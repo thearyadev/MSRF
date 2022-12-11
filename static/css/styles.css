@@ -1,0 +1,15 @@
+body{
+    font-family: 'Mukta', sans-serif;
+    font-weight: 200;
+    
+}
+
+
+
+.vp-max{
+    height: 100vh;
+}
+
+.content-box{
+    padding: 50px;
+}

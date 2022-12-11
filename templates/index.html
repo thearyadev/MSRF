@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MSRF</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+</head>
+<body>
+<div class="container">
+    <div class="row align-items-center vp-max">
+        <div class="col-12 col-sm-6 col-md-8 hl">
+            <div class="card content-box">
+                <p>Active Accounts</p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Points</th>
+                        <th scope="col">Last Exec</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in accounts %}
+                    <tr>
+                        <th scope="row">{{a.id}}</th>
+                        <td>{{a.email}}</td>
+                        <td>{{a.points}}</td>
+                        <td>{{a.lastExecution}}</td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+        <div class="col-6 col-md-4 hl">
+            <div class="card content-box">
+                <p>Add Account</p>
+                <form>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="" aria-label="Username">
+                        <span class="input-group-text">@</span>
+                        <input type="text" class="form-control" placeholder="" aria-label="Server">
+                    </div>
+
+                    <div class="input-group mb-3">
+
+                        <input type="password" class="form-control" placeholder="Password" aria-label="Password"
+                               aria-describedby="basic-addon1">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </form>
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script src="/js/bootstrap.bundle.js"></script>
+</body>
+
+
+</html>
