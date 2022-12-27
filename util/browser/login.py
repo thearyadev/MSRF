@@ -1,17 +1,23 @@
+import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 import util
 from selenium.webdriver.common.by import By
 import time
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException
+import logging
+from util import deprecated
 
 
-def login(browser: WebDriver, email: str, pwd: str, logger: util.ConsoleLogger, isMobile: bool = False):
+@deprecated
+def login(browser: WebDriver, email: str, pwd: str, isMobile: bool = False):
+    logger: logging.Logger = logging.getLogger("msrf")
+
     # Access to bing.com
     browser.get('https://login.live.com/')
     # Wait complete loading
     util.waitUntilVisible(browser, By.ID, 'loginHeader', 10)
     # Enter email
-    logger.log("Writing email...")
+    logger.info("Writing email...")
     browser.find_element(By.NAME, "loginfmt").send_keys(email)
     # Click next
     browser.find_element(By.ID, 'idSIButton9').click()
@@ -22,13 +28,13 @@ def login(browser: WebDriver, email: str, pwd: str, logger: util.ConsoleLogger, 
     # Enter password
     # browser.find_element(By.ID, "i0118").send_keys(pwd)
     browser.execute_script("document.getElementById('i0118').value = '" + pwd + "';")
-    logger.log("Writing password...")
+    logger.info("Writing password...")
     # Click next
     browser.find_element(By.ID, 'idSIButton9').click()
     # Wait 5 seconds
     time.sleep(5)
     # Click Security Check
-    logger.log("Passing security checks...")
+    logger.info("Passing security checks...")
     try:
         browser.find_element(By.ID, 'iLandingViewAction').click()
     except (NoSuchElementException, ElementNotInteractableException) as e:
@@ -50,5 +56,109 @@ def login(browser: WebDriver, email: str, pwd: str, logger: util.ConsoleLogger, 
     except (NoSuchElementException, ElementNotInteractableException) as e:
         pass
     # Check Login
-    logger.log("Validating Bing login state...")
-    util.checkBingLogin(browser, isMobile=isMobile, logger=logger)
+    logger.info("Validating Bing login state...")
+    util.checkBingLogin(browser, isMobile=isMobile)
+
+
+def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:
+    """
+    Logs into Microsoft Rewards (and bing) in the current browser instance for the given account.
+    :browser Selenium webdriver
+    :account MicrosoftAccount object
+    """
+    logger: logging.Logger = logging.getLogger("msrf")
+
+    # Access to bing.com
+    logger.info("Navigating to https://login.live.com/")
+    browser.get('https://login.live.com/')
+
+    # Wait for the page to load
+    try:
+        util.waitUntilVisible(browser, By.ID, 'loginHeader', 10)
+    except selenium.common.exceptions.TimeoutException:
+        logger.warning("Element loginHeader has not loaded.")
+
+    # Enter email
+    logger.info("Writing email...")
+    try:
+        browser.find_element(By.NAME, "loginfmt").send_keys(account.email)
+    except selenium.common.exceptions.NoSuchElementException:
+        logger.warning("Login text field does not exist. loginfmt")
+    except selenium.common.exceptions.ElementNotInteractableException:
+        logger.warning("Login text field is not intractable. loginfmt")
+    except Exception as e:
+        logger.error(f"Error uncaught. Likely unable to log in. {e}")
+
+    # Click next
+    try:
+        browser.find_element(By.ID, 'idSIButton9').click()
+    except selenium.common.exceptions.NoSuchElementException:
+        logger.warning("Login next button not found. Likely unable to log in idSIButton9")
+    except selenium.common.exceptions.ElementNotInteractableException:
+        logger.warning("Login next button not intractable. idSIButton9")
+    except Exception as e:
+        logger.error(f"Error uncaught. Likely unable to log in. {e}")
+
+    # Wait 2 seconds
+    time.sleep(2)
+    # Wait complete loading of the password field.
+    try:
+        util.waitUntilVisible(browser, By.ID, 'loginHeader', 10)
+    except selenium.common.exceptions.TimeoutException:
+        logger.warning("loginHeader is not visible. Password field may be inaccessible. Attempting login anyway.")
+
+    # Enter password
+    # browser.find_element(By.ID, "i0118").send_keys(pwd)
+    # TODO
+    # determine which password entry method works.
+    logger.info("Writing password...")
+    browser.execute_script("document.getElementById('i0118').value = '" + account.password + "';")
+
+    # Click next
+    try:
+        browser.find_element(By.ID, 'idSIButton9').click()
+    except selenium.common.exceptions.NoSuchElementException:
+        logger.warning("Password next button does not exist.")
+    except selenium.common.exceptions.ElementNotInteractableException:
+        logger.warning("Password next button is not interactable")
+    except Exception as e:
+        logger.error(f"Error uncaught. Likely unable to log in. {e}")
+
+    # Wait 5 seconds
+    time.sleep(5)
+
+    # Click Security Check
+    logger.info("Passing security checks...")
+    try:
+        browser.find_element(By.ID, 'iLandingViewAction').click()
+    except (NoSuchElementException, ElementNotInteractableException) as e:
+        logger.warning(f"iLandingViewAction element is unreachable.. Message: {e}")
+    try:
+        browser.find_element(By.ID, 'iNext').click()
+    except (NoSuchElementException, ElementNotInteractableException) as e:
+        logger.warning(f"iNext element is unreachable.. Message: {e}")
+    except Exception as e:
+        logger.warning("Caught unknown error during security check pass. Login state uncertain")
+
+    # Wait complete loading
+    try:
+        util.waitUntilVisible(browser, By.ID, 'KmsiCheckboxField', 10)  # wait 10 sec for the element to load
+    except TimeoutException as e:
+        logger.warning("Element KmsiCheckboxField not detected. Timeout or element does not exist.")
+
+    # Click next
+    try:
+        browser.find_element(By.ID, 'idSIButton9').click()
+        # Wait 5 seconds
+        time.sleep(5)
+    except (NoSuchElementException, ElementNotInteractableException) as e:
+        logger.warning(f"idSIButton9 element is unreachable.. Login state uncertain")
+    except Exception as e:
+        logger.warning(f"Caught unknown error during security check pass. Login state uncertain. {e}")
+
+    # Check Login in Bing.
+    logger.info("Validating Bing login state...")
+    try:
+        return util.verify_bing_login(browser)
+    except Exception as e:
+        logger.critical(f"Uncaught error in validating bing login: {e}")

@@ -1,128 +1,67 @@
+import datetime
 import threading
 import time
-
-from selenium.webdriver.common.by import By
-
-import database
 import util
 from types import SimpleNamespace
 from rich import print
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-from flask import Flask, render_template
 import database
+import logging
+import sys
 
-config: SimpleNamespace = util.load_config("configuration.yaml")
-logger: util.ConsoleLogger = util.ConsoleLogger()
-
-logger.log("Loaded ./configuration.yaml")
-logger.log(f"Accounts Detected: {len(config.MicrosoftAccounts)}")
+from flask import Flask, render_template, redirect, Response
 
 
-def _exec(account: util.MicrosoftAccount):
-    POINTS = 0
-    # init browser
-    logger.log(f"Current Account: {account}")
-    browser: WebDriver = util.browser_setup(headless_mode=True, user_agent=config.pc_user_agent, config=config)
-    logger.log("Attempting login...")
-    # go through login process
-    util.login(browser, account.email, account.password, logger=logger, isMobile=False)
-    logger.log("Login successful")
-    browser.get('https://account.microsoft.com/')
-    util.waitUntilVisible(browser, By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a', 20)
-
-    if browser.find_element(By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a').get_attribute(
-            'target') == '_blank':
-        BASE_URL = 'https://rewards.microsoft.com'
-        browser.find_element(By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a').click()
-        time.sleep(1)
-        browser.switch_to.window(window_name=browser.window_handles[0])
-        browser.close()
-        browser.switch_to.window(window_name=browser.window_handles[0])
-        time.sleep(10)
-    else:
-        BASE_URL = 'https://account.microsoft.com/rewards'
-        browser.get(BASE_URL)
-    POINTS = util.getPointCount(browser, BASE_URL)
-    logger.log(f"Current Points: {POINTS}")
-    logger.log("Setup complete. Starting point farmer.")
-    logger.log("Attempting to complete 'Daily Set'")
-    util.completeDailySet(browser, base_url=BASE_URL)
-    logger.log("Successfully completed 'Daily Set'")
-    logger.log("Attempting to complete 'Punch Cards'")
-    util.completePunchCards(browser, BASE_URL=BASE_URL)
-    logger.log("Successfully completed 'Punch Cards'")
-    logger.log("Attempting to complete 'Additional Promotions'")
-    util.completeMorePromotions(browser, BASE_URL=BASE_URL)
-    logger.log("Successfully completed 'Additional Promotions'")
-    POINTS = util.getPointCount(browser, BASE_URL)
-    remainingSearches, remainingSearchesM = util.getRemainingSearches(browser)
-    if remainingSearches != 0:
-        logger.log("Searches available. Executing searches...")
-        util.bingSearches(browser,
-                          remainingSearches,
-                          px=POINTS,
-                          logger=logger,
-                          LANG=config.LANG,
-                          GEO=config.GEO,
-                          agent=config.pc_user_agent)
-        logger.log("Successfully completed all PC searches")
-    browser.quit()
+def configure_loggers():
+    logging.basicConfig(
+        format='%(name)s ---- [%(threadName)s] [%(asctime)s] [%(levelname)s]'
+               ' [%(filename)s] [Line %(lineno)d] %(message)s',
+        handlers=[
+            logging.FileHandler("farmer.log"),
+            logging.StreamHandler(),
+        ],
+        level=logging.DEBUG)
+    logging.getLogger("werkzeug").setLevel(logging.CRITICAL)  # disable flask logger
+    logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
+    logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.CRITICAL)
+    logging.getLogger("selenium.webdriver.common.selenium_manager").setLevel(logging.CRITICAL)
+    logging.getLogger("selenium.webdriver.common.selenium_manager").setLevel(logging.CRITICAL)
+    logging.getLogger("selenium.webdriver.common.service").setLevel(logging.CRITICAL)
+    logging.getLogger("httpx._client").setLevel(logging.CRITICAL)
 
 
-
-    """
-        if remainingSearchesM != 0:
-        browser = util.browser_setup(headless_mode=True, user_agent=config.mobile_user_agent, config=config)
-        logger.log("Logging in for mobile searches...")
-        util.login(browser, account.email, account.password, logger=logger, isMobile=True)
-        logger.log("Mobile login successful.")
-        logger.log("Searches Available. Executing mobile searches...")
-
-        util.bingSearches(browser,
-                          remainingSearchesM,
-                          px=POINTS,
-                          logger=logger,
-                          LANG=config.LANG,
-                          GEO=config.GEO,
-                          agent=config.mobile_user_agent,
-                          isMobile=True)
-        logger.log("Successfully completed all PC searches")
-        browser.quit()
-
-    if remainingSearchesM == 0 and remainingSearches == 0:
-        logger.log("No searches available. Skipping...")
-    """
-
-    try:
-        POINTS = util.getPointCount(browser, BASE_URL)
-        logger.log(F"Closing Point Total: {POINTS}")
-    except Exception:
-        pass
+# Configure Logging
+configure_loggers()
 
 
-def init_exec():
-    for account in db.get_all():
-        _exec(account)
+logger: logging.Logger = logging.getLogger("msrf")  # create msrf logger
+config: SimpleNamespace = util.load_config("configuration.yaml")  # load config from file
+logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
+db = database.DatabaseAccess(url=config.database_url)  # create database connection
+logger.info(f"Connection to database ({config.database_url}) was successful.")
 
-
-app = Flask(__name__, static_folder="./static", static_url_path="")
-
-db: database.DatabaseOperations = database.DatabaseOperations(file="accounts.db")
+app = Flask(__name__, static_folder="./static", static_url_path="")  # init flask
 
 
 @app.route("/")
 def index():
-    return render_template("index.html", accounts=db.get_all())
+    logger.info("Serving index webpage.")
+    return render_template("index.html", accounts=db.read(), active_threads=[t.name for t in threading.enumerate()])
 
 
-@app.route("/run")
-def run():
-    threading.Thread(target=init_exec).start()
-    return "", 200
+@app.route("/log")
+def log():
+    with open("farmer.log", "r") as file:
+        return list(reversed(list(reversed(file.readlines()))[:15]))
+
+
+@app.template_filter('strftime')
+def _jinja2_filter_datetime(date: datetime.datetime) -> str:
+    return date.strftime("%Y-%m-%d %H:%M")
 
 
 if __name__ == '__main__':
-
-
+    for a in db.read():
+        util.exec_farmer(a, config=config, db=db)
     app.run()
+
+## PB PASSWORD C!ddKm9R5ESTJJz6

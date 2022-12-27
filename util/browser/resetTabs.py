@@ -3,6 +3,9 @@ import time
 
 
 def resetTabs(browser: WebDriver, BASE_URL: str):
+    """
+    Closes all irrelevant tabs and returns to base_url
+    """
     try:
         curr = browser.current_window_handle
 
@@ -16,5 +19,5 @@ def resetTabs(browser: WebDriver, BASE_URL: str):
         browser.switch_to.window(curr)
         time.sleep(0.5)
         browser.get(BASE_URL)
-    except:
+    except Exception:
         browser.get(BASE_URL)

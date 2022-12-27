@@ -1,10 +1,24 @@
+import dataclasses
+
 import yaml
 from types import SimpleNamespace
 import util
+from pydantic import BaseModel
 
 
-def load_config(file: str) -> SimpleNamespace:
+class Config(BaseModel):
+    pc_user_agent: str | None
+    mobile_user_agent: str | None
+    database_url: str | None
+    LANG: str | None
+    GEO: str | None
+    TZ: str | None
+
+
+def load_config(file: str) -> Config:
     with open(file, "r") as f:
-        ns: SimpleNamespace = SimpleNamespace(**yaml.safe_load(f))
-        ns.LANG, ns.GEO, ns.TZ = util.get_c_code_lang_and_offset()
-        return ns
+        return Config(**yaml.safe_load(f))
+
+
+if __name__ == '__main__':
+    print(load_config("../../configuration.yaml"))

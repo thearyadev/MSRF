@@ -1,10 +1,17 @@
 import time
+
+import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
 import util
 from selenium.webdriver.common.by import By
+import logging
+from util import deprecated
 
 
-def checkBingLogin(browser: WebDriver, logger: util.ConsoleLogger,  isMobile: bool = False,) -> int:
+@deprecated
+def checkBingLogin(browser: WebDriver, isMobile: bool = False, ) -> int:
+    logger: logging.Logger = logging.getLogger("msrf")
+
     # Access Bing.com
     browser.get('https://bing.com/')
     # Wait 8 seconds
@@ -74,6 +81,43 @@ def checkBingLogin(browser: WebDriver, logger: util.ConsoleLogger,  isMobile: bo
             POINTS_COUNTER = int(browser.find_element(By.ID, 'fly_id_rc').get_attribute('innerHTML'))
             return POINTS_COUNTER
     except:
-        logger.log("Unable to validate login state... trying again. Username or password may be invalid.")
-        checkBingLogin(browser, logger=logger, isMobile=isMobile)
+        logger.info("Unable to validate login state... trying again. Username or password may be invalid.")
+        checkBingLogin(browser, isMobile=isMobile)
 
+
+def verify_bing_login(browser: WebDriver) -> bool:
+    """
+    Uses the bing login homepage to check if the user is logged in.
+    This will check the id_n span tag. This tag will contain text if the user is logged in.
+    If there is no text (or element does not exist), the user is not logged in.
+
+    :browser Selenium webdriver.
+    """
+    logger: logging.Logger = logging.getLogger("msrf")
+    # Access Bing.com
+    browser.get('https://bing.com/')
+    # Wait 8 seconds
+
+    try:
+        logger.info("Waiting for browser to load login evidence")
+        util.waitUntilVisible(browser, By.ID, "id_n", 8)
+    except selenium.common.exceptions.TimeoutException:
+        logger.warning("Timeout exception: element may not be loaded.")
+
+    # Check login
+
+    try:
+        authenticated_user_title = browser.find_element(By.ID, "id_n")
+    except selenium.common.exceptions.NoSuchElementException:
+        logger.error("id_n element does not exist.")
+        return False  # cant find element. Login failed.
+    else:
+        # the id_n element will have the users name. This element does not have text if the user is not logged in.
+        if authenticated_user_title.text:
+            return True  # success
+    return False  # guard. Login failed
+
+
+if __name__ == '__main__':
+    config = util.load_config("../../configuration.yaml")
+    b = util.init_browser(headless=False, agent=config.pc_user_agent)

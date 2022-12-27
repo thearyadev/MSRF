@@ -26,3 +26,5 @@ urllib3==1.26.13
 wsproto==1.2.0
 
 Flask~=2.2.2
+pocketbase~=0.2.2
+Deprecated~=1.2.13

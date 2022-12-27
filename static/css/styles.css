@@ -1,15 +1,57 @@
-body{
+body {
     font-family: 'Mukta', sans-serif;
-    font-weight: 200;
-    
+    font-weight: 700 !important;
+    background-color: #e0e0e0 !important;
+
+
+}
+
+body, table, input, button, .btnclr{
+    color: #878787 !important;
+}
+table {
+    font-weight: 300 !important;
 }
 
 
+.code {
+    font-family: monospace;
+    font-size: 10px;
+    pointer-events: none;
+}
 
-.vp-max{
+.code p {
+    line-height: 10%;
+    white-space: pre;
+    -webkit-filter: brightness(100%);
+}
+
+.vp-max {
     height: 100vh;
+
 }
 
-.content-box{
+.content-box {
+    background-color: #e0e0e0 !important;
     padding: 50px;
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow: 20px 20px 60px #bebebe,
+    -20px -20px 60px #ffffff;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
+    background-color: #e0e0e0 !important;
+}
+
+.btn-danger, .btn-danger:hover, .btn-danger:active, .btn-danger:visited {
+    background-color: #e0e0e0 !important;
+}
+
+.input {
+    background-color: #e0e0e0 !important;
+}
+
+.btnclr {
+    width: 10em;
 }

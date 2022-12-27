@@ -1,5 +1,9 @@
 pc_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
 mobile_user_agent: 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0. 3945.79 Mobile Safari/537.36'
+database_url: "http://localhost:8090"
+LANG: "en-CA"
+GEO: "CA"
+TZ: '-300'
 
 
 

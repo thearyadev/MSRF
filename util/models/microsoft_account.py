@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class MicrosoftAccount(BaseModel):
-    id: int = Field(default=None)
+    id: str | None = Field(default=None)
     email: str
     password: str
     points: int = Field(default=0)
-    lastExecution: datetime | None = Field(default=None)
+    lastExec: datetime | None = Field(default=None)
