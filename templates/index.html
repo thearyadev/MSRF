@@ -17,18 +17,15 @@
 
     <div class="row align-items-center vp-max">
 
+            <div class=" card content-box border-0 p-5 m-0">
 
-        <div class="col-12 col-sm-6 col-md-8 hl">
-            <div class="card content-box border-0">
-                <p>Active Accounts</p>
-                <table class="table table-responsive" style="max-height: 400px;">
+                <table class="table" style="max-height: 400px;">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Account</th>
                         <th scope="col">Points</th>
                         <th scope="col">Last Exec</th>
-                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -43,7 +40,7 @@
                                 <a href="" class="btn btn-danger disabled btn-sm btnclr text-center border-0">Running...</a>
                             {% endif %}
                             {% if a.id | string not in active_threads %}
-                                <a href="/rs/{{a.id}}" class="btn btn-primary btn-sm btnclr text-center border-0">Run</a>
+                                <a href="/exec_single_account/{{a.id}}" class="btn btn-primary btn-sm btnclr text-center border-0">Run</a>
                             {% endif %}
                         </td>
                     </tr>
@@ -55,29 +52,7 @@
 
 
             </div>
-        </div>
-        <div class="col-6 col-md-4 hl">
-            <div class="card content-box border-0">
-                <p>Add Account</p>
-                <form>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control input" placeholder="" aria-label="Username">
-                        <span class="input-group-text input">@</span>
-                        <input type="text" class="form-control input" placeholder="" aria-label="Server">
-                    </div>
 
-                    <div class="input-group mb-3">
-
-                        <input type="password" class="form-control input" placeholder="" aria-label="Password"
-                               aria-describedby="basic-addon1">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary ">Add</button>
-                </form>
-
-
-            </div>
-        </div>
 
     </div>
 </div>
@@ -88,9 +63,7 @@
     </div>
 
 </div>
-<div class="col fixed-top" style="position: absolute; right: 0;">
-        <p>hello world</p>
-    </div>
+
 <script src="https://code.jquery.com/jquery-3.6.1.js" integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI=" crossorigin="anonymous"></script>
 <script src="/js/bootstrap.bundle.js"></script>
 <script src="/js/index.js"></script>

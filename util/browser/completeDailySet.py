@@ -108,10 +108,10 @@ def complete_daily_set(browser: WebDriver, base_url: str):
                             filter = filter.split(':', 1)
                             filters[filter[0]] = filter[1]
                         if "PollScenarioId" in filters:
-                            print('[DAILY SET]', 'Completing poll of card ' + str(cardNumber))
+                            logger.info(f"Completing poll of card: {cardNumber}")
                             util.completeDailySetSurvey(browser, cardNumber)
                         else:
-                            print('[DAILY SET]', 'Completing quiz of card ' + str(cardNumber))
+                            logger.info(f"Completing quiz of card: {cardNumber}")
                             util.completeDailySetVariableActivity(browser, cardNumber)
         except Exception as e:
             logger.critical(f"Unknown exception was raised in daily set module. {e}")

@@ -1,3 +1,5 @@
+import threading
+
 import selenium.common.exceptions
 
 import util
@@ -19,12 +21,13 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
 
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
 
-    POINTS = 0
     # init browser
     logger.info(f"Current Account: {account}")
     # Defaults in headless mode.
     # Starting with PC user agent
-    browser: WebDriver = util.init_browser(headless=True, agent=config.pc_user_agent)
+
+    # if debug is TRUE, run headless=FALSE to view the browser window.
+    browser: WebDriver = util.init_browser(headless=not config.debug, agent=config.pc_user_agent)
 
     logger.info("Attempting login...")
     # go through login process
@@ -54,9 +57,6 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
 
     browser.get(BASE_URL)  # return
 
-    # TODO
-    # ##
-
     # Farmer start
     logger.info("Setup complete. Starting point collection process.")
 
@@ -77,9 +77,6 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
         logger.critical(f"Uncaught exception has caused punch cards to fail. {e}")
     else:
         logger.info("Successfully completed PUNCH CARDS")
-
-    # TODO
-    # ###
 
     # additional promotions
     logger.info("(3/5) Completing ADDITIONAL PROMOTIONS")
@@ -106,19 +103,24 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
 
         if remainingSearches != 0:
             logger.info("Executing searches...")
-            util.bingSearches(browser,
-                              remainingSearches,
-                              px=POINTS,
-                              LANG=config.LANG,
-                              GEO=config.GEO,
-                              agent=config.pc_user_agent)
+            try:
+                util.bing_searches(browser,
+                                   remainingSearches,
+                                   px=account.points,
+                                   LANG=config.LANG,
+                                   GEO=config.GEO,
+                                   agent=config.pc_user_agent)
+            except Exception as e:
+                logger.critical(f"Unable to complete bing searches. Unexpected error {e}")
             logger.info("Successfully completed all PC searches")
+
+    browser.get(BASE_URL)
+    account.points = util.getPointCount(browser)
+    db.write(account)
+    logger.info(F"Closing Point Total: {account.points}")
 
     browser.quit()
 
-    account.points = util.getPointCount(browser)
-    db.write(account)
-    logger.info(F"Closing Point Total: {POINTS}")
 
 
 

@@ -13,7 +13,7 @@ from flask import Flask, render_template, redirect, Response
 
 def configure_loggers():
     logging.basicConfig(
-        format='%(name)s ---- [%(threadName)s] [%(asctime)s] [%(levelname)s]'
+        format='[%(threadName)s] [%(asctime)s] [%(levelname)s]'
                ' [%(filename)s] [Line %(lineno)d] %(message)s',
         handlers=[
             logging.FileHandler("farmer.log"),
@@ -32,9 +32,8 @@ def configure_loggers():
 # Configure Logging
 configure_loggers()
 
-
 logger: logging.Logger = logging.getLogger("msrf")  # create msrf logger
-config: SimpleNamespace = util.load_config("configuration.yaml")  # load config from file
+config: util.Config = util.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
 db = database.DatabaseAccess(url=config.database_url)  # create database connection
 logger.info(f"Connection to database ({config.database_url}) was successful.")
@@ -51,7 +50,18 @@ def index():
 @app.route("/log")
 def log():
     with open("farmer.log", "r") as file:
-        return list(reversed(list(reversed(file.readlines()))[:15]))
+        return list(reversed(list(reversed(file.readlines()))[:20]))
+
+
+@app.route("/exec_single_account/<account_id>")
+def exec_single_account(account_id: int):
+    account: util.MicrosoftAccount = [a for a in db.read() if a.id == account_id][0]
+    threading.Thread(
+        name=account.email,
+        target=util.exec_farmer,
+        kwargs={"account": account, "config": config, "db": db}
+    ).start()
+    return redirect("/", code=200)
 
 
 @app.template_filter('strftime')
@@ -60,8 +70,10 @@ def _jinja2_filter_datetime(date: datetime.datetime) -> str:
 
 
 if __name__ == '__main__':
-    for a in db.read():
-        util.exec_farmer(a, config=config, db=db)
-    app.run()
+    # for a in db.read():
+    #    util.exec_farmer(account=a,
+    #                     config=config,
+    #                    db=db)
+    app.run(debug=False)
 
 ## PB PASSWORD C!ddKm9R5ESTJJz6

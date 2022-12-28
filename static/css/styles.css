@@ -6,9 +6,10 @@ body {
 
 }
 
-body, table, input, button, .btnclr{
+body, table, input, button, .btnclr {
     color: #878787 !important;
 }
+
 table {
     font-weight: 300 !important;
 }

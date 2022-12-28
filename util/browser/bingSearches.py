@@ -3,13 +3,13 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 import logging
 
 
-def bingSearches(browser: WebDriver,
-                 numberOfSearches: int,
-                 px: int,
-                 LANG: str,
-                 GEO: str,
-                 agent: str,
-                 isMobile: bool = False):
+def bing_searches(browser: WebDriver,
+                  numberOfSearches: int,
+                  px: int,
+                  LANG: str,
+                  GEO: str,
+                  agent: str,
+                  isMobile: bool = False):
     logger: logging.Logger = logging.getLogger("msrf")
 
     i = 0
@@ -20,9 +20,9 @@ def bingSearches(browser: WebDriver,
         points = util.bingSearch(browser, word, isMobile)
         if points <= px:
             relatedTerms = util.getRelatedTerms(word, pc_user_agent=agent)
-            for term in relatedTerms :
+            for term in relatedTerms:
                 points = util.bingSearch(browser, term, isMobile)
-                if not points <= px :
+                if not points <= px:
                     break
         if points > 0:
             px = points

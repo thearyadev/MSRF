@@ -4,7 +4,7 @@ database_url: "http://localhost:8090"
 LANG: "en-CA"
 GEO: "CA"
 TZ: '-300'
-
+debug: True
 
 
 

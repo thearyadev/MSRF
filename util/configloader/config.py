@@ -13,6 +13,7 @@ class Config(BaseModel):
     LANG: str | None
     GEO: str | None
     TZ: str | None
+    debug: bool
 
 
 def load_config(file: str) -> Config:

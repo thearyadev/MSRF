@@ -1,9 +1,18 @@
 import json
+import logging
+
 import requests
 from datetime import date, timedelta
 
 
 def getGoogleTrends(numberOfwords: int, LANG: str, GEO: str) -> list:
+    """
+    Gets a list of search terms from Google Trends following the area and language defined.
+
+    """
+
+    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger.info("Getting search terms")
     search_terms = []
     i = 0
     while len(search_terms) < numberOfwords:
