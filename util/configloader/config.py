@@ -1,4 +1,5 @@
 import dataclasses
+import pydantic.typing
 
 import yaml
 from types import SimpleNamespace
@@ -13,7 +14,8 @@ class Config(BaseModel):
     LANG: str | None
     GEO: str | None
     TZ: str | None
-    debug: bool
+    debug: bool | None
+    minimum_auto_rerun_delay_seconds: int | None
 
 
 def load_config(file: str) -> Config:

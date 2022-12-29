@@ -10,7 +10,6 @@ import sys
 import atexit
 
 from flask import Flask, render_template, redirect, Response
-import schedule
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
@@ -72,21 +71,33 @@ def _jinja2_filter_datetime(date: datetime.datetime) -> str:
     return date.strftime("%Y-%m-%d %H:%M")
 
 
-def job():
-    print("job run :D")
+def run_sequential_threads(accounts: list[util.MicrosoftAccount]):
+    for account in accounts: #loop over given accounts
+        thread = threading.Thread( # init thread object
+            name=account.email, # name of thread is the account email
+            target=util.exec_farmer,
+            kwargs={"account": account, "config": config, "db": db}
+        )
+        thread.start() # start thread
+        # wait for 3600 seconds for the thread.
+        thread.join(timeout=3600)
+        # once the thread exits
+        # if the thread is still running, its name will be changed to indicate that the thread is unresponsive.
+        # if the thread exits, the next line does nothing.
+        thread.name = f"{account.email} [hung]"
+
+
+def check_then_run():
+    accounts_ready = list()
+    for account in db.read():
+        if (datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec).total_seconds() >= \
+                config.minimum_auto_rerun_delay_seconds:
+            print(f"{account.email} is due for a rerun")
+    run_sequential_threads(accounts=accounts_ready)
 
 
 if __name__ == '__main__':
-    #for a in db.read():
-     #   util.exec_farmer(account=a,
-      #                   config=config,
-       #                  db=db)
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(func=job, trigger="interval", hours=5)
-    # scheduler.start()
-
-
+    check_then_run()
     app.run(debug=config.debug)
-# atexit.register(lambda: scheduler.shutdown())
 
-## PB PASSWORD C!ddKm9R5ESTJJz6
+# PB PASSWORD C!ddKm9R5ESTJJz6
