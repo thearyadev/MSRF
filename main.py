@@ -7,8 +7,11 @@ from rich import print
 import database
 import logging
 import sys
+import atexit
 
 from flask import Flask, render_template, redirect, Response
+import schedule
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def configure_loggers():
@@ -61,7 +64,7 @@ def exec_single_account(account_id: int):
         target=util.exec_farmer,
         kwargs={"account": account, "config": config, "db": db}
     ).start()
-    return redirect("/", code=200)
+    return redirect("/")
 
 
 @app.template_filter('strftime')
@@ -69,11 +72,20 @@ def _jinja2_filter_datetime(date: datetime.datetime) -> str:
     return date.strftime("%Y-%m-%d %H:%M")
 
 
+def job():
+    print("job run :D")
+
+
 if __name__ == '__main__':
-    # for a in db.read():
-    #    util.exec_farmer(account=a,
-    #                     config=config,
-    #                    db=db)
-    app.run(debug=False)
+    #for a in db.read():
+     #   util.exec_farmer(account=a,
+      #                   config=config,
+       #                  db=db)
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(func=job, trigger="interval", hours=5)
+    # scheduler.start()
+
+    app.run(debug=config.debug)
+# atexit.register(lambda: scheduler.shutdown())
 
 ## PB PASSWORD C!ddKm9R5ESTJJz6
