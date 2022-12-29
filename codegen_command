@@ -1,0 +1,1 @@
+datamodel-codegen --input dashboard_data_schema_source.json --input-file-type json --output ./util/models/codegen_models.py --allow-extra-fields --force-optional --class-name GeneratedDashboardDataModel --target-python-version 3.10 --use-field-description --use-annotated
