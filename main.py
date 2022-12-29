@@ -11,11 +11,12 @@ import atexit
 
 from flask import Flask, render_template, redirect, Response
 from apscheduler.schedulers.background import BackgroundScheduler
+import flet as ft
 
 
-def configure_loggers():
+def configure_loggers() -> list[None]:
     logging.basicConfig(
-        format='[%(threadName)s] [%(asctime)s] [%(levelname)s]'
+        format='%(name)s----[%(threadName)s] [%(asctime)s] [%(levelname)s]'
                ' [%(filename)s] [Line %(lineno)d] %(message)s',
         handlers=[
             logging.FileHandler("farmer.log"),
@@ -29,6 +30,7 @@ def configure_loggers():
     logging.getLogger("selenium.webdriver.common.selenium_manager").setLevel(logging.CRITICAL)
     logging.getLogger("selenium.webdriver.common.service").setLevel(logging.CRITICAL)
     logging.getLogger("httpx._client").setLevel(logging.CRITICAL)
+    logging.getLogger("root").disabled = True  # flet logger
 
 
 # Configure Logging
@@ -102,17 +104,39 @@ def check_then_run():
     # run_sequential_threads(accounts=accounts_ready)
 
 
+def main_screen(page: ft.Page):
+    page.title = "Flet counter example"
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
+
+    txt_number = ft.TextField(value="0", text_align=ft.TextAlign.RIGHT, width=100)
+
+    def minus_click(e):
+        txt_number.value = str(int(txt_number.value) - 1)
+        page.update()
+
+    def plus_click(e):
+        txt_number.value = str(int(txt_number.value) + 1)
+        page.update()
+
+    page.add(
+        ft.Row(
+            [
+                ft.IconButton(ft.icons.REMOVE, on_click=minus_click),
+                txt_number,
+                ft.IconButton(ft.icons.ADD, on_click=plus_click),
+            ],
+            alignment=ft.MainAxisAlignment.CENTER,
+        )
+    )
+
+
 if __name__ == '__main__':
     # scheduler = BackgroundScheduler()
     # scheduler.add_job(func=check_then_run, trigger="interval", seconds=20)
     # scheduler.start()
     # app.run(debug=not config.debug)
     # atexit.register(lambda: scheduler.shutdown())
-    b = util.init_browser(headless=False, agent=config.pc_user_agent)
-
-
-
-
+    ft.app(target=main_screen)
 
 # PB PASSWORD C!ddKm9R5ESTJJz6
 #

@@ -37,7 +37,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
     return dashboard
 
 
-def load_dashboard_data(browser: WebDriver) -> DashboardData:
+def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     logger.info("loading dashboard data")
     try:
@@ -45,3 +45,4 @@ def load_dashboard_data(browser: WebDriver) -> DashboardData:
     except Exception as e:
         # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
         logger.critical(f"Unable to load dashboard data. {e}")
+
