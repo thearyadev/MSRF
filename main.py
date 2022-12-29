@@ -85,6 +85,8 @@ if __name__ == '__main__':
     # scheduler.add_job(func=job, trigger="interval", hours=5)
     # scheduler.start()
 
+
+
     app.run(debug=config.debug)
 # atexit.register(lambda: scheduler.shutdown())
 
