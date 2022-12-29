@@ -109,3 +109,18 @@ if __name__ == '__main__':
     app.run(debug=not config.debug)
     atexit.register(lambda: scheduler.shutdown())
 # PB PASSWORD C!ddKm9R5ESTJJz6
+#
+"""
+
+let vars = []
+
+for (var b in window){
+	if (window.hasOwnProperty(b)){
+	vars.push(b)
+{
+}
+
+vars.sort()
+console.log(vars)
+
+"""
