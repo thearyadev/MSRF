@@ -72,13 +72,13 @@ def _jinja2_filter_datetime(date: datetime.datetime) -> str:
 
 
 def run_sequential_threads(accounts: list[util.MicrosoftAccount]):
-    for account in accounts: #loop over given accounts
-        thread = threading.Thread( # init thread object
-            name=account.email, # name of thread is the account email
+    for account in accounts:  # loop over given accounts
+        thread = threading.Thread(  # init thread object
+            name=account.email,  # name of thread is the account email
             target=util.exec_farmer,
             kwargs={"account": account, "config": config, "db": db}
         )
-        thread.start() # start thread
+        thread.start()  # start thread
         # wait for 3600 seconds for the thread.
         thread.join(timeout=3600)
         # once the thread exits
@@ -88,16 +88,24 @@ def run_sequential_threads(accounts: list[util.MicrosoftAccount]):
 
 
 def check_then_run():
+    logger.info("Checking if any accounts are ready...")
     accounts_ready = list()
     for account in db.read():
         if (datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec).total_seconds() >= \
                 config.minimum_auto_rerun_delay_seconds:
-            print(f"{account.email} is due for a rerun")
-    run_sequential_threads(accounts=accounts_ready)
+            logger.info(f"{account.email} is ready.")
+            accounts_ready.append(account)
+
+        else:
+            logger.info(f"{account.email} is not ready.")
+
+    # run_sequential_threads(accounts=accounts_ready)
 
 
 if __name__ == '__main__':
-    check_then_run()
-    app.run(debug=config.debug)
-
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=check_then_run, trigger="interval", seconds=20)
+    scheduler.start()
+    app.run(debug=not config.debug)
+    atexit.register(lambda: scheduler.shutdown())
 # PB PASSWORD C!ddKm9R5ESTJJz6
