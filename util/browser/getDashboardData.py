@@ -33,7 +33,6 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
         dashboard = json.loads(dashboard)
     except Exception as e:
         logger.critical(f"Unable to load dashboard data. {e}")
-        # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
         return None
     return dashboard
 
@@ -44,4 +43,5 @@ def load_dashboard_data(browser: WebDriver) -> DashboardData:
     try:
         return util.DashboardData(**browser.execute_script("return dashboard"))
     except Exception as e:
+        # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
         logger.critical(f"Unable to load dashboard data. {e}")
