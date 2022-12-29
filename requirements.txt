@@ -28,3 +28,5 @@ wsproto==1.2.0
 Flask~=2.2.2
 pocketbase~=0.2.2
 Deprecated~=1.2.13
+flet~=0.2.4
+APScheduler~=3.9.1.post1
