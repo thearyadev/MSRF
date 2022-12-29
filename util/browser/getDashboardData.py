@@ -5,17 +5,21 @@ import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from util import deprecated
+from ..models.dashboard_data import DashboardData
 
 
 @deprecated
 def getDashboardData(browser: WebDriver) -> dict:
     dashboard = util.findBetween(
-        browser.find_element(By.XPATH, '/html/body').get_attribute('innerHTML'), "var dashboard = ",
+        browser.find_element(By.XPATH, '/html/body')
+        .get_attribute('innerHTML'),
+        "var dashboard = ",
         ";\n        appDataModule.constant(\"prefetchedDashboard\", dashboard);")
     dashboard = json.loads(dashboard)
     return dashboard
 
 
+@deprecated
 def get_dashboard_data(browser: WebDriver) -> dict | None:
     """
     Returns the data from the dashboard
@@ -29,10 +33,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
         dashboard = json.loads(dashboard)
     except Exception as e:
         logger.critical(f"Unable to load dashboard data. {e}")
+        # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
         return None
     return dashboard
 
-
-if __name__ == '__main__':
-    config = util.load_config("../../configuration.yaml")
-    b = util.init_browser(headless=False, agent=config.pc_user_agent)

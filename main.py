@@ -103,11 +103,17 @@ def check_then_run():
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=check_then_run, trigger="interval", seconds=20)
-    scheduler.start()
-    app.run(debug=not config.debug)
-    atexit.register(lambda: scheduler.shutdown())
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(func=check_then_run, trigger="interval", seconds=20)
+    # scheduler.start()
+    # app.run(debug=not config.debug)
+    # atexit.register(lambda: scheduler.shutdown())
+    b = util.init_browser(headless=False, agent=config.pc_user_agent)
+
+
+
+
+
 # PB PASSWORD C!ddKm9R5ESTJJz6
 #
 """
