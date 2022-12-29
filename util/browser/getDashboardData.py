@@ -37,6 +37,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
         return None
     return dashboard
 
+
 def load_dashboard_data(browser: WebDriver) -> DashboardData:
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     logger.info("loading dashboard data")
