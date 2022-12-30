@@ -8,7 +8,6 @@ import logging
 import sys
 import atexit
 
-from flask import Flask, render_template, redirect, Response
 from apscheduler.schedulers.background import BackgroundScheduler
 import flet as ft
 
@@ -40,37 +39,6 @@ config: util.Config = util.load_config("configuration.yaml")  # load config from
 logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
 db = database.DatabaseAccess(url=config.database_url)  # create database connection
 logger.info(f"Connection to database ({config.database_url}) was successful.")
-
-app = Flask(__name__, static_folder="./static", static_url_path="")  # init flask
-
-
-@app.route("/")
-def index():
-    logger.info("Serving index webpage.")
-    return render_template("index.html", accounts=db.read(), active_threads=[t.name for t in threading.enumerate()])
-
-
-@app.route("/log")
-def log():
-    with open("farmer.log", "r") as file:
-        return list(reversed(list(reversed(file.readlines()))[:20]))
-
-
-@app.route("/exec_single_account/<account_id>")
-def exec_single_account(account_id: int):
-    account: util.MicrosoftAccount = [a for a in db.read() if a.id == account_id][0]
-    threading.Thread(
-        name=account.email,
-        target=util.exec_farmer,
-        kwargs={"account": account, "config": config, "db": db}
-    ).start()
-    return redirect("/")
-
-
-@app.template_filter('strftime')
-def _jinja2_filter_datetime(date: datetime.datetime) -> str:
-    return date.strftime("%Y-%m-%d %H:%M")
-
 
 def run_sequential_threads(accounts: list[util.MicrosoftAccount]):
     for account in accounts:  # loop over given accounts
