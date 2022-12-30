@@ -16,7 +16,7 @@ This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/cha
 
 The project has a few components to deploying for development.
 - Database: Pocketbase
-- Flask Server / Farmer Scripts
+- Flet (Flutter) Server / Farmer Scripts
 - Chromedriver (for selenium)
 
 
@@ -31,7 +31,7 @@ Currently, no specific Chromedriver version is required. The Chromedriver must b
 
 **WIP**
 
-### Flask Server / Farmer Scripts
+### Flet Server / Farmer Scripts
 
 Clone this repository and navigate to the root of the project. 
 
