@@ -97,9 +97,7 @@ def get_log() -> str:
 
 
 def is_currently_running(account: util.MicrosoftAccount) -> bool:
-    c = bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
-
-    return c
+    return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
 
 
 def remove_account(email):
@@ -117,6 +115,10 @@ def add_account(email, password):
         lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
         points=0
     ))
+
+
+def is_seq_thread_executor_running():
+    return bool(len([t.name for t in threading.enumerate() if "@" in t.name]))
 
 
 def calc_hours_ago(account: util.MicrosoftAccount) -> str:
@@ -227,7 +229,10 @@ def main_screen(page: ft.Page):
                         ft.IconButton(
                             icon=ft.icons.CLOSE,
                             tooltip="Remove Account",
-                            on_click=lambda e: [remove_account(e.control.data), hydrate()],
+                            on_click=lambda e: [
+                                remove_account(e.control.data) if is_seq_thread_executor_running() else None,
+                                hydrate()
+                            ],
                             data=account.email
                         )
                     )
@@ -351,7 +356,7 @@ def main_screen(page: ft.Page):
 
                 ),
                 divider,
-                log_display,
+                log_display
             ],
             spacing=0,
             expand=True,
@@ -371,7 +376,10 @@ def main_screen(page: ft.Page):
                         ft.IconButton(
                             icon=ft.icons.CLOSE,
                             tooltip="Remove Account",
-                            on_click=lambda e: [remove_account(e.control.data), hydrate()],
+                            on_click=lambda e: [
+                                remove_account(e.control.data) if is_seq_thread_executor_running() else None,
+                                hydrate()
+                            ],
                             data=account.email
                         )
                     )
@@ -394,7 +402,7 @@ def main_screen(page: ft.Page):
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=check_then_run, trigger="interval", seconds=30)
-    # scheduler.start()
+    scheduler.start()
 
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())

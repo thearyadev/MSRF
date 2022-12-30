@@ -35,6 +35,7 @@ class DatabaseConfig:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 email TEXT UNIQUE,
                 password TEXT,
+                points INTEGER,
                 lastExec TIMESTAMP
             )
             """

@@ -52,9 +52,9 @@ class DatabaseAccess(database.DatabaseConfig):
     def insert(self, account: util.MicrosoftAccount):
         self.cursor.execute(
             """
-            INSERT INTO MicrosoftAccount (email, password, lastExec) VALUES (?, ?, ?)
+            INSERT INTO MicrosoftAccount (email, password, lastExec, points) VALUES (?, ?, ?, ?)
             """,
-            (account.email, account.password, account.lastExec)
+            (account.email, account.password, account.lastExec, account.points)
         )
         self.connection.commit()
 
@@ -70,10 +70,10 @@ class DatabaseAccess(database.DatabaseConfig):
         self.cursor.execute(
             """
             UPDATE MicrosoftAccount
-            SET email = ?, password = ?, lastExec = ?
+            SET email = ?, password = ?, lastExec = ?, points = ?
             WHERE id = ?
             """,
-            (account.email, account.password, account.lastExec, account.id)
+            (account.email, account.password, account.lastExec, account.points, account.id)
         )
         self.connection.commit()
 
