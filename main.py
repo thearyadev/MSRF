@@ -1,4 +1,5 @@
 import datetime
+import re
 import threading
 import time
 import util
@@ -7,9 +8,11 @@ import database
 import logging
 import sys
 import atexit
-
+import pathlib
 from apscheduler.schedulers.background import BackgroundScheduler
 import flet as ft
+import copy
+
 """
 github.com/thearyadev/msrf
 
@@ -22,10 +25,11 @@ What does this file do?
 5. background scheduler to check which accounts are ready to run
 """
 
+
 def configure_loggers():
     logging.basicConfig(
-        format='[%(threadName)s] [%(levelname)s]'
-               ' [%(filename)s] [Line %(lineno)d] %(message)s',
+        format='[%(threadName)s][%(levelname)s]'
+               '[%(filename)s][Line %(lineno)d] %(message)s',
         handlers=[
             logging.FileHandler("farmer.log"),
             logging.StreamHandler(),
@@ -47,7 +51,7 @@ configure_loggers()
 logger: logging.Logger = logging.getLogger("msrf")  # create msrf logger
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
-db = database.DatabaseAccess(url=config.database_url)  # create database connection
+db = database.DatabaseAccess()  # create database connection
 logger.info(f"Connection to database ({config.database_url}) was successful.")
 
 
@@ -100,6 +104,33 @@ def is_currently_running(account: util.MicrosoftAccount) -> bool:
 
 def remove_account(email):
     logger.info(f"Removing {email}")
+    account = [a for a in db.read() if a.email == email]
+    if len(account):
+        db.delete(account[0])
+
+
+def add_account(email, password):
+    logger.info(f"Adding {email}")
+    db.insert(util.MicrosoftAccount(
+        email=email,
+        password=password,
+        lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
+        points=0
+    ))
+
+
+def calc_hours_ago(account: util.MicrosoftAccount) -> str:
+    tsec = (
+            datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
+    ).total_seconds()
+
+    if tsec > 2_592_000:
+        return "Ready"
+
+    if is_currently_running(account):
+        return "Currently Running"
+
+    return f"{tsec / 60 / 60:.0f} hrs ago"
 
 
 def main_screen(page: ft.Page):
@@ -131,9 +162,10 @@ def main_screen(page: ft.Page):
                             "their terms of service.", italic=True, color=ft.colors.RED),
                     ft.Row(
                         [
-                            ft.TextField(label="Email", autofocus=True),
-                            ft.TextField(label="Password"),
-                            ft.ElevatedButton("Add", on_click=close_bs)
+                            email_field := ft.TextField(label="Email", autofocus=True),
+                            password_field := ft.TextField(label="Password"),
+                            ft.ElevatedButton("Add",
+                                              on_click=lambda _: [close_bs(_), add_account_btn_handler(), hydrate()])
                         ],
 
                     )
@@ -145,6 +177,23 @@ def main_screen(page: ft.Page):
         open=False,
         on_dismiss=bs_dismissed,
     )
+
+    def add_account_btn_handler():
+        if not email_field.value:
+            return
+
+        if not password_field.value:
+            return
+
+        if "@" not in email_field.value:
+            return
+
+        e, p = copy.copy(email_field.value), copy.copy(password_field.value)
+        email_field.value = ""
+        password_field.value = ""
+        page.update()
+        add_account(e, p)
+
     page.overlay.append(bs)
 
     page.title = "Microsoft Rewards Farmer"
@@ -154,6 +203,9 @@ def main_screen(page: ft.Page):
     page.window_maximizable = False
 
     log_text = ft.Text(get_log(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
+    add_account_prompt = ft.Text("Click the + button below to add an account.",
+                                 width=600,
+                                 text_align=ft.TextAlign.CENTER)
     accountsTable = ft.DataTable(
         width=600 if not page.web else 800,
         horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
@@ -169,11 +221,7 @@ def main_screen(page: ft.Page):
                 cells=[
                     ft.DataCell(ft.Text(account.email)),
                     ft.DataCell(
-                        ft.Text(
-                            f"{(((datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec).total_seconds() / 60) / 60):.0f} hrs ago"
-                            if not is_currently_running(account)
-                            else "Currently Running"
-                        )),
+                        ft.Text(calc_hours_ago(account))),
                     ft.DataCell(ft.Text(str(account.points))),
                     ft.DataCell(
                         ft.IconButton(
@@ -215,12 +263,14 @@ def main_screen(page: ft.Page):
             # if log is disabled
             log_display.visible = True
             accountsTable.width = 600
+            add_account_prompt.width = 600
             divider.visible = True
             page.update()
             return
         # if log is enabled
         log_display.visible = False
         accountsTable.width = 1240
+        add_account_prompt.width = 1240
         divider.visible = False
         page.update()
         return
@@ -253,9 +303,9 @@ def main_screen(page: ft.Page):
                             ],
                             spacing=0
                         ),
-                        ft.Container(
+                        accounts_container := ft.Container(
                             alignment=ft.alignment.center,
-                            content=accountsTable,
+                            content=accountsTable if len(db.read()) else add_account_prompt,
                             expand=True,
                         ),
                         ft.Row(
@@ -314,11 +364,7 @@ def main_screen(page: ft.Page):
                 cells=[
                     ft.DataCell(ft.Text(account.email)),
                     ft.DataCell(
-                        ft.Text(
-                            f"{(((datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec).total_seconds() / 60) / 60):.0f} hrs ago"
-                            if not is_currently_running(account)
-                            else "Currently Running"
-                        )
+                        ft.Text(calc_hours_ago(account))
                     ),
                     ft.DataCell(ft.Text(str(account.points))),
                     ft.DataCell(
@@ -335,10 +381,10 @@ def main_screen(page: ft.Page):
         ]
 
         log_text.value = get_log()
+        accounts_container.content = accountsTable if len(accountsTable.rows) else add_account_prompt
         page.update()
 
     page.window_visible = True
-    page.window_center()
 
     while True:
         time.sleep(4)
@@ -353,18 +399,3 @@ if __name__ == '__main__':
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
 # PB PASSWORD C!ddKm9R5ESTJJz6
-#
-"""
-
-let vars = []
-
-for (var b in window){
-	if (window.hasOwnProperty(b)){
-	vars.push(b)
-{
-}
-
-vars.sort()
-console.log(vars)
-
-"""

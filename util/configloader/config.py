@@ -18,6 +18,7 @@ class Config(BaseModel):
     minimum_auto_rerun_delay_seconds: int | None
     gui_window_opacity: float | None
     operation_mode: str | None
+    pocket_base_binary_path: str | None
 
 
 def load_config(file: str) -> Config:
