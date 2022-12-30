@@ -106,7 +106,7 @@ def main_screen(page: ft.Page):
                             "the credentials are correct.", italic=True, color=ft.colors.BLUE_GREY),
                     ft.Row(
                         [
-                            ft.TextField(label="Email"),
+                            ft.TextField(label="Email", autofocus=True),
                             ft.TextField(label="Password"),
                             ft.ElevatedButton("Add", on_click=close_bs)
                         ],
@@ -192,10 +192,17 @@ def main_screen(page: ft.Page):
             ],
             visible=not page.web,
         ),
+
         ft.Row(
             [
+
                 ft.Column(
                     controls=[
+                        ft.IconButton(
+                            icon=ft.icons.PERSON_SEARCH_ROUNDED,
+                            tooltip="View Project on GitHub",
+                            on_click=lambda _: page.launch_url("https://github.com/thearyadev/MSRF")
+                        ),
                         ft.Container(
                             alignment=ft.alignment.center,
                             content=accountsTable,
