@@ -2,7 +2,6 @@ import datetime
 import threading
 import time
 import util
-from types import SimpleNamespace
 from rich import print
 import database
 import logging
@@ -14,7 +13,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import flet as ft
 
 
-def configure_loggers() -> list[None]:
+def configure_loggers():
     logging.basicConfig(
         format='[%(threadName)s] [%(levelname)s]'
                ' [%(filename)s] [Line %(lineno)d] %(message)s',
@@ -116,12 +115,15 @@ def remove_account(email):
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
     page.window_title_bar_buttons_hidden = True
+    print(config.gui_window_opacity)
+    page.window_opacity = config.gui_window_opacity
+
     def show_bs(e):
         bs.open = True
         bs.update()
 
     def bs_dismissed(e):
-        logger.info("dismissed")
+        ...
 
     def close_bs(e):
         bs.open = False
@@ -156,6 +158,7 @@ def main_screen(page: ft.Page):
     page.window_height = 720
     page.window_width = 1280
     page.window_resizable = False
+    page.window_maximizable = False
 
     log_text = ft.Text(get_log(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
     accountsTable = ft.DataTable(
@@ -187,6 +190,29 @@ def main_screen(page: ft.Page):
             ) for account in db.read()
         ],
     )
+
+    log_display = ft.Column(
+        expand=True,
+        controls=[log_text],
+        scroll=ft.ScrollMode.ALWAYS,
+    )
+    divider = ft.VerticalDivider()
+
+    def toggle_log(_):
+        if not log_display.visible:
+            # if log is disabled
+            log_display.visible = True
+            accountsTable.width = 600
+            divider.visible = True
+            page.update()
+            return
+        # if log is enabled
+        log_display.visible = False
+        accountsTable.width = 1240
+        divider.visible = False
+        page.update()
+        return
+
     page.add(
         ft.Row(
             [
@@ -194,7 +220,7 @@ def main_screen(page: ft.Page):
                     ft.Container(ft.Text("Microsoft Rewards Farmer"),
                                  bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
                 ),
-                ft.IconButton(ft.icons.MINIMIZE, on_click=lambda _: page.window_close()),
+                ft.IconButton(ft.icons.CLOSE, on_click=lambda _: page.window_close()),
             ],
             visible=not page.web,
         ),
@@ -214,17 +240,26 @@ def main_screen(page: ft.Page):
                                     tooltip="Add Account",
                                     on_click=show_bs
                                 ),
-                            ]
+                                ft.IconButton(
+                                    icon=ft.icons.TOGGLE_ON,
+                                    tooltip="Toggle Log Display",
+                                    on_click=toggle_log,
+                                    visible=not page.web
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.LOGO_DEV_SHARP,
+                                    tooltip="Download Full Log File",
+                                ),
+                                ft.Text("The farmer will run as and when needed. " if page.web else
+                                        "The farmer will run as and when needed, keep this application open.",
+                                        italic=True, color=ft.colors.BLUE_GREY)
+                            ],
                         )
                     ],
 
                 ),
-                ft.VerticalDivider(),
-                ft.Column(
-                    expand=True,
-                    controls=[log_text],
-                    scroll=ft.ScrollMode.ALWAYS,
-                ),
+                divider,
+                log_display,
             ],
             spacing=0,
             expand=True,

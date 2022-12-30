@@ -6,4 +6,5 @@ GEO: "CA"
 TZ: '-300'
 debug: True
 minimum_auto_rerun_delay_seconds: 100800
+gui_window_opacity: 0.9
 
