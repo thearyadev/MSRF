@@ -58,8 +58,6 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     account.points = util.getPointCount(browser)  # will redirect to bing.com. Go back to baseurl
     db.write(account)
     logger.info(f"Current Points: {account.points}")
-    browser.quit()
-    return
 
     browser.get(BASE_URL)  # return
 
