@@ -17,6 +17,7 @@ class Config(BaseModel):
     debug: bool | None
     minimum_auto_rerun_delay_seconds: int | None
     gui_window_opacity: float | None
+    operation_mode: str | None
 
 
 def load_config(file: str) -> Config:

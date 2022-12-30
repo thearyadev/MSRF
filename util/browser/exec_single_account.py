@@ -1,3 +1,4 @@
+import datetime
 import threading
 
 import selenium.common.exceptions
@@ -18,6 +19,9 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     :config generic configuration for this project
     :db DatabaseAccess class to record MicrosoftAccount changes
     """
+
+    account.lastExec = datetime.datetime.now(tz=datetime.timezone.utc)
+    db.write(account=account)
 
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
 
@@ -120,9 +124,6 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     logger.info(F"Closing Point Total: {account.points}")
 
     browser.quit()
-
-
-
 
 
 """
