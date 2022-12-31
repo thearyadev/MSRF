@@ -144,6 +144,7 @@ def force_exec():
         account.lastExec = account.lastExec - datetime.timedelta(days=365)
         db.write(account)
 
+
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
     page.window_title_bar_buttons_hidden = True
@@ -222,7 +223,7 @@ def main_screen(page: ft.Page):
         horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
         divider_thickness=0,
         columns=[
-            ft.DataColumn(ft.Text("Account")),
+            ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
             ft.DataColumn(ft.Text("Last Exec")),
             ft.DataColumn(ft.Text("Points"), numeric=True),
             ft.DataColumn(ft.Text("")),
@@ -230,7 +231,7 @@ def main_screen(page: ft.Page):
         rows=[
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(account.email)),
+                    ft.DataCell(ft.Text(account.email), on_long_press=lambda event: print(event.control.content.value)),
                     ft.DataCell(
                         ft.Text(calc_hours_ago(account))),
                     ft.DataCell(ft.Text(str(account.points))),
@@ -245,8 +246,7 @@ def main_screen(page: ft.Page):
                             data=account.email
                         )
                     )
-                ]
-
+                ],
             ) for account in db.read()
         ],
     )
@@ -271,6 +271,32 @@ def main_screen(page: ft.Page):
         page.theme_mode = ft.ThemeMode.DARK
         page.update()
         return
+
+
+
+    def show_del_acct_dialog(e):
+        delete_account_dialog.data = e.control.content.value
+        page.dialog = delete_account_dialog
+        delete_account_dialog.open = True
+        page.update()
+
+    def hide_del_acct_dialog(e):
+
+        delete_account_dialog.open = False
+        page.update()
+        if e.control.data:
+            remove_account(delete_account_dialog.data)
+        delete_account_dialog.data = ""
+
+    delete_account_dialog = ft.AlertDialog(
+        title=ft.Text("Remove Account"),
+        modal=True,
+        actions=[
+            ft.TextButton("Yes", on_click=hide_del_acct_dialog, data=True),
+            ft.TextButton("No", on_click=hide_del_acct_dialog, data=False),
+        ],
+        actions_alignment=ft.MainAxisAlignment.END
+    )
 
     def toggle_log(_):
         if not log_display.visible:
@@ -388,7 +414,7 @@ def main_screen(page: ft.Page):
         accountsTable.rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(account.email)),
+                    ft.DataCell(ft.Text(account.email), on_long_press=show_del_acct_dialog),
                     ft.DataCell(
                         ft.Text(calc_hours_ago(account))
                     ),
@@ -413,20 +439,18 @@ def main_screen(page: ft.Page):
         accounts_container.content = accountsTable if len(accountsTable.rows) else add_account_prompt
 
         if not page.client_storage.get("farmer_prompt_shown"):
-            print("Still counting down")
             try:
                 secs = (
-                        scheduler.get_jobs()[0].next_run_time - datetime.datetime.now(
-                    tz=pytz.timezone('America/New_York'))
+                        scheduler.get_jobs()[0]
+                        .next_run_time - datetime.datetime.now(tz=pytz.timezone('America/New_York'))
                 ).total_seconds()
                 if secs < 1.5:
-                    print("zero has been reached.")
                     page.client_storage.set("farmer_prompt_shown", True)
 
                 bg_process_prompt.value = f"Starting Farmer in: {secs:.0f} seconds"
 
             except Exception as e:
-                bg_process_prompt.value = e
+                bg_process_prompt.value = "Paused"
         else:
             bg_process_prompt.value = ""
 
@@ -435,14 +459,21 @@ def main_screen(page: ft.Page):
     page.window_visible = True
 
     while True:
-        time.sleep(1)
+        time.sleep(config.hydration_rate)
         hydrate()
 
 
 if __name__ == '__main__':
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=check_then_run, trigger="interval", seconds=10)
-    scheduler.start()
-    ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
-    atexit.register(lambda: scheduler.shutdown())
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(func=check_then_run, trigger="interval", seconds=90)
+    # # scheduler.start()
+    # ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
+    # atexit.register(lambda: scheduler.shutdown())
+
+    with open("dashboard_data_schema_source.json", "r") as file:
+        import json
+
+        d = util.DashboardData(**json.load(file))
+        print(d.punchCards[0].childPromotions[0].attributes)
+
 # PB PASSWORD C!ddKm9R5ESTJJz6
