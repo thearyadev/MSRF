@@ -12,6 +12,7 @@ import pathlib
 from apscheduler.schedulers.background import BackgroundScheduler
 import flet as ft
 import copy
+import pytz
 
 """
 github.com/thearyadev/msrf
@@ -34,7 +35,7 @@ def configure_loggers():
             logging.FileHandler("farmer.log"),
             logging.StreamHandler(),
         ],
-        level=logging.DEBUG)
+        level=logging.NOTSET)
     logging.getLogger("werkzeug").setLevel(logging.CRITICAL)  # disable flask logger
     logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
     logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.CRITICAL)
@@ -127,13 +128,21 @@ def calc_hours_ago(account: util.MicrosoftAccount) -> str:
     ).total_seconds()
 
     if tsec > 2_592_000:
-        return "Ready"
+        return "Ready (Waiting)"
 
     if is_currently_running(account):
         return "Currently Running"
-
+    thour = tsec / 60 / 60
+    if thour < 1:
+        return "Recently"
     return f"{tsec / 60 / 60:.0f} hrs ago"
 
+
+def force_exec():
+    accounts = db.read()
+    for account in accounts:
+        account.lastExec = account.lastExec - datetime.timedelta(days=365)
+        db.write(account)
 
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
@@ -315,6 +324,12 @@ def main_screen(page: ft.Page):
                         ),
                         ft.Row(
                             [
+                                bg_process_prompt := ft.Text("",
+                                                             color=ft.colors.BLUE_GREY, italic=True)
+                            ]
+                        ),
+                        ft.Row(
+                            [
                                 ft.IconButton(
                                     icon=ft.icons.ADD,
                                     tooltip="Add Account",
@@ -332,9 +347,14 @@ def main_screen(page: ft.Page):
                                     on_click=toggle_dark,
                                 ),
                                 ft.IconButton(
-                                    icon=ft.icons.LOCK_RESET,
-                                    tooltip="Reset Configuration",
+                                    icon=ft.icons.BUG_REPORT,
+                                    tooltip="Debugging Mode",
                                     on_click=toggle_dark,
+                                ),
+                                ft.IconButton(
+                                    icon=ft.icons.DOUBLE_ARROW,
+                                    tooltip="Force Execution (Not Recommended)",
+                                    on_click=lambda _: force_exec(),
                                 ),
                                 ft.Text("Server Mode" if config.operation_mode == "SERVER" else "Application Mode",
                                         italic=True,
@@ -362,6 +382,7 @@ def main_screen(page: ft.Page):
             expand=True,
         )
     )
+    page.client_storage.set("farmer_prompt_shown", False)
 
     def hydrate():
         accountsTable.rows = [
@@ -390,20 +411,38 @@ def main_screen(page: ft.Page):
 
         log_text.value = get_log()
         accounts_container.content = accountsTable if len(accountsTable.rows) else add_account_prompt
+
+        if not page.client_storage.get("farmer_prompt_shown"):
+            print("Still counting down")
+            try:
+                secs = (
+                        scheduler.get_jobs()[0].next_run_time - datetime.datetime.now(
+                    tz=pytz.timezone('America/New_York'))
+                ).total_seconds()
+                if secs < 1.5:
+                    print("zero has been reached.")
+                    page.client_storage.set("farmer_prompt_shown", True)
+
+                bg_process_prompt.value = f"Starting Farmer in: {secs:.0f} seconds"
+
+            except Exception as e:
+                bg_process_prompt.value = e
+        else:
+            bg_process_prompt.value = ""
+
         page.update()
 
     page.window_visible = True
 
     while True:
-        time.sleep(4)
+        time.sleep(1)
         hydrate()
 
 
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=check_then_run, trigger="interval", seconds=30)
+    scheduler.add_job(func=check_then_run, trigger="interval", seconds=10)
     scheduler.start()
-
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
 # PB PASSWORD C!ddKm9R5ESTJJz6
