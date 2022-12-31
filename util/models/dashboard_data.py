@@ -6,3 +6,4 @@ from rich import print
 
 
 class DashboardData(GeneratedDashboardDataModel): ...
+
