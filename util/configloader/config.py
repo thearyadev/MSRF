@@ -19,6 +19,7 @@ class Config(BaseModel):
     gui_window_opacity: float | None
     operation_mode: str | None
     pocket_base_binary_path: str | None
+    hydration_rate: int | None
 
 
 def load_config(file: str) -> Config:
