@@ -10,3 +10,4 @@ gui_window_opacity: 0.9
 # operation_mode: SERVER
 operation_mode: APPLICATION
 pocket_base_binary_path: "./bin/pocketbase.exe"
+hydration_rate: 2 # 2 or below feels good. Above 2 causes some delays when screen elements change
