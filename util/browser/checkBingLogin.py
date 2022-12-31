@@ -95,7 +95,11 @@ def verify_bing_login(browser: WebDriver) -> bool:
     """
     logger: logging.Logger = logging.getLogger("msrf")
     # Access Bing.com
-    browser.get('https://bing.com/')
+    browser.get(
+        "https://www.bing.com/fd/auth/signin?action=interactive&provider=windows_live_id&return_url=https%3a%2f%2fwww"
+        ".bing.com%2f%3ftoWww%3d1%26redig%3d0A10E5FC496E4B2CB8EFC9C629932938%26wlexpsignin%3d1&src=EXPLICIT&sig"
+        "=1555A6A1CA736D690B78B42BCBD96C3E"
+    )
     # Wait 8 seconds
 
     try:
