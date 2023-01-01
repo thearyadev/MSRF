@@ -56,7 +56,7 @@ def complete_punch_cards(browser: WebDriver, base_url: str):
                            userCode + path.split(userCode)[1]
                     util.complete_punch_card(browser, url, punchCard['childPromotions'])
         except Exception as e:
-            logger.critical("Uncaught exception in completing punch cards. Likely malformed data. Resetting tabs")
+            logger.critical(f"Uncaught exception in completing punch cards. Likely malformed data. Resetting tabs. {e}")
             util.resetTabs(browser, BASE_URL=base_url)
     time.sleep(2)
     logger.info("Returning home.")
