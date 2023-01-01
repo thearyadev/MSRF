@@ -2,6 +2,9 @@ import datetime
 import re
 import threading
 import time
+
+import flet.buttons
+
 import util
 from rich import print
 import database
@@ -24,6 +27,8 @@ What does this file do?
 3. Configures and runs UI/Flet server. 
 4. methods for starting and managing farmer processes using sequentially run threads
 5. background scheduler to check which accounts are ready to run
+
+Also... idk how to build ui's. this file is messy. 
 """
 
 
@@ -171,13 +176,23 @@ def main_screen(page: ft.Page):
                     ft.Text("Note: Ensure that the Microsoft Rewards onboarding tasks have been completed. Make sure "
                             "the credentials are correct.", italic=True, color=ft.colors.BLUE_GREY),
                     ft.Text("Your account may be banned by Microsoft as this application is a direct violation of "
-                            "their terms of service.", italic=True, color=ft.colors.RED),
+                            "their terms of service. Avoid using accounts that have any importance",
+                            italic=True, color=ft.colors.RED, tooltip="MSRF will attempt to avoid bans. This may not "
+                                                                      "be successful, as MS Rewards will update "
+                                                                      "faster than MSRF can. "),
                     ft.Row(
                         [
                             email_field := ft.TextField(label="Email", autofocus=True),
                             password_field := ft.TextField(label="Password"),
                             ft.ElevatedButton("Add",
-                                              on_click=lambda _: [close_bs(_), add_account_btn_handler(), hydrate()])
+                                              on_click=lambda _: [close_bs(_), add_account_btn_handler(), hydrate()],
+                                              width=200,
+                                              height=60,
+                                              bgcolor=flet.colors.GREEN,
+                                              color=flet.colors.WHITE,
+                                              style=ft.ButtonStyle(
+                                                  shape=flet.buttons.RoundedRectangleBorder(radius=5)
+                                              ))
                         ],
 
                     )
@@ -226,7 +241,6 @@ def main_screen(page: ft.Page):
             ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
             ft.DataColumn(ft.Text("Last Exec")),
             ft.DataColumn(ft.Text("Points"), numeric=True),
-            ft.DataColumn(ft.Text("")),
         ],
         rows=[
             ft.DataRow(
@@ -235,17 +249,6 @@ def main_screen(page: ft.Page):
                     ft.DataCell(
                         ft.Text(calc_hours_ago(account))),
                     ft.DataCell(ft.Text(str(account.points))),
-                    ft.DataCell(
-                        ft.IconButton(
-                            icon=ft.icons.CLOSE,
-                            tooltip="Remove Account",
-                            on_click=lambda e: [
-                                remove_account(e.control.data) if is_seq_thread_executor_running() else None,
-                                hydrate()
-                            ],
-                            data=account.email
-                        )
-                    )
                 ],
             ) for account in db.read()
         ],
@@ -419,17 +422,6 @@ def main_screen(page: ft.Page):
                         ft.Text(calc_hours_ago(account))
                     ),
                     ft.DataCell(ft.Text(str(account.points))),
-                    ft.DataCell(
-                        ft.IconButton(
-                            icon=ft.icons.CLOSE,
-                            tooltip="Remove Account",
-                            on_click=lambda e: [
-                                remove_account(e.control.data) if is_seq_thread_executor_running() else None,
-                                hydrate()
-                            ],
-                            data=account.email
-                        )
-                    )
                 ]
 
             ) for account in db.read()
@@ -464,16 +456,10 @@ def main_screen(page: ft.Page):
 
 
 if __name__ == '__main__':
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(func=check_then_run, trigger="interval", seconds=90)
-    # # scheduler.start()
-    # ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
-    # atexit.register(lambda: scheduler.shutdown())
-
-    with open("dashboard_data_schema_source.json", "r") as file:
-        import json
-
-        d = util.DashboardData(**json.load(file))
-        print(d.punchCards[0].childPromotions[0].attributes)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=check_then_run, trigger="interval", seconds=90)
+    scheduler.start()
+    ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
+    atexit.register(lambda: scheduler.shutdown())
 
 # PB PASSWORD C!ddKm9R5ESTJJz6
