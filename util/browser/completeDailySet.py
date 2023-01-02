@@ -7,6 +7,7 @@ import urllib.parse
 from util import deprecated
 
 
+@deprecated
 def complete_daily_set(browser: WebDriver, base_url: str):
     """
     Completes the daily set of an authenticated microsoft account.
@@ -65,3 +66,19 @@ def complete_daily_set(browser: WebDriver, base_url: str):
         except Exception as e:
             logger.critical(f"Unknown exception was raised in daily set module. {e}")
             util.resetTabs(browser, base_url)
+
+
+def exec_daily_set(browser: WebDriver):
+    """Completes the daily set section"""
+    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    #accountData: util.DashboardData = util.load_dashboard_data(browser)
+    # load the daily set data.
+    with open("../../dashboard_data_schema_source.json", "r") as file:
+        import json
+        accountData = util.DashboardData(**json.load(file))
+        print(accountData.dailySetPromotions)
+    todayDate = datetime.today().strftime('%m/%d/%Y')
+
+
+if __name__ == '__main__':
+    exec_daily_set(0)

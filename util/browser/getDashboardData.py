@@ -40,6 +40,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
 def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     logger.info("loading dashboard data")
+    browser.get("https://rewards.bing.com")
     try:
         return util.DashboardData(**browser.execute_script("return dashboard"))
     except Exception as e:

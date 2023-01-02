@@ -33,7 +33,7 @@ from .browser.getRelatedTerms import *
 from .browser.exec_single_account import *
 from .deprecate import deprecated
 from .browser.isMicrosoftRewards import isMicrosoftRewards
-from .models.codegen_models import GeneratedDashboardDataModel
+from .models.dashboard_json_models import GeneratedDashboardDataModel
 from .models.dashboard_data import DashboardData
 
 
