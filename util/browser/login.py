@@ -7,59 +7,6 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 import logging
 from util import deprecated
 
-
-@deprecated
-def login(browser: WebDriver, email: str, pwd: str, isMobile: bool = False):
-    logger: logging.Logger = logging.getLogger("msrf")
-
-    # Access to bing.com
-    browser.get('https://login.live.com/')
-    # Wait complete loading
-    util.waitUntilVisible(browser, By.ID, 'loginHeader', 10)
-    # Enter email
-    logger.info("Writing email...")
-    browser.find_element(By.NAME, "loginfmt").send_keys(email)
-    # Click next
-    browser.find_element(By.ID, 'idSIButton9').click()
-    # Wait 2 seconds
-    time.sleep(2)
-    # Wait complete loading
-    util.waitUntilVisible(browser, By.ID, 'loginHeader', 10)
-    # Enter password
-    # browser.find_element(By.ID, "i0118").send_keys(pwd)
-    browser.execute_script("document.getElementById('i0118').value = '" + pwd + "';")
-    logger.info("Writing password...")
-    # Click next
-    browser.find_element(By.ID, 'idSIButton9').click()
-    # Wait 5 seconds
-    time.sleep(5)
-    # Click Security Check
-    logger.info("Passing security checks...")
-    try:
-        browser.find_element(By.ID, 'iLandingViewAction').click()
-    except (NoSuchElementException, ElementNotInteractableException) as e:
-        pass
-    try:
-        browser.find_element(By.ID, 'iNext').click()
-    except:
-        pass
-    # Wait complete loading
-    try:
-        util.waitUntilVisible(browser, By.ID, 'KmsiCheckboxField', 10)
-    except (TimeoutException) as e:
-        pass
-    # Click next
-    try:
-        browser.find_element(By.ID, 'idSIButton9').click()
-        # Wait 5 seconds
-        time.sleep(5)
-    except (NoSuchElementException, ElementNotInteractableException) as e:
-        pass
-    # Check Login
-    logger.info("Validating Bing login state...")
-    util.checkBingLogin(browser, isMobile=isMobile)
-
-
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:
     """
     Logs into Microsoft Rewards (and bing) in the current browser instance for the given account.
