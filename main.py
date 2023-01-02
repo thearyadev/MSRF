@@ -3,6 +3,7 @@ import re
 import threading
 import time
 
+import apscheduler.triggers.base
 import flet.buttons
 
 import util
@@ -61,42 +62,6 @@ db = database.DatabaseAccess()  # create database connection
 logger.info(f"Connection to database ({config.database_url}) was successful.")
 
 
-def run_sequential_threads(accounts: list[util.MicrosoftAccount]):
-    for account in accounts:  # loop over given accounts
-        thread = threading.Thread(  # init thread object
-            name=account.email,  # name of thread is the account email
-            target=util.exec_farmer,
-            kwargs={"account": account, "config": config, "db": db}
-        )
-        thread.start()  # start thread
-        # wait for 3600 seconds for the thread.
-        thread.join(timeout=3600)
-        # once the thread exits
-        # if the thread is still running, its name will be changed to indicate that the thread is unresponsive.
-        # if the thread exits, the next line does nothing.
-        thread.name = f"{account.email} [hung]"
-
-
-def check_then_run():
-    logger.info("Checking if any accounts are ready...")
-    accounts_ready = list()
-    for account in db.read():
-        if (datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec).total_seconds() >= \
-                config.minimum_auto_rerun_delay_seconds:
-            logger.info(f"{account.email} is ready.")
-            accounts_ready.append(account)
-
-        else:
-            logger.info(f"{account.email} is not ready.")
-
-    if len([t.name for t in threading.enumerate() if "@" in t.name]):
-        logger.warning("Attempted to start sequential thread process"
-                       " while existing process is already running. Cancelled.")
-        return
-
-    run_sequential_threads(accounts=accounts_ready)
-
-
 def get_log() -> str:
     with open("farmer.log", "r") as file:
         return "".join(list((list(reversed(file.readlines()))[:100])))
@@ -121,10 +86,6 @@ def add_account(email, password):
         lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
         points=0
     ))
-
-
-def is_seq_thread_executor_running():
-    return bool(len([t.name for t in threading.enumerate() if "@" in t.name]))
 
 
 def calc_hours_ago(account: util.MicrosoftAccount) -> str:
@@ -274,8 +235,6 @@ def main_screen(page: ft.Page):
         page.theme_mode = ft.ThemeMode.DARK
         page.update()
         return
-
-
 
     def show_del_acct_dialog(e):
         delete_account_dialog.data = e.control.content.value
@@ -455,9 +414,42 @@ def main_screen(page: ft.Page):
         hydrate()
 
 
+def pick_and_run():
+    running = bool([t.name for t in threading.enumerate() if "@" in t.name])  # get all active threads by name
+    # the thread names that are active account processes will have an @ in them.
+    # if true, there is something running.
+
+    if not running:
+
+        # 1. Sort accounts by last exec datetime.
+        # 2 if the time between its last execution and now is greater than the defined # of seconds
+        # 3. append
+        validAccounts = [
+            account for account in sorted(db.read(), key=lambda a: a.lastExec)
+            if (
+                       datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
+               ).total_seconds() > config.minimum_auto_rerun_delay_seconds
+        ]
+        if validAccounts:  # if at least one account is eligible
+            threading.Thread(
+                name=validAccounts[0].email,
+                target=util.exec_farmer,
+                kwargs={
+                    "account": validAccounts[0],
+                    "config": config,
+                    "db": db
+                }
+            ).start()
+            logger.log(f"Started thread for {validAccounts[0]}")
+            return
+        logger.info("Eligible account was not found.")
+        return
+    logger.info("Skipping Exec... Existing process detected.")
+
+
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=check_then_run, trigger="interval", seconds=90)
+    scheduler.add_job(func=pick_and_run, trigger="interval", seconds=15)
     scheduler.start()
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
