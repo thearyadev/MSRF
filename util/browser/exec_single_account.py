@@ -74,6 +74,8 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     else:
         logger.info("Successfully completed DAILY SET")
 
+    account.points = util.getPointCount(browser)
+    db.write(account)
     # punch cards
     logger.info("(2/5) Completing PUNCH CARDS")
     try:
@@ -82,6 +84,9 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
         logger.critical(f"Uncaught exception has caused punch cards to fail. {e}")
     else:
         logger.info("Successfully completed PUNCH CARDS")
+
+    account.points = util.getPointCount(browser)
+    db.write(account)
 
     # additional promotions
     logger.info("(3/5) Completing ADDITIONAL PROMOTIONS")
