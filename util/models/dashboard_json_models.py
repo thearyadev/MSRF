@@ -26,6 +26,7 @@ class MobileSearch(BaseModel):
 
 class Counters(BaseModel):
     pcSearch: Optional[List[PcSearch]] = None
+    mobileSearch: Optional[List[MobileSearch]] = None
 
 
 class LevelInfo(BaseModel):
@@ -115,4 +116,4 @@ class DashboardDataModel(BaseModel):
 if __name__ == '__main__':
     with open("../../dashboard_data_schema_source.json", "r") as file:
         data = json.load(file)
-        print(DashboardDataModel(**data))
+        print(DashboardDataModel(**data).dailySetPromotions)
