@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import json
-from typing import Any, List, Optional, Dict
+from datetime import datetime
+from typing import Any, List, Optional, Dict, Union
 
-from pydantic import BaseModel, Extra, Field
+from pydantic import BaseModel, Extra, Field, validator
 from rich import print
 
 """
 This file models the data retrieved from rewards.bing.com.
-The data is 4000 lines of JSON. Converted into Pydantic models. 
+The data is 4000 lines of JSON. Converted into Pydantic models with only essential information
 If the data is malformed or changed, this will cause errors. 
- """
+"""
 
 
 class PcSearch(BaseModel):
@@ -41,12 +42,22 @@ class UserStatus(BaseModel):
     counters: Optional[Counters] = None
 
 
+# noinspection PyNestedDecorators
 class DailyPromotion(BaseModel):
     destinationUrl: Optional[str] = None
     complete: Optional[bool] = None
     promotionType: Optional[str] = None
     pointProgress: Optional[int] = None
     pointProgressMax: Optional[int] = None
+    cardNumber: Optional[int | Any] = Field(None, alias="offerId")
+
+    @validator("cardNumber")
+    @classmethod
+    def convert_offerId_to_int(cls, value: str) -> int | Any:
+        try:
+            return int(value[-1])
+        except ValueError:
+            return None
 
 
 class PunchCardParentAttributes(BaseModel):
@@ -85,11 +96,20 @@ class MorePromotion(BaseModel):
     destinationUrl: Optional[str] = None
 
 
+# noinspection PyNestedDecorators
 class DashboardDataModel(BaseModel):
     userStatus: Optional[UserStatus] = None
-    dailySetPromotions: Optional[Dict[str, List[DailyPromotion]]] = None
+    dailySetPromotions: Optional[Dict[Union[datetime, str], List[DailyPromotion]]] = None
     punchCards: Optional[List[PunchCards]] = None
     morePromotions: Optional[List[MorePromotion]] = None
+
+    @validator("dailySetPromotions")
+    @classmethod
+    def validate_promotion_date(cls, value: dict) -> Any:
+        newDict = dict()
+        for promotionDateString, promotionData in value.items():
+            newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
+        return newDict
 
 
 if __name__ == '__main__':
