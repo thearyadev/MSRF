@@ -148,4 +148,3 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     logger.info(F"Closing Point Total: {account.points}")
 
     browser.quit()
-
