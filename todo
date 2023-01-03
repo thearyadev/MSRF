@@ -1,8 +1,6 @@
 - gui
     - hide delete account button while a thread is running
 - farmer
-    - remove all unused deprecated components
     - hook new dashboard data to the farmer
 - database
     - run tests to ensure sqlite3 can run from multiple threads without problems
-- plan bundled binary modules (chromedriver, chrome)
