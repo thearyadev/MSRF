@@ -67,8 +67,9 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     # daily set
     logger.info("(1/5) Completing DAILY SET")
     try:
-        util.complete_daily_set(browser, base_url=BASE_URL)
+        util.exec_daily_set(browser)
     except Exception as e:
+        util.resetTabs(browser, BASE_URL)
         logger.critical(f"Uncaught exception has caused daily set to fail. {e}")
     else:
         logger.info("Successfully completed DAILY SET")
