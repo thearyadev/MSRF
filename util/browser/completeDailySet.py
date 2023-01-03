@@ -169,6 +169,3 @@ def exec_daily_set(browser: WebDriver):
                         logger.critical(f"Legacy code segment caused an exception. {e}")
         else:
             logger.info(f"Daily Set Card #{daily_set_item.cardNumber} is already complete")
-
-if __name__ == '__main__':
-    exec_daily_set(0)
