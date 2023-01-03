@@ -149,28 +149,3 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
 
     browser.quit()
 
-
-"""
-code for mobile searches. to be fixed and implemented at a future date. 
-
-        if remainingSearchesM != 0:
-        browser = util.browser_setup(headless_mode=True, user_agent=config.mobile_user_agent, config=config)
-        logger.log("Logging in for mobile searches...")
-        util.login(browser, account.email, account.password, logger=logger, isMobile=True)
-        logger.log("Mobile login successful.")
-        logger.log("Searches Available. Executing mobile searches...")
-
-        util.bingSearches(browser,
-                          remainingSearchesM,
-                          px=POINTS,
-                          logger=logger,
-                          LANG=config.LANG,
-                          GEO=config.GEO,
-                          agent=config.mobile_user_agent,
-                          isMobile=True)
-        logger.log("Successfully completed all PC searches")
-        browser.quit()
-
-    if remainingSearchesM == 0 and remainingSearches == 0:
-        logger.log("No searches available. Skipping...")
-    """
