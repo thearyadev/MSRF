@@ -440,7 +440,7 @@ def pick_and_run():
                     "db": db
                 }
             ).start()
-            logger.log(f"Started thread for {validAccounts[0]}")
+            logger.info(f"Started thread for {validAccounts[0]}")
             return
         logger.info("Eligible account was not found.")
         return
