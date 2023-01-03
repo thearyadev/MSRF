@@ -112,7 +112,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
         logger.warning("Unable to do mobile searches. Module is not implemented. ")
 
         if remainingSearches != 0:
-            logger.info("Executing searches...")
+            logger.info("Executing PC searches...")
             try:
                 util.bing_searches(browser,
                                    remainingSearches,
@@ -121,12 +121,30 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
                                    GEO=config.GEO,
                                    agent=config.pc_user_agent)
             except Exception as e:
-                logger.critical(f"Unable to complete bing searches. Unexpected error {e}")
+                logger.critical(f"Unable to complete bing pc searches. Unexpected error {e}")
             logger.info("Successfully completed all PC searches")
+
+        if remainingSearchesM != 0:
+            logger.info("Executing Mobile searches...")
+            mobileBrowser = util.init_browser(headless=True, agent=config.mobile_user_agent)
+            try:
+                util.bing_searches(
+                    browser,
+                    remainingSearchesM,
+                    px=account.points,
+                    LANG=config.LANG,
+                    GEO=config.GEO,
+                    agent=config.mobile_user_agent,
+                    isMobile=True
+                )
+            except Exception as e:
+                logger.critical(f"Unable to complete bing mobile searches. Unexpected error {e}")
+            mobileBrowser.quit()
 
     browser.get(BASE_URL)
     account.points = util.getPointCount(browser)
     db.write(account)
+
     logger.info(F"Closing Point Total: {account.points}")
 
     browser.quit()
