@@ -126,10 +126,11 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
 
         if remainingSearchesM != 0:
             logger.info("Executing Mobile searches...")
-            mobileBrowser = util.init_browser(headless=True, agent=config.mobile_user_agent)
+            mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
             try:
+                util.authenticate_microsoft_account(browser=mobileBrowser, account=account)
                 util.bing_searches(
-                    browser,
+                    mobileBrowser,
                     remainingSearchesM,
                     px=account.points,
                     LANG=config.LANG,
@@ -137,6 +138,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
                     agent=config.mobile_user_agent,
                     isMobile=True
                 )
+
             except Exception as e:
                 logger.critical(f"Unable to complete bing mobile searches. Unexpected error {e}")
             mobileBrowser.quit()
