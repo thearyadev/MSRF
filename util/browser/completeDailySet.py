@@ -73,12 +73,9 @@ def complete_daily_set(browser: WebDriver, base_url: str):
 def exec_daily_set(browser: WebDriver):
     """Completes the daily set section"""
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
-    # accountData: util.DashboardData = util.load_dashboard_data(browser)
+    accountData: util.DashboardData = util.load_dashboard_data(browser)
     # load the daily set data.
-    with open("../../dashboard_data_schema_source.json", "r") as file:
-        import json
-        accountData = util.DashboardData(**json.load(file))
-
+    
     # the daily set is a few quizzes and such for the current date.
     # the data will include a dictionary of "dates". yesterday, today, and tomorrow.
     # only Today is can be done.
