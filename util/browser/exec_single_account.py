@@ -77,10 +77,12 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     account.points = util.getPointCount(browser)
     db.write(account)
     # punch cards
+
     logger.info("(2/5) Completing PUNCH CARDS")
     try:
-        util.complete_punch_cards(browser, base_url=BASE_URL)
+        util.exec_punch_cards(browser)
     except Exception as e:
+        util.resetTabs(browser, BASE_URL)
         logger.critical(f"Uncaught exception has caused punch cards to fail. {e}")
     else:
         logger.info("Successfully completed PUNCH CARDS")
