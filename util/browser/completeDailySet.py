@@ -74,6 +74,9 @@ def exec_daily_set(browser: WebDriver):
     """Completes the daily set section"""
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     accountData: util.DashboardData = util.load_dashboard_data(browser)
+    if accountData is None:
+        logging.critical("Unable to complete daily set due to missing dashboard data.")
+        return
     # load the daily set data.
     
     # the daily set is a few quizzes and such for the current date.
@@ -90,6 +93,7 @@ def exec_daily_set(browser: WebDriver):
     if daily_set is None:
         logger.warning("Daily set did not yield any results. Dictionary containing the data does not contain the key "
                        "for the current date.")
+        return
 
     # if daily set was found
     # iterate over all items of the daily set.
