@@ -49,6 +49,10 @@ def is_currently_running(account: util.MicrosoftAccount) -> bool:
     return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
 
 
+def toggle_debug_mode():
+    config.debug = not config.debug
+
+
 def remove_account(email):
     logger.info(f"Removing {email}")
     account = [a for a in db.read() if a.email == email]
@@ -315,27 +319,14 @@ def main_screen(page: ft.Page):
                                 ft.IconButton(
                                     icon=ft.icons.BUG_REPORT,
                                     tooltip="Debugging Mode",
-                                    on_click=toggle_dark,
+                                    on_click=toggle_debug_mode,
                                 ),
                                 ft.IconButton(
                                     icon=ft.icons.DOUBLE_ARROW,
                                     tooltip="Force Execution (Not Recommended)",
                                     on_click=lambda _: force_exec(),
                                 ),
-                                ft.Text("Server Mode" if config.operation_mode == "SERVER" else "Application Mode",
-                                        italic=True,
-                                        color=ft.colors.RED,
-                                        tooltip="Application Mode:\nMSRF will run as a desktop application. This is "
-                                                "very similar to the server instance, but it enables use as an app on "
-                                                "your computer. This can be left running in the background, "
-                                                "or started as needed. \nOnce launched, MSRF will auto start the "
-                                                "farming process after a few seconds.\nAvoid closing the application "
-                                                "if any account states 'Currently Running', as this will cancel the "
-                                                "execution and cause MSRF to wait another day to run that "
-                                                "account.\n\nServer Mode:\nMSRF will run on a high uptime server "
-                                                "instance. This is similar to application mode, but the interface "
-                                                "will be available though the web instead. "
-                                        )
+
                             ],
                         )
                     ],
@@ -354,7 +345,8 @@ def main_screen(page: ft.Page):
         accountsTable.rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text(account.email), on_long_press=show_del_acct_dialog),
+                    ft.DataCell(ft.Text(account.email),
+                                on_long_press=show_del_acct_dialog if not is_currently_running(account) else None),
                     ft.DataCell(
                         ft.Text(calc_hours_ago(account))
                     ),
@@ -431,6 +423,5 @@ if __name__ == '__main__':
     scheduler.start()
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
-
 
 # PB PASSWORD C!ddKm9R5ESTJJz6
