@@ -8,7 +8,8 @@ import random
 import util
 from util import deprecated
 
-def complete_more_promotion_this_or_that(*, browser: WebDriver, cardNumber: int, base_url: str):
+
+def complete_more_promotion_this_or_that(*, browser: WebDriver, cardNumber: int):
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
 
     browser.find_element(By.XPATH, '//*[@id="more-activities"]/div/mee-card[' + str(
