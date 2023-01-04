@@ -120,7 +120,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
             try:
                 util.exec_bing_searches(
                     browser=browser,
-                    searchCount=remainingSearches.mobileSearches,
+                    searchCount=remainingSearches.pcSearches,
                     terms=searchTerms,
                     starting_points=account.points,
                     agent=config.pc_user_agent,
