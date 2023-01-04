@@ -27,6 +27,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
     """
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info("loading dashboard data")
+    browser.get("https://rewards.bing.com")
     try:
         dashboard = util.findBetween(
             browser.find_element(By.XPATH, '/html/body').get_attribute('innerHTML'), "var dashboard = ",
