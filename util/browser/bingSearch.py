@@ -1,14 +1,14 @@
 import logging
 
 from selenium.webdriver.chrome.webdriver import WebDriver
-
 import custom_logging
 import util
 import time
 from selenium.webdriver.common.by import By
 
 import random
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException, UnexpectedAlertPresentException, NoAlertPresentException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException, \
+    UnexpectedAlertPresentException, NoAlertPresentException
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):
@@ -25,14 +25,14 @@ def bingSearch(browser: WebDriver, word: str, isMobile: bool):
         if not isMobile:
             points = int(browser.find_element(By.ID, 'id_rc').get_attribute('innerHTML'))
         else:
-            try :
+            try:
                 browser.find_element(By.ID, 'mHamburger').click()
             except UnexpectedAlertPresentException:
-                try :
+                try:
                     browser.switch_to.alert.accept()
                     time.sleep(1)
                     browser.find_element(By.ID, 'mHamburger').click()
-                except NoAlertPresentException :
+                except NoAlertPresentException:
                     pass
             time.sleep(1)
             points = int(browser.find_element(By.ID, 'fly_id_rc').get_attribute('innerHTML'))
