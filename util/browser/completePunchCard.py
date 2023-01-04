@@ -53,7 +53,7 @@ def complete_punch_card(browser: WebDriver, url: str, childPromotions: dict):
 
 def exec_single_punch_card_child_promotion(browser: WebDriver,
                                            url: str,
-                                           childPromotions: list[util.PunchCardChildPromotion]):
+                                           childPromotions: list['util.PunchCardChildPromotion']):
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     logger.info(f"Navigating to punch card url: {url}")
     browser.get(url)
