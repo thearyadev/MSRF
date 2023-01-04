@@ -7,6 +7,7 @@ import time
 import random
 from util import deprecated
 
+
 def complete_more_promotion_search(*, browser: WebDriver, cardNumber: int):
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     logger.info("Completing promotion search")
