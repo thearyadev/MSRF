@@ -95,6 +95,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     try:
         util.complete_additional_promotions(browser, base_url=BASE_URL)
     except Exception as e:
+        util.resetTabs(browser, BASE_URL)
         logger.critical(f"Uncaught exception has caused additional promotions to fail. {e}")
     else:
         logger.info("Successfully completed ADDITIONAL PROMOTIONS")
@@ -103,52 +104,54 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     account.points = util.getPointCount(browser)
     db.write(account)
 
-    # bing searches. Mobile is currently broken.
-
+    # bing searches.
     try:
-        remainingSearches, remainingSearchesM = util.getRemainingSearches(browser)
+        remainingSearches: util.RemainingSearchOutline = util.get_remaining_searches(browser)
     except Exception as e:
         logger.critical(f"Unable to get remaining searches. Could be malformed data. {e}")
     else:
-        logger.info(f"Searches available: [desktop: {remainingSearches} mobile: {remainingSearchesM}]")
-        logger.warning("Unable to do mobile searches. Module is not implemented. ")
+        logger.info(f"Searches loaded. {remainingSearches}")
 
-        if remainingSearches != 0:
-            logger.info("Executing PC searches...")
+        if remainingSearches.pcSearches:
+            account.points = util.getPointCount(browser)
+            db.write(account)
+            searchTerms = util.getGoogleTrends(remainingSearches.pcSearches, config.LANG, config.GEO)
             try:
-                util.bing_searches(browser,
-                                   remainingSearches,
-                                   px=account.points,
-                                   LANG=config.LANG,
-                                   GEO=config.GEO,
-                                   agent=config.pc_user_agent)
-            except Exception as e:
-                logger.critical(f"Unable to complete bing pc searches. Unexpected error {e}")
-            logger.info("Successfully completed all PC searches")
-
-        if remainingSearchesM != 0:
-            logger.info("Executing Mobile searches...")
-            mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
-            try:
-                util.authenticate_microsoft_account(browser=mobileBrowser, account=account)
-                util.bing_searches(
-                    mobileBrowser,
-                    remainingSearchesM,
-                    px=account.points,
-                    LANG=config.LANG,
-                    GEO=config.GEO,
-                    agent=config.mobile_user_agent,
-                    isMobile=True
+                util.exec_bing_searches(
+                    browser=browser,
+                    searchCount=remainingSearches.mobileSearches,
+                    terms=searchTerms,
+                    starting_points=account.points,
+                    agent=config.pc_user_agent,
+                    mobile=False
                 )
-
             except Exception as e:
-                logger.critical(f"Unable to complete bing mobile searches. Unexpected error {e}")
+                logger.critical(f"Failed to complete PC bing searches. {e}")
+
+        if remainingSearches.mobileSearches:
+            logging.info("Starting mobile browser.")
+            account.points = util.getPointCount(browser)
+            db.write(account)
+            mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
+            searchTerms = util.getGoogleTrends(remainingSearches.mobileSearches, config.LANG, config.GEO)
+            try:
+                util.exec_bing_searches(
+                    browser=mobileBrowser,
+                    searchCount=remainingSearches.mobileSearches,
+                    terms=searchTerms,
+                    starting_points=account.points,
+                    agent=config.mobile_user_agent,
+                    mobile=True
+                )
+            except Exception as e:
+                logger.critical(f"Failed to complete Mobile bing searches. {e}")
+            logger.info("Closing mobile browser")
             mobileBrowser.quit()
 
-    browser.get(BASE_URL)
+    logging.info("Getting closing point count.")
     account.points = util.getPointCount(browser)
     db.write(account)
 
     logger.info(F"Closing Point Total: {account.points}")
-
+    logger.info("Closing main browser.")
     browser.quit()
