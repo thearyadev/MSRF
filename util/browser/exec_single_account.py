@@ -94,7 +94,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     # additional promotions
     logger.info("(3/5) Completing ADDITIONAL PROMOTIONS")
     try:
-        util.complete_additional_promotions(browser, base_url=BASE_URL)
+        util.exec_additional_promotions(browser)
     except Exception as e:
         util.resetTabs(browser, BASE_URL)
         logger.critical(f"Uncaught exception has caused additional promotions to fail. {e}")
