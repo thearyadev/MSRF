@@ -5,7 +5,7 @@ import requests
 from datetime import date, timedelta
 
 
-def getGoogleTrends(numberOfwords: int, LANG: str, GEO: str) -> list:
+def getGoogleTrends(numberOfWords: int, LANG: str, GEO: str) -> list[str]:
     """
     Gets a list of search terms from Google Trends following the area and language defined.
 
@@ -15,7 +15,7 @@ def getGoogleTrends(numberOfwords: int, LANG: str, GEO: str) -> list:
     logger.info("Getting search terms")
     search_terms = []
     i = 0
-    while len(search_terms) < numberOfwords:
+    while len(search_terms) < numberOfWords:
         i += 1
         r = requests.get('https://trends.google.com/trends/api/dailytrends?hl=' + LANG + '&ed=' + str(
             (date.today() - timedelta(days=i)).strftime('%Y%m%d')) + '&geo=' + GEO + '&ns=15')
@@ -25,5 +25,5 @@ def getGoogleTrends(numberOfwords: int, LANG: str, GEO: str) -> list:
             for related_topic in topic['relatedQueries']:
                 search_terms.append(related_topic['query'].lower())
         search_terms = list(set(search_terms))
-    del search_terms[numberOfwords:(len(search_terms) + 1)]
+    del search_terms[numberOfWords:(len(search_terms) + 1)]
     return search_terms
