@@ -1,8 +1,10 @@
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 import logging
+from util import deprecated
 
 
+@deprecated
 def bing_searches(browser: WebDriver,
                   numberOfSearches: int,
                   px: int,
@@ -28,3 +30,27 @@ def bing_searches(browser: WebDriver,
             px = points
         else:
             break
+
+
+def exec_bing_searches(*, browser: WebDriver,
+                       searchCount: int,
+                       terms: list[str],
+                       starting_points: int,
+                       mobile: bool,
+                       agent: str):
+    logger: logging.Logger = logging.getLogger("msrf")
+
+    for i, searchTerm in enumerate(terms):
+        logger.info(f"Executing search # {i}/{searchCount}")
+        points = util.bingSearch(browser, searchTerm, mobile)
+        if points <= starting_points:
+            relatedTerms = util.getRelatedTerms(searchTerm, agent)
+            for relatedSearchTerm in relatedTerms:
+                points = util.bingSearch(browser, relatedSearchTerm, mobile)
+                if not points <= starting_points:
+                    break
+            if points > 0:
+                starting_points = points
+            else:
+                break
+
