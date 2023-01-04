@@ -1,3 +1,7 @@
+- logging
+    - when application is run as an executable, the logger no longer works.
+    - Create a class to handle logging, info, debug, critical, etc.
+    - each method call will write that log statement to the file.
 - gui
     - hide delete account button while a thread is running
 - database
