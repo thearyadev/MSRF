@@ -17,12 +17,13 @@ def getPointCount(browser: WebDriver) -> int:
     :browser Selenium web driver
     """
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
-    data = util.get_dashboard_data(browser)
-    try:
-        return data.get("userStatus").get("availablePoints") if data.get("userStatus").get("availablePoints") else 0
-    except AttributeError as e:
-        logger.critical(f"Point count not available. Likely dashboard data has changed. {e}")
-    except Exception as e:
-        logger.critical(f"Unexpected exception {e}")
+    accountData = util.load_dashboard_data(browser)
 
+    if not accountData:
+        logger.critical("Account data is missing. Unable to get point count")
+        return 0
+    try:
+        return accountData.userStatus.availablePoints
+    except Exception as e:
+        logger.critical(f"Unexpected error in point retrieval. {e}")
     return 0
