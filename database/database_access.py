@@ -1,11 +1,13 @@
+import sqlite3
+
 import database
 import util
 import typing
 import datetime
 from util import deprecated
+import threading
 
-
-
+lock = threading.Lock()
 
 
 @deprecated
@@ -29,7 +31,9 @@ class DatabaseAccessLegacy(database.DatabaseConfigLegacy):
         self.records.update("microsoft_account", account.id, body_params=accountData)
 
     def read(self) -> list[util.MicrosoftAccount]:
+        lock.acquire()
         accountsAsRecord: list[util.MicrosoftAccount] | typing.Any = self.records.get_full_list("microsoft_account")
+        lock.release()
         accounts: list[util.MicrosoftAccount] = list()
 
         for a in accountsAsRecord:
@@ -83,6 +87,6 @@ class DatabaseAccess(database.DatabaseConfig):
             DELETE FROM MicrosoftAccount
             WHERE id = ?
             """,
-            (account.id, )
+            (account.id,)
         )
         self.connection.commit()
