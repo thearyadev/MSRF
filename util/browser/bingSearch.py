@@ -1,6 +1,8 @@
 import logging
 
 from selenium.webdriver.chrome.webdriver import WebDriver
+
+import custom_logging
 import util
 import time
 from selenium.webdriver.common.by import By
@@ -10,7 +12,7 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     browser.get('https://bing.com')
     time.sleep(2)

@@ -1,5 +1,7 @@
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
+
+import custom_logging
 import util
 from selenium.webdriver.common.by import By
 import time
@@ -13,7 +15,7 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     :browser Selenium webdriver
     :account MicrosoftAccount object
     """
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     # Access to bing.com
     logger.info("Navigating to https://login.live.com/")

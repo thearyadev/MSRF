@@ -1,3 +1,4 @@
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 import logging
@@ -38,7 +39,7 @@ def exec_bing_searches(*, browser: WebDriver,
                        starting_points: int,
                        mobile: bool,
                        agent: str):
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     for i, searchTerm in enumerate(terms):
         logger.info(f"Executing search # {i}/{searchCount}")

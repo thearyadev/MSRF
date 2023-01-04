@@ -8,9 +8,6 @@ from selenium.webdriver.chrome.options import Options
 import util
 
 
-
-
-
 def init_browser(*, headless: bool, agent: str) -> WebDriver:
     """
     Initializes a new Chrome instance using Selenium and chromedriver.

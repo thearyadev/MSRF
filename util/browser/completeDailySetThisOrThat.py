@@ -1,6 +1,8 @@
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
+
+import custom_logging
 import util
 from util import deprecated
 import logging
@@ -21,7 +23,7 @@ def complete_daily_set_this_or_that(browser: WebDriver, cardNumber: int, base_ur
     Completes the this or that quiz.
     """
 
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     time.sleep(2)
     browser.find_element(By.XPATH, '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[' + str(

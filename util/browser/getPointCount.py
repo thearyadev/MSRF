@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 import time
 import re
 
+import custom_logging
 import util
 
 
@@ -15,7 +16,7 @@ def getPointCount(browser: WebDriver) -> int:
     Defaults to 0 if the function fails.
     :browser Selenium web driver
     """
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     data = util.get_dashboard_data(browser)
     try:
         return data.get("userStatus").get("availablePoints") if data.get("userStatus").get("availablePoints") else 0

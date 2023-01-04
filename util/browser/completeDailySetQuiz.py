@@ -1,5 +1,7 @@
 import logging
 import time
+
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 
@@ -12,7 +14,7 @@ def complete_daily_set_quiz(browser: WebDriver, cardNumber: int, base_url: str):
     """
     completes the daily set quiz
     """
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     time.sleep(2)
     browser.find_element(By.XPATH, '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[' + str(
         cardNumber) + ']/div/card-content/mee-rewards-daily-set-item-content/div/a').click()

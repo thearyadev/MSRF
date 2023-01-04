@@ -4,6 +4,8 @@ import logging
 import requests
 from datetime import date, timedelta
 
+import custom_logging
+
 
 def getGoogleTrends(numberOfWords: int, LANG: str, GEO: str) -> list[str]:
     """
@@ -11,7 +13,7 @@ def getGoogleTrends(numberOfWords: int, LANG: str, GEO: str) -> list[str]:
 
     """
 
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info("Getting search terms")
     search_terms = []
     i = 0

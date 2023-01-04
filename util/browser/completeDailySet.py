@@ -1,5 +1,6 @@
 import logging
 
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from datetime import datetime
@@ -72,7 +73,7 @@ def complete_daily_set(browser: WebDriver, base_url: str):
 # noinspection PyTypeChecker
 def exec_daily_set(browser: WebDriver):
     """Completes the daily set section"""
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     accountData: util.DashboardData = util.load_dashboard_data(browser)
     if accountData is None:
         logging.critical("Unable to complete daily set due to missing dashboard data.")

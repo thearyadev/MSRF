@@ -3,6 +3,7 @@ import logging
 
 from pydantic import BaseModel
 
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from util import deprecated
@@ -44,7 +45,7 @@ class RemainingSearchOutline(BaseModel):
 
 
 def get_remaining_searches(browser: WebDriver) -> RemainingSearchOutline:
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     accountData: util.DashboardData = util.load_dashboard_data(browser)
 

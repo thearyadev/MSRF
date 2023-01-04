@@ -1,6 +1,7 @@
 import json
 import logging
 
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from util import deprecated
@@ -36,12 +37,8 @@ def complete_additional_promotions(browser: WebDriver, base_url: str):
 
 
 def exec_additional_promotions(browser: WebDriver):
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
-    logger.setLevel(logging.INFO)
-    # accountData: util.DashboardData = util.load_dashboard_data(browser)
-    with open("../../dashboard_data_schema_source.json", "r") as file:
-        d = json.load(file)
-        accountData = util.DashboardData(**d)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    accountData: util.DashboardData = util.load_dashboard_data(browser)
 
     more_promotions: list[util.MorePromotion] = accountData.morePromotions
 

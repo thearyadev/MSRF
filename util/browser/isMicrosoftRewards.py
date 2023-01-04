@@ -4,13 +4,15 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
 import time
 
+import custom_logging
+
 
 def isMicrosoftRewards(browser: WebDriver) -> bool:
     """
     Checks to see if the current page is the correct Microsoft Rewards page.
     :browser Selenium webdriver
     """
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     if browser.find_element(By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a').get_attribute(
             'target') == '_blank':

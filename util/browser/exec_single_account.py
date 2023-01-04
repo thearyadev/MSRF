@@ -3,6 +3,7 @@ import threading
 
 import selenium.common.exceptions
 
+import custom_logging
 import util
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -23,7 +24,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     account.lastExec = datetime.datetime.now(tz=datetime.timezone.utc)
     db.write(account=account)
 
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     # init browser
     logger.info(f"Current Account: {account}")

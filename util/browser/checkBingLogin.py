@@ -2,6 +2,8 @@ import time
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
+
+import custom_logging
 import util
 from selenium.webdriver.common.by import By
 import logging
@@ -16,7 +18,7 @@ def verify_bing_login(browser: WebDriver) -> bool:
 
     :browser Selenium webdriver.
     """
-    logger: logging.Logger = logging.getLogger("msrf")
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     # Access Bing.com
     browser.get(
         "https://www.bing.com/fd/auth/signin?action=interactive&provider=windows_live_id&return_url=https%3a%2f%2fwww"

@@ -5,6 +5,8 @@ import rich
 
 from _testcapi import instancemethod
 
+import custom_logging
+
 
 class LogLevel(Enum):
     INFO = 1

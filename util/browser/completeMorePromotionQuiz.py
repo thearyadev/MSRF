@@ -5,12 +5,14 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 import time
 import random
+
+import custom_logging
 import util
 from util import deprecated
 
 
 def complete_more_promotion_quiz(*, browser: WebDriver, cardNumber: int):
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     browser.find_element(By.XPATH, '//*[@id="more-activities"]/div/mee-card[' + str(
         cardNumber) + ']/div/card-content/mee-rewards-more-activities-card-item/div/a').click()
     time.sleep(1)

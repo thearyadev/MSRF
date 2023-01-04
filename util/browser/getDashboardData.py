@@ -1,6 +1,7 @@
 import json
 import logging
 
+import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -24,7 +25,7 @@ def get_dashboard_data(browser: WebDriver) -> dict | None:
     """
     Returns the data from the dashboard
     """
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info("loading dashboard data")
     try:
         dashboard = util.findBetween(

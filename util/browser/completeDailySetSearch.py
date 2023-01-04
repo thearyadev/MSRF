@@ -3,6 +3,8 @@ import time
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 import random
+
+import custom_logging
 from util import deprecated
 
 
@@ -16,7 +18,7 @@ def complete_daily_set_search(browser: WebDriver, cardNumber: int):
     :cardNumber int for card #
     """
 
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     time.sleep(5)
     browser.find_element(By.XPATH, '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card['

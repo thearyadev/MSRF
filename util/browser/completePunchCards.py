@@ -1,5 +1,6 @@
 import logging
 
+import custom_logging
 import util
 
 from selenium.webdriver.common.by import By
@@ -40,7 +41,7 @@ def complete_punch_cards(browser: WebDriver, base_url: str):
 
 
 def exec_punch_cards(browser: WebDriver):
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     accountData: util.DashboardData = util.load_dashboard_data(browser)
     if accountData is None:
