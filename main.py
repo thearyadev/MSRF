@@ -33,29 +33,6 @@ What does this file do?
 Also... idk how to build ui's. this file is messy. 
 """
 
-
-def configure_loggers():
-    logging.basicConfig(
-        format='[%(threadName)s][%(levelname)s]'
-               '[%(filename)s][Line %(lineno)d] %(message)s',
-        handlers=[
-            logging.FileHandler("farmer.log"),
-            logging.StreamHandler(),
-        ],
-        level=logging.NOTSET)
-    logging.getLogger("werkzeug").setLevel(logging.CRITICAL)  # disable flask logger
-    logging.getLogger("urllib3.connectionpool").setLevel(logging.CRITICAL)
-    logging.getLogger("selenium.webdriver.remote.remote_connection").setLevel(logging.CRITICAL)
-    logging.getLogger("selenium.webdriver.common.selenium_manager").setLevel(logging.CRITICAL)
-    logging.getLogger("selenium.webdriver.common.selenium_manager").setLevel(logging.CRITICAL)
-    logging.getLogger("selenium.webdriver.common.service").setLevel(logging.CRITICAL)
-    logging.getLogger("httpx._client").setLevel(logging.CRITICAL)
-    logging.getLogger("root").disabled = True  # flet logger
-
-
-# Configure Logging
-configure_loggers()
-
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
@@ -387,7 +364,7 @@ def main_screen(page: ft.Page):
             ) for account in db.read()
         ]
 
-        log_text.value = get_log()
+        log_text.value = logger.load()
         accounts_container.content = accountsTable if len(accountsTable.rows) else add_account_prompt
 
         if not page.client_storage.get("farmer_prompt_shown"):

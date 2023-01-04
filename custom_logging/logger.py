@@ -31,6 +31,15 @@ class FileStreamLogger:
         self.file_path: str = file_path
         self.file = open(self.file_path, "a")
 
+    def load(self) -> str:
+        lock.acquire()
+        with open(self.file_path, "r") as file:
+            data = "".join(list((list(reversed(file.readlines()))[:100])))
+            lock.release()
+            return data
+
+
+
     def _log(self, level: LogLevel, message: str) -> None:
         next_in_line_frame = inspect.stack()[2]
         lineNo: int = next_in_line_frame.lineno
