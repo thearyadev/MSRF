@@ -42,7 +42,7 @@ def exec_bing_searches(*, browser: WebDriver,
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     for i, searchTerm in enumerate(terms):
-        logger.info(f"Executing search # {i}/{searchCount}")
+        logger.info(f"Executing search # {i + 1}/{searchCount}")
         points = util.bingSearch(browser, searchTerm, mobile)
         if points <= starting_points:
             relatedTerms = util.getRelatedTerms(searchTerm, agent)
