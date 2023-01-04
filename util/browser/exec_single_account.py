@@ -134,6 +134,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
             account.points = util.getPointCount(browser)
             db.write(account)
             mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
+            util.authenticate_microsoft_account(browser=mobileBrowser, account=account)
             searchTerms = util.getGoogleTrends(remainingSearches.mobileSearches, config.LANG, config.GEO)
             try:
                 util.exec_bing_searches(
