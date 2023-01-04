@@ -1,3 +1,5 @@
+import logging
+
 from selenium.webdriver.chrome.webdriver import WebDriver
 import util
 import time
@@ -8,6 +10,8 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):
+    logger: logging.Logger = logging.getLogger("msrf")
+
     browser.get('https://bing.com')
     time.sleep(2)
     searchbar = browser.find_element(By.ID, 'sb_form_q')
@@ -30,6 +34,6 @@ def bingSearch(browser: WebDriver, word: str, isMobile: bool):
                     pass
             time.sleep(1)
             points = int(browser.find_element(By.ID, 'fly_id_rc').get_attribute('innerHTML'))
-    except:
-        pass
+    except Exception as e:
+        logger.critical(f"Unknown error trying to complete single bing search. {e}")
     return points
