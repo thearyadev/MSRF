@@ -64,6 +64,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
     # Farmer start
     logger.info("Setup complete. Starting point collection process.")
 
+
     # daily set
     logger.info("(1/5) Completing DAILY SET")
     try:
