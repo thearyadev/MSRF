@@ -8,9 +8,6 @@ import custom_logging
 from util import deprecated
 
 
-
-
-
 def complete_daily_set_search(browser: WebDriver, cardNumber: int):
     """
     Completes the daily set search.

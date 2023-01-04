@@ -9,6 +9,7 @@ from selenium.common.exceptions import NoSuchElementException, TimeoutException,
 import logging
 from util import deprecated
 
+
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:
     """
     Logs into Microsoft Rewards (and bing) in the current browser instance for the given account.

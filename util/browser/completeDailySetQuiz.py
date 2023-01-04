@@ -9,7 +9,6 @@ from selenium.webdriver.common.by import By
 from util import deprecated
 
 
-
 def complete_daily_set_quiz(browser: WebDriver, cardNumber: int, base_url: str):
     """
     completes the daily set quiz
