@@ -1,8 +1,12 @@
+import json
 import logging
 
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
+from util import deprecated
 
+
+@deprecated
 def complete_additional_promotions(browser: WebDriver, base_url: str):
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     morePromotions = util.getDashboardData(browser)['morePromotions']
@@ -29,3 +33,50 @@ def complete_additional_promotions(browser: WebDriver, base_url: str):
         except Exception as e:
             logger.critical(f"Unexpected error in single additional promotion loop {e}")
             util.resetTabs(browser, BASE_URL=base_url)
+
+
+def exec_additional_promotions(browser: WebDriver):
+    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger.setLevel(logging.INFO)
+    # accountData: util.DashboardData = util.load_dashboard_data(browser)
+    with open("../../dashboard_data_schema_source.json", "r") as file:
+        d = json.load(file)
+        accountData = util.DashboardData(**d)
+
+    more_promotions: list[util.MorePromotion] = accountData.morePromotions
+
+    if accountData is None:
+        logging.critical("Unable to complete more promotions due to missing dashboard data.")
+        return
+
+    if not more_promotions:
+        logging.critical("Unable to complete more promotions. Attribute is None or Empty Array")
+        return
+
+    for cardNumberNoOffset, promotion in enumerate(more_promotions):
+        promotion.complete = False
+        promotion.pointProgress = 0
+        cardNo = cardNumberNoOffset + 1
+        try:
+            if not promotion.complete and promotion.pointProgressMax != 0:
+                if promotion.promotionType == "urlreward":
+                    logger.info("More promotion type [urlreward] eligible")
+                    util.complete_more_promotion_search(browser=browser, cardNumber=cardNo)
+                elif promotion.promotionType == "quiz" and promotion.pointProgress == 0:
+                    logger.info("More promotion type [quiz] eligible")
+                    print("More promotion type [quiz] eligible")
+                    if promotion.pointProgressMax == 10:
+                        logger.info("Promotion Point Quiz value: 10")
+                        util.complete_more_promotion_abc(browser=browser, cardNumber=cardNo)
+                    elif promotion.pointProgressMax in (30, 40):
+                        logger.info("Promotion Point Quiz value: 30 or 40")
+                        util.complete_more_promotion_quiz(browser=browser, cardNumber=cardNo)
+                    elif promotion.pointProgressMax == 50:
+                        logger.info("Promotion Point Quiz value: 50")
+                        util.complete_more_promotion_this_or_that(browser=browser, cardNumber=cardNo)
+                else:
+                    if promotion.pointProgressMax in (100, 200):
+                        logger.info("Promotion Point Search value: 100-200")
+                        util.complete_more_promotion_search(browser=browser, cardNumber=cardNo)
+        except Exception as e:
+            logger.critical(f"Uncaught error in more promotions scraper. {e}")
