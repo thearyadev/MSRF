@@ -9,7 +9,7 @@ import util
 from util import deprecated
 
 
-def complete_more_promotion_quiz(*, browser: WebDriver, cardNumber: int, base_url: str):
+def complete_more_promotion_quiz(*, browser: WebDriver, cardNumber: int):
     logger: logging.Logger = logging.getLogger("msrf")  # get logger
     browser.find_element(By.XPATH, '//*[@id="more-activities"]/div/mee-card[' + str(
         cardNumber) + ']/div/card-content/mee-rewards-more-activities-card-item/div/a').click()
@@ -18,8 +18,7 @@ def complete_more_promotion_quiz(*, browser: WebDriver, cardNumber: int, base_ur
     time.sleep(8)
     if not util.waitUntilQuizLoads(browser):
         logger.critical("Quiz did not load. Resetting tabs and exiting module")
-        util.resetTabs(browser, BASE_URL=base_url)
-        return
+        raise Exception("Forced exception due to missing quiz load.")
 
     browser.find_element(By.XPATH, '//*[@id="rqStartQuiz"]').click()
     util.waitUntilVisible(browser, By.XPATH, '//*[@id="currentQuestionContainer"]/div/div[1]', 10)
