@@ -17,6 +17,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import flet as ft
 import copy
 import pytz
+import custom_logging
 
 """
 github.com/thearyadev/msrf
@@ -55,7 +56,7 @@ def configure_loggers():
 # Configure Logging
 configure_loggers()
 
-logger: logging.Logger = logging.getLogger("msrf")  # create msrf logger
+logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
 db = database.DatabaseAccess()  # create database connection
@@ -453,5 +454,6 @@ if __name__ == '__main__':
     scheduler.start()
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
+
 
 # PB PASSWORD C!ddKm9R5ESTJJz6
