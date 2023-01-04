@@ -18,8 +18,7 @@ def complete_more_promotion_this_or_that(*, browser: WebDriver, cardNumber: int,
     time.sleep(8)
     if not util.waitUntilQuizLoads(browser):
         logger.critical("Quiz did not load. Resetting tabs and exiting module")
-        util.resetTabs(browser, BASE_URL=base_url)
-        return
+        raise Exception("Forced exception due to missing quiz load.")
     browser.find_element(By.XPATH, '//*[@id="rqStartQuiz"]').click()
     util.waitUntilVisible(browser, By.XPATH, '//*[@id="currentQuestionContainer"]/div/div[1]', 10)
     time.sleep(3)
