@@ -1,63 +1,36 @@
 
 # Microsoft Rewards Famer (MSRF)
 
-This project is a automated farmer for Microsoft Rewards. It will log into given accounts and complete surveys, quizzes, and conduct bing searches. This application is primarily designed to be run in a server environment, as it will automatically schedule executions of the farmer. This is done to carefully control the frequency of runs on a single account, to avoid bans. 
+This project is a automated farmer for Microsoft Rewards. It will log into given accounts and complete surveys, quizzes, and conduct bing searches. The farmer will automatically schedule runs to farm points for each account. More details on what exactly it is doing is outlined below.
 
 **Usage of this application may get your Microsoft account permanently banned. I take no responsibility for any actions made on your account.**
 
-This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/charlesbel/Microsoft-Rewards-Farmer). The goal of this project is to move towards a documented and test driven code base. 
-## Features
-
-- Hands free farming
-- Web interface for tracking points and recent executions
+This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/charlesbel/Microsoft-Rewards-Farmer). The goal of this project is to move towards a documented and test driven code base. The entire code base has been restructured, and over 90% of it is re-written. Some components from the original project still exist within this one.
 
 
 ## Installation
 
-The project has a few components to deploying for development.
-- Database: Pocketbase
-- Flet (Flutter) Server / Farmer Scripts
-- Chromedriver (for selenium)
+Download the zip file from the github releases for this project. It will include everything needed to run this program, including: 
+  - The main executable
+  - Chrome
+  - Chromedriver Binary
+
+Run the executable to start the program.
 
 
-### Database
+## Development
 
-Don't ask why I'm using PocketBase. In the near future, the application will auto configure PocketBase in this project.
+This project was developed in Python 3.10.8 and has **not** been tested with any other version of python. 
 
-**WIP**
-
-### Chromedriver
-Currently, no specific Chromedriver version is required. The Chromedriver must be in the PATH as Selenium auto detects this. In the near future, the application will auto configure Chromedriver within the project. 
-
-**WIP**
-
-### Flet Server / Farmer Scripts
-
-Clone this repository and navigate to the root of the project. 
+Install all python dependencies using the `requirements.txt` file found in the root of this project. 
 
 ```bash
-  python -m pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
-Database must be active for this to work. 
+Selenium requires a Chromedriver binary and Chrome installation. This is automatically detected assuming you have correctly configured both on your machine.
+This behavior can be changed temporarily for development. Browser initialization is done in the file `./util/browser/browser_setup.py`. Here you can configure custom chromedriver and chrome binary paths.
 
-```bash
-python main.py
-```
-
-This will schedule tasks to run the farmer when applicable. It will also start the web interface. 
-
-## Documentation
-TBD
-
-The documentation for this project will be created late in the development cycle, as many things are currently changing. 
-
-
-## Roadmap
-
-- Add tests to identify breaking changes to Microsoft Rewards.
-
-- Add CLI for generic use. 
 
 ## Contributing
 
