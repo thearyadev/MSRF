@@ -1,5 +1,4 @@
 from .configloader.config import *
-from .browser.location_info import *
 from .browser.browser_setup import *
 from .models.microsoft_account import *
 from .browser.waitUntilVisible import *
