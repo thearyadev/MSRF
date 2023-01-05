@@ -425,6 +425,9 @@ if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=pick_and_run, trigger="interval", seconds=15)
     scheduler.start()
+
+
+
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
     atexit.register(lambda: scheduler.shutdown())
 
