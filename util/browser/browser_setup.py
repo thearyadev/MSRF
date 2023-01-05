@@ -1,9 +1,12 @@
-
+import sys
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.chrome.options import Options
+from subprocess import CREATE_NO_WINDOW
 
+import custom_logging
 import util
 
 
@@ -15,10 +18,24 @@ def init_browser(*, headless: bool, agent: str) -> WebDriver:
     :agent mobile or pc agent string.
     :config generic config for this application.
     """
-
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     options = Options()
     options.add_argument("user-agent=" + agent)
+    options.add_argument("log-level=3")
     if headless:
         options.add_argument("--headless")
-    options.add_argument("log-level=3")
-    return webdriver.Chrome(options=options)
+
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        logger.info("Starting browser in bundled mode")
+        options.binary_location = "bin/chrome/chrome.exe"
+        options.add_argument("--log-level=OFF")
+        args = ["hide_console", ]
+
+        service = Service("bin/chromedriver.exe", service_args=args)
+        service.creation_flags = CREATE_NO_WINDOW
+
+        return webdriver.Chrome(service=service, options=options)
+
+    else:
+        logger.info("Starting browser in development mode")
+        return webdriver.Chrome(options=options)
