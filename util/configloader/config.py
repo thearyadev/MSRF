@@ -20,6 +20,7 @@ class Config(BaseModel):
     operation_mode: str | None
     pocket_base_binary_path: str | None
     hydration_rate: int | None
+    max_concurrent_accounts: int | None
 
 
 def load_config(file: str) -> Config:
