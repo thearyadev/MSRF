@@ -6,8 +6,6 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 import custom_logging
 import util
 from selenium.webdriver.common.by import By
-import logging
-from util import deprecated
 
 
 def verify_bing_login(browser: WebDriver) -> bool:

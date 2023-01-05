@@ -1,14 +1,11 @@
-import logging
-
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from selenium.webdriver.common.by import By
 import time
-import random
+
 
 import custom_logging
 import util
-from util import deprecated
 
 
 def complete_more_promotion_this_or_that(*, browser: WebDriver, cardNumber: int):

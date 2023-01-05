@@ -6,8 +6,6 @@ import util
 from selenium.webdriver.common.by import By
 import time
 from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException
-import logging
-from util import deprecated
 
 
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:

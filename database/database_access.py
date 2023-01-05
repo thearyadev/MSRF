@@ -1,52 +1,9 @@
-import sqlite3
-
 import database
 import util
-import typing
-import datetime
-from util import deprecated
+
 import threading
 
 lock = threading.Lock()
-
-
-@deprecated
-class DatabaseAccessLegacy(database.DatabaseConfigLegacy):
-    def __init__(self, url):
-        super().__init__(url=url)
-        self._dt_format = "%Y-%m-%d %H:%M:%S"
-
-    def insert(self, account: util.MicrosoftAccount):
-        accountData = account.dict()
-        accountData["lastExec"] = account.lastExec.strftime(self._dt_format)
-        self.records.create("microsoft_account", body_params=accountData)
-
-    def delete(self, account):
-        self.records.delete("microsoft_account", account.id)
-
-    def write(self, account: util.MicrosoftAccount):
-        accountData = account.dict()
-        accountData["lastExec"] = account.lastExec.strftime(self._dt_format)
-
-        self.records.update("microsoft_account", account.id, body_params=accountData)
-
-    def read(self) -> list[util.MicrosoftAccount]:
-        lock.acquire()
-        accountsAsRecord: list[util.MicrosoftAccount] | typing.Any = self.records.get_full_list("microsoft_account")
-        lock.release()
-        accounts: list[util.MicrosoftAccount] = list()
-
-        for a in accountsAsRecord:
-            accounts.append(
-                util.MicrosoftAccount(
-                    id=a.id,
-                    email=a.email,
-                    password=a.password,
-                    lastExec=a.last_exec,
-                    points=a.points
-                )
-            )
-        return accounts
 
 
 class DatabaseAccess(database.DatabaseConfig):

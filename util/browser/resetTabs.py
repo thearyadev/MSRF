@@ -1,9 +1,7 @@
 from selenium.webdriver.chrome.webdriver import WebDriver
 import time
-from util import deprecated
 
 
-@deprecated
 def resetTabs(browser: WebDriver, BASE_URL: str):
     """
     Closes all irrelevant tabs and returns to base_url

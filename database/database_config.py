@@ -1,9 +1,6 @@
 import datetime
 
-import pocketbase
-
 import util
-from util import deprecated
 import sqlite3
 import database
 
@@ -14,11 +11,6 @@ def dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
-
-@deprecated
-class DatabaseConfigLegacy(pocketbase.PocketBase):
-    def __init__(self, url: str):
-        super().__init__(url)
 
 
 class DatabaseConfig:

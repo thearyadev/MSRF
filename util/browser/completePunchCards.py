@@ -3,10 +3,7 @@ import logging
 import custom_logging
 import util
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.webdriver import WebDriver
-import time
-from util import deprecated
 
 
 def exec_punch_cards(browser: WebDriver):

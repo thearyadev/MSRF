@@ -4,7 +4,7 @@ import logging
 import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
-from util import deprecated
+
 
 def exec_additional_promotions(browser: WebDriver):
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)

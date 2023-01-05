@@ -7,8 +7,8 @@ import time
 import random
 
 import custom_logging
-from util import deprecated
 import util
+
 
 def exec_single_punch_card_child_promotion(browser: WebDriver,
                                            url: str,

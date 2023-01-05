@@ -4,8 +4,6 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
-from util import deprecated
-import logging
 
 
 def getAnswerCode(key: str, string: str) -> str:
@@ -14,8 +12,6 @@ def getAnswerCode(key: str, string: str) -> str:
         t += ord(string[i])
     t += int(key[-2:], 16)
     return str(t)
-
-
 
 
 def complete_daily_set_this_or_that(browser: WebDriver, cardNumber: int, base_url: str):
@@ -63,4 +59,3 @@ def complete_daily_set_this_or_that(browser: WebDriver, cardNumber: int, base_ur
     logger.info("Switching back to main window.")
     browser.switch_to.window(window_name=browser.window_handles[0])
     time.sleep(2)
-

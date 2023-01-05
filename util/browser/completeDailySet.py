@@ -5,8 +5,6 @@ import util
 from selenium.webdriver.chrome.webdriver import WebDriver
 from datetime import datetime
 import urllib.parse
-from util import deprecated
-from rich import print
 
 
 # noinspection PyTypeChecker
@@ -18,7 +16,7 @@ def exec_daily_set(browser: WebDriver):
         logging.critical("Unable to complete daily set due to missing dashboard data.")
         return
     # load the daily set data.
-    
+
     # the daily set is a few quizzes and such for the current date.
     # the data will include a dictionary of "dates". yesterday, today, and tomorrow.
     # only Today is can be done.

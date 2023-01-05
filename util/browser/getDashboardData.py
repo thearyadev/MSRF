@@ -1,16 +1,13 @@
-import json
-import logging
-
 import custom_logging
 import util
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.common.by import By
-from util import deprecated
+
+
 from ..models.dashboard_data import DashboardData
 
 
 def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
-    logger: logging.Logger = logging.getLogger("msrf")  # get logger
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(colors=True, console=True)
     logger.info("loading dashboard data")
     browser.get("https://rewards.bing.com")
     try:

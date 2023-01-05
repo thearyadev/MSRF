@@ -7,7 +7,6 @@ import time
 import random
 
 import custom_logging
-from util import deprecated
 
 
 def complete_more_promotion_search(*, browser: WebDriver, cardNumber: int):
