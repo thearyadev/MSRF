@@ -4,8 +4,6 @@ import threading
 import rich
 from pydantic import BaseModel
 
-from _testcapi import instancemethod
-
 import custom_logging
 
 
