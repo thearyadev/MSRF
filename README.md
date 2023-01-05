@@ -8,7 +8,7 @@ This project is a automated farmer for Microsoft Rewards. It will log into given
 This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/charlesbel/Microsoft-Rewards-Farmer). The goal of this project is to move towards a documented and test driven code base. The entire code base has been restructured, and over 90% of it is re-written. Some components from the original project still exist within this one.
 
 ## Demo
-**WIP**
+[[demo/demo-add-account.png|Add Account Demo]]
 
 ## Installation
 
