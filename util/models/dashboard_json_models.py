@@ -111,9 +111,3 @@ class DashboardDataModel(BaseModel):
         for promotionDateString, promotionData in value.items():
             newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
         return newDict
-
-
-if __name__ == '__main__':
-    with open("../../dashboard_data_schema_source.json", "r") as file:
-        data = json.load(file)
-        print(DashboardDataModel(**data).userStatus.counters)
