@@ -15,7 +15,7 @@ def getGoogleTrends(numberOfWords: int, LANG: str, GEO: str) -> list[str]:
 
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info("Getting search terms")
-    search_terms = []
+    search_terms: list[str] = []
     i = 0
     while len(search_terms) < numberOfWords:
         i += 1
