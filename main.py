@@ -172,7 +172,7 @@ def main_screen(page: ft.Page):
     page.window_resizable = False
     page.window_maximizable = False
 
-    log_text = ft.Text(get_log(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
+    log_text = ft.Text(logger.load(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
     add_account_prompt = ft.Text("Click the + button below to add an account.",
                                  width=600,
                                  text_align=ft.TextAlign.CENTER)
@@ -410,11 +410,10 @@ def pick_and_run():
                     "db": db
                 }
             ).start()
-            logger.info(f"Started thread for {validAccounts[0]}")
+            logger.info(f"Started thread for: {validAccounts[0]}")
             return
         logger.info("Eligible account was not found.")
         return
-    logger.info("Skipping Exec... Existing process detected.")
 
 
 if __name__ == '__main__':
