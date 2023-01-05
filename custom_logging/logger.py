@@ -2,6 +2,7 @@ from enum import Enum
 import inspect
 import threading
 import rich
+from pydantic import BaseModel
 
 from _testcapi import instancemethod
 
@@ -37,8 +38,6 @@ class FileStreamLogger:
             data = "".join(list((list(reversed(file.readlines()))[:100])))
             lock.release()
             return data
-
-
 
     def _log(self, level: LogLevel, message: str) -> None:
         next_in_line_frame = inspect.stack()[2]
