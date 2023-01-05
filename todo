@@ -1,6 +1,5 @@
 - gui
     - hide delete account button while a thread is running
-    - load logs as a complex data structure so it can be loaded to the screen individually instead of a long string.
 - create tests for all stages
     - daily set
         - daily set has data
