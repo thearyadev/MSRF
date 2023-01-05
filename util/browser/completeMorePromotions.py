@@ -31,7 +31,6 @@ def exec_additional_promotions(browser: WebDriver):
                     util.complete_more_promotion_search(browser=browser, cardNumber=cardNo)
                 elif promotion.promotionType == "quiz" and promotion.pointProgress == 0:
                     logger.info("More promotion type [quiz] eligible")
-                    print("More promotion type [quiz] eligible")
                     if promotion.pointProgressMax == 10:
                         logger.info("Promotion Point Quiz value: 10")
                         util.complete_more_promotion_abc(browser=browser, cardNumber=cardNo)
