@@ -1,12 +1,6 @@
-- logging
-    - when application is run as an executable, the logger no longer works.
-    - Create a class to handle logging, info, debug, critical, etc.
-    - each method call will write that log statement to the file.
 - gui
     - hide delete account button while a thread is running
-- database
-    - use thread lock to solve recursive cursor error?
-- test and delete all deprecated components
+    - load logs as a complex data structure so it can be loaded to the screen individually instead of a long string.
 - create tests for all stages
     - daily set
         - daily set has data
@@ -23,3 +17,4 @@
 
     - run on an account that is confirmed to have searches and daily set available.
         - get dashboard data before and after to confirm changes and potential missed points
+- remove some error checking in login function
