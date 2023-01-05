@@ -62,12 +62,16 @@ def remove_account(email):
 
 def add_account(email, password):
     logger.info(f"Adding {email}")
-    db.insert(util.MicrosoftAccount(
-        email=email,
-        password=password,
-        lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
-        points=0
-    ))
+    # if current account number is less than or equal to the max allowed accounts
+    if len(db.read()) <= config.max_account_number:
+        db.insert(util.MicrosoftAccount(
+            email=email,
+            password=password,
+            lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
+            points=0
+        ))
+    else:
+        logger.error(f"Unable to add account {email}. Account limit reached.")
 
 
 def calc_hours_ago(account: util.MicrosoftAccount) -> str:
