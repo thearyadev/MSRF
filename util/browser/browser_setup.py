@@ -1,8 +1,7 @@
-from types import SimpleNamespace
+
 
 from selenium import webdriver
 from selenium.webdriver.chrome.webdriver import WebDriver
-from deprecated import deprecated
 from selenium.webdriver.chrome.options import Options
 
 import util
