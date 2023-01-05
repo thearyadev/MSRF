@@ -13,7 +13,6 @@
     - more promotions
         - promotions has data
         - promotion types are in recorded types
-
     - run on an account that is confirmed to have searches and daily set available.
         - get dashboard data before and after to confirm changes and potential missed points
 - remove some error checking in login function
