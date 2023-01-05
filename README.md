@@ -10,7 +10,7 @@ This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/cha
 
 ## Installation
 
-Download the zip file from the github releases for this project. It will include everything needed to run this program, including: 
+Download the zip file from the Github releases for this project. It will include everything needed to run this program, including: 
   - The main executable
   - Chrome
   - Chromedriver Binary
