@@ -67,5 +67,5 @@ I'm a developer. Actively learning and looking for new and interesting opportuni
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[Apache-2.0](/LICENSE)
 
