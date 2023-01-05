@@ -5,7 +5,7 @@ LANG: "en-CA"
 GEO: "CA"
 TZ: '-300'
 debug: True
-minimum_auto_rerun_delay_seconds: 36000
+minimum_auto_rerun_delay_seconds: 97200
 gui_window_opacity: 0.9
 # operation_mode: SERVER # not implemented
 operation_mode: APPLICATION
