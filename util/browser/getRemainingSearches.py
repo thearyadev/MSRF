@@ -30,7 +30,15 @@ def get_remaining_searches(browser: WebDriver) -> RemainingSearchOutline:
         logger.critical("Counters may be missing. valued at zero")
         return remainingSearches
     # pc searches = points required - points earned
-    remainingSearches.pcSearches = int((counters.pcSearch[0].pointProgressMax - counters.pcSearch[0].pointProgress) / 3)
-    remainingSearches.mobileSearches = \
-        int((counters.mobileSearch[0].pointProgressMax - counters.mobileSearch[0].pointProgress) / 3)
+    try:
+        remainingSearches.pcSearches = int(
+            (counters.pcSearch[0].pointProgressMax - counters.pcSearch[0].pointProgress) / 3)
+    except TypeError:
+        pass
+    try:
+        remainingSearches.mobileSearches = \
+            int((counters.mobileSearch[0].pointProgressMax - counters.mobileSearch[0].pointProgress) / 3)
+    except TypeError:
+        pass
+
     return remainingSearches
