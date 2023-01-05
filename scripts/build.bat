@@ -5,4 +5,6 @@ flet pack main.py --name msrf --product-name "Microsoft Rewards Farmer" --produc
 mkdir dist/bin
 xcopy bin "dist/bin" /e
 xcopy configuration.yaml dist
+xcopy LICENSE dist
+xcopy README.md dist
 ECHO build complete
