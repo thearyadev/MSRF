@@ -21,6 +21,7 @@ class Config(BaseModel):
     pocket_base_binary_path: str | None
     hydration_rate: int | None
     max_account_number: int | None
+    version: str | None
 
 
 def load_config(file: str) -> Config:
