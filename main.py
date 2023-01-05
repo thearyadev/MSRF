@@ -35,9 +35,9 @@ Also... idk how to build ui's. this file is messy.
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
-logger.info("Loaded ./configuration.yaml into config SimpleNamespace")
+logger.info("Loaded ./configuration.yaml into config object")
 db = database.DatabaseAccess()  # create database connection
-logger.info(f"Connection to database ({config.database_url}) was successful.")
+logger.info(f"Connection to database was successful.")
 
 
 def get_log() -> str:
@@ -381,6 +381,7 @@ def main_screen(page: ft.Page):
 
         page.update()
 
+    page.window_center()
     page.window_visible = True
 
     while True:
