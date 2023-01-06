@@ -1,8 +1,8 @@
 import threading
-from .database_config import DatabaseConfig
-
 
 import util
+
+from .database_config import DatabaseConfig
 
 lock = threading.Lock()
 

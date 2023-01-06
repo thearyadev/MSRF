@@ -44,7 +44,7 @@ def is_currently_running(account: util.MicrosoftAccount) -> bool:
     return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
 
 
-def toggle_debug_mode():
+def toggle_debug_mode(_):
     config.debug = not config.debug
 
 
