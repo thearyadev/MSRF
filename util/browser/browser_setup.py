@@ -1,5 +1,6 @@
 import sys
 from subprocess import CREATE_NO_WINDOW
+import atexit
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -32,9 +33,12 @@ def init_browser(*, headless: bool, agent: str) -> WebDriver:
 
         service = Service("bin/chromedriver.exe", service_args=args)
         service.creation_flags = CREATE_NO_WINDOW
-
-        return webdriver.Chrome(service=service, options=options)
+        driver = webdriver.Chrome(service=service, options=options)
+        atexit.register(driver.quit)
+        return driver
 
     else:
         logger.info("Starting browser in development mode")
-        return webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(options=options)
+        atexit.register(driver.quit)
+        return driver
