@@ -22,7 +22,8 @@ class Config(BaseModel):
     hydration_rate: int | None
     max_account_number: int | None
     version: str | None
-
+    program_name: str | None
+    product_name: str | None
 
 def load_config(file: str) -> Config:
     with open(file, "r") as f:
