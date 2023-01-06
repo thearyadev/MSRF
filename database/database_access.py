@@ -1,12 +1,13 @@
 import threading
+from .database_config import DatabaseConfig
 
-import database
+
 import util
 
 lock = threading.Lock()
 
 
-class DatabaseAccess(database.DatabaseConfig):
+class DatabaseAccess(DatabaseConfig):
     def __init__(self, db_path: str = "./accounts.sqlite"):
         super().__init__(db_path)
 
