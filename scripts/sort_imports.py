@@ -6,7 +6,6 @@ import subprocess
 
 
 def exec_file(file: str):
-    input(f"running on {file}. __init__ {'__init__' not in file}")
     if "__init__" not in file:
         subprocess.run(
             f"autoflake --in-place --remove-unused-variables --remove-all-unused-imports  {file}")
