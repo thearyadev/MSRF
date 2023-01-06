@@ -1,6 +1,6 @@
+import atexit
 import sys
 from subprocess import CREATE_NO_WINDOW
-import atexit
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
