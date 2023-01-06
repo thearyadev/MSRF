@@ -33,7 +33,7 @@ class FileStreamLogger:
     def load(self) -> str:
         lock.acquire()
         with open(self.file_path, "r") as file:
-            data = "".join(list((list(reversed(file.readlines()))[:100])))
+            data = "".join(list((list(reversed(file.readlines()))[:200])))
             lock.release()
             return data
 
