@@ -12,6 +12,6 @@ operation_mode: APPLICATION
 pocket_base_binary_path: "./bin/pocketbase.exe"
 hydration_rate: 2 # 2 or below feels good. Above 2 causes some delays when screen elements change
 max_account_number: 8
-version: v0.11b
+version: v0.2b
 program_name: "msrf"
 product_name: "Microsoft Rewards Farmer"
