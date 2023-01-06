@@ -262,7 +262,7 @@ def main_screen(page: ft.Page):
         divider.visible = False
         page.update()
         return
-
+    version_info: util.VersionInfo = util.check_version()
     page.add(
         ft.Row(
             [
@@ -330,6 +330,15 @@ def main_screen(page: ft.Page):
                                     tooltip="Force Execution (Not Recommended)",
                                     on_click=lambda _: force_exec(),
                                 ),
+                                ft.Container(
+                                    content=ft.Text("Update Available",
+                                                    color=ft.colors.RED,
+                                                    tooltip=f"Version {version_info.release_version} is available."
+                                                            f" Current on {config.version}"
+                                                            f".\nClick to update") if
+                                    version_info.release_version != config.version else None,
+                                    on_click=lambda _: page.launch_url(version_info.release_url)
+                                )
 
                             ],
                         )
@@ -381,7 +390,6 @@ def main_screen(page: ft.Page):
 
         page.update()
 
-    page.window_center()
     page.window_visible = True
 
     while True:
