@@ -430,4 +430,4 @@ if __name__ == '__main__':
     scheduler.start()
 
     ft.app(target=main_screen, view=ft.WEB_BROWSER if config.operation_mode == "SERVER" else "flet_app_hidden")
-    atexit.register(lambda: scheduler.shutdown())
+    atexit.register(scheduler.shutdown)
