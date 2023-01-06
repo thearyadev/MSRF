@@ -1,8 +1,4 @@
-import datetime
 import sqlite3
-
-import database
-import util
 
 
 def dict_factory(cursor, row):
@@ -10,7 +6,6 @@ def dict_factory(cursor, row):
     for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
-
 
 
 class DatabaseConfig:
@@ -33,18 +28,3 @@ class DatabaseConfig:
             """
         )
         self.connection.commit()
-
-
-if __name__ == '__main__':
-    x = database.DatabaseAccess()
-    # x.insert(
-    #     util.MicrosoftAccount(
-    #         email="ajksdlasddddj",
-    #         password="aasddoisdjasd",
-    #         lastExec=datetime.datetime.now(tz=datetime.timezone.utc)
-    #     )
-    # )
-    x.delete(account=util.MicrosoftAccount(
-        id='1', email='ajksdlasdj', password='this was updated', points=0,
-        lastExec=datetime.datetime(2022, 12, 30, 19, 26, 2, 453184, tzinfo=datetime.timezone.utc)
-    ))
