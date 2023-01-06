@@ -12,4 +12,4 @@ operation_mode: APPLICATION
 pocket_base_binary_path: "./bin/pocketbase.exe"
 hydration_rate: 2 # 2 or below feels good. Above 2 causes some delays when screen elements change
 max_account_number: 8
-version: 0.10b
+version: v0.11b
