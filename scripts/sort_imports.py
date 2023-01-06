@@ -5,7 +5,7 @@ import subprocess
 
 
 def exec_file(file: str):
-    if "__init__" not in file:
+    if "__init__" not in file:  # do not run in __init__.py files
         subprocess.run(
             f"autoflake --in-place --remove-unused-variables --remove-all-unused-imports  {file}")
         isort.file(file)
