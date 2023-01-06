@@ -1,5 +1,4 @@
 import datetime
-import logging
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -10,7 +9,7 @@ import database
 import util
 
 
-def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: database.DatabaseAccess):
+def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
     """
     Runs the script on a single MicrosoftAccount object.
 
@@ -128,7 +127,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
                 logger.critical(f"Failed to complete PC bing searches. {e}")
 
         if remainingSearches.mobileSearches:
-            logging.info("Starting mobile browser.")
+            logger.info("Starting mobile browser.")
             account.points = util.getPointCount(browser)
             db.write(account)
             mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
@@ -148,7 +147,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: data
             logger.info("Closing mobile browser")
             mobileBrowser.quit()
 
-    logging.info("Getting closing point count.")
+    logger.info("Getting closing point count.")
     account.points = util.getPointCount(browser)
     db.write(account)
 
