@@ -54,7 +54,10 @@ if __name__ == '__main__':
     for file in files_to_copy:
         target_file = pathlib.Path(f"{target_directory.name}/{file.name}")
         shutil.copy(file, target_file)
-
+    try:
+        os.remove("msrf.spec")
+    except FileNotFoundError:
+        pass
     try:
         shutil.rmtree(build_dir)
     except FileNotFoundError:
