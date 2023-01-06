@@ -16,4 +16,6 @@
     - run on an account that is confirmed to have searches and daily set available.
         - get dashboard data before and after to confirm changes and potential missed points
 - remove some error checking in login function
-- add proper cleanup for browsers on unexpected program failure.
+- add proper teardown for browsers on unexpected program failure.
+- sort import statements for all files
+- format all files
