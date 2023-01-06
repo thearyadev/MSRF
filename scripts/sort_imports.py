@@ -1,6 +1,16 @@
 import isort
 import glob
 from rich.progress import track
+import autoflake
+import subprocess
+
+
+def exec_file(file: str):
+    if "__init__" not in file:
+        subprocess.run(
+            f"autoflake --in-place --remove-unused-variables --remove-all-unused-imports  {file}")
+    isort.file(file)
+
 
 if __name__ == '__main__':
     dirs = ["custom_logging", "database", "util", "tests"]
@@ -9,7 +19,7 @@ if __name__ == '__main__':
     for d in track(dirs, "stage 1"):
         gb = glob.glob(f"{d}/**/*.py", recursive=True)
         for f in gb:
-            isort.file(f)
+            exec_file(f)
 
     for f in track(files, "stage 2"):
-        isort.file(f)
+        exec_file(f)

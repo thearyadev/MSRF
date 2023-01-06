@@ -1,5 +1,4 @@
 import functools
-import logging
 import warnings
 
 import custom_logging

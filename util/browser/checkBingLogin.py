@@ -1,4 +1,3 @@
-import time
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver

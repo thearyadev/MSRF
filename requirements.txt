@@ -7,3 +7,5 @@ APScheduler~=3.9.1.post1
 flet~=0.3.1
 pytz~=2022.6
 PyGithub~=1.57
+isort~=5.11.4
+autoflake~=2.0.0

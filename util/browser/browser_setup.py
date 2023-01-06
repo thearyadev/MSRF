@@ -7,7 +7,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
-import util
 
 
 def init_browser(*, headless: bool, agent: str) -> WebDriver:

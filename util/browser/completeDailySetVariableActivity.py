@@ -1,11 +1,7 @@
 import random
 import time
 
-from selenium.common.exceptions import (ElementNotInteractableException,
-                                        NoAlertPresentException,
-                                        NoSuchElementException,
-                                        TimeoutException,
-                                        UnexpectedAlertPresentException)
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 

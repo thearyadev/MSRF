@@ -1,14 +1,9 @@
 import atexit
 import copy
 import datetime
-import logging
-import pathlib
-import re
-import sys
 import threading
 import time
 
-import apscheduler.triggers.base
 import flet as ft
 import flet.buttons
 import pytz
@@ -22,22 +17,22 @@ import util
 """
 github.com/thearyadev/msrf
 
-What does this file do? 
+What does this file do?
 
 1. Configures logging
 2. Connects to Database
-3. Configures and runs UI/Flet server. 
+3. Configures and runs UI/Flet server.
 4. methods for starting and managing farmer processes using sequentially run threads
 5. background scheduler to check which accounts are ready to run
 
-Also... idk how to build ui's. this file is messy. 
+Also... idk how to build ui's. this file is messy.
 """
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config object")
 db = database.DatabaseAccess()  # create database connection
-logger.info(f"Connection to database was successful.")
+logger.info("Connection to database was successful.")
 
 
 def get_log() -> str:
@@ -76,7 +71,7 @@ def add_account(email, password):
 
 def calc_hours_ago(account: util.MicrosoftAccount) -> str:
     tsec = (
-            datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
+        datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
     ).total_seconds()
 
     if tsec > 2_592_000:
@@ -375,15 +370,15 @@ def main_screen(page: ft.Page):
         if not page.client_storage.get("farmer_prompt_shown"):
             try:
                 secs = (
-                        scheduler.get_jobs()[0]
-                        .next_run_time - datetime.datetime.now(tz=pytz.timezone('America/New_York'))
+                    scheduler.get_jobs()[0]
+                    .next_run_time - datetime.datetime.now(tz=pytz.timezone('America/New_York'))
                 ).total_seconds()
                 if secs < 1.5:
                     page.client_storage.set("farmer_prompt_shown", True)
 
                 bg_process_prompt.value = f"Starting Farmer in: {secs:.0f} seconds"
 
-            except Exception as e:
+            except Exception:
                 bg_process_prompt.value = "Paused"
         else:
             bg_process_prompt.value = ""
@@ -410,8 +405,8 @@ def pick_and_run():
         validAccounts = [
             account for account in sorted(db.read(), key=lambda a: a.lastExec)
             if (
-                       datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
-               ).total_seconds() > config.minimum_auto_rerun_delay_seconds
+                datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
+            ).total_seconds() > config.minimum_auto_rerun_delay_seconds
         ]
         if validAccounts:  # if at least one account is eligible
             threading.Thread(

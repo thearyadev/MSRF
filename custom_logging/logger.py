@@ -3,9 +3,6 @@ import threading
 from enum import Enum
 
 import rich
-from pydantic import BaseModel
-
-import custom_logging
 
 
 class LogLevel(Enum):

@@ -1,13 +1,9 @@
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Extra, Field, validator
-from rich import print
-
-import util
+from pydantic import BaseModel, Field, validator
 
 """
 This file models the data retrieved from rewards.bing.com.

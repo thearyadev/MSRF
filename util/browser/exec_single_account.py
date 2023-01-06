@@ -1,7 +1,5 @@
 import datetime
 import logging
-import threading
-import time
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
