@@ -1,7 +1,6 @@
 import isort
 import glob
 from rich.progress import track
-import autoflake
 import subprocess
 
 
@@ -10,7 +9,6 @@ def exec_file(file: str):
         subprocess.run(
             f"autoflake --in-place --remove-unused-variables --remove-all-unused-imports  {file}")
         isort.file(file)
-
 
 
 if __name__ == '__main__':
