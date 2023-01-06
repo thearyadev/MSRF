@@ -1,6 +1,7 @@
-from enum import Enum
 import inspect
 import threading
+from enum import Enum
+
 import rich
 from pydantic import BaseModel
 

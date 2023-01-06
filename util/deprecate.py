@@ -1,6 +1,7 @@
+import functools
 import logging
 import warnings
-import functools
+
 import custom_logging
 
 

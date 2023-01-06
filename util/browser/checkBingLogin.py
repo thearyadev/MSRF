@@ -2,10 +2,10 @@ import time
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import custom_logging
 import util
-from selenium.webdriver.common.by import By
 
 
 def verify_bing_login(browser: WebDriver) -> bool:

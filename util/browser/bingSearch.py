@@ -1,14 +1,17 @@
 import logging
-
-from selenium.webdriver.chrome.webdriver import WebDriver
-import custom_logging
-import util
+import random
 import time
+
+from selenium.common.exceptions import (ElementNotInteractableException,
+                                        NoAlertPresentException,
+                                        NoSuchElementException,
+                                        TimeoutException,
+                                        UnexpectedAlertPresentException)
+from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
-import random
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException, \
-    UnexpectedAlertPresentException, NoAlertPresentException
+import custom_logging
+import util
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):

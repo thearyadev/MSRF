@@ -1,10 +1,15 @@
+import random
 import time
+
+from selenium.common.exceptions import (ElementNotInteractableException,
+                                        NoAlertPresentException,
+                                        NoSuchElementException,
+                                        TimeoutException,
+                                        UnexpectedAlertPresentException)
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException, \
-    UnexpectedAlertPresentException, NoAlertPresentException
+
 import util
-import random
 
 
 def completeDailySetVariableActivity(browser: WebDriver, cardNumber: int):

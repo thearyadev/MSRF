@@ -1,8 +1,8 @@
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-from selenium.webdriver.common.by import By
-import time
 import random
+import time
+
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import custom_logging
 

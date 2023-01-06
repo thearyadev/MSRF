@@ -1,10 +1,11 @@
 import dataclasses
-import pydantic.typing
-
-import yaml
 from types import SimpleNamespace
-import util
+
+import pydantic.typing
+import yaml
 from pydantic import BaseModel
+
+import util
 
 
 class Config(BaseModel):

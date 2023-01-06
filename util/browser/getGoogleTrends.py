@@ -1,8 +1,8 @@
 import json
 import logging
+from datetime import date, timedelta
 
 import requests
-from datetime import date, timedelta
 
 import custom_logging
 

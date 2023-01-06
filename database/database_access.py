@@ -1,7 +1,7 @@
+import threading
+
 import database
 import util
-
-import threading
 
 lock = threading.Lock()
 

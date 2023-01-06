@@ -1,5 +1,5 @@
-from github import Github
 import github
+from github import Github
 from pydantic import BaseModel
 
 

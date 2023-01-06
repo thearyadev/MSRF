@@ -1,5 +1,6 @@
-from selenium.webdriver.chrome.webdriver import WebDriver
 import time
+
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 
 def resetTabs(browser: WebDriver, BASE_URL: str):

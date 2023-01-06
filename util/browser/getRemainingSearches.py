@@ -1,8 +1,8 @@
 from pydantic import BaseModel
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
-from selenium.webdriver.chrome.webdriver import WebDriver
 
 
 class RemainingSearchOutline(BaseModel):

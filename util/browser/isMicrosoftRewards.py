@@ -1,8 +1,8 @@
 import logging
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.webdriver import WebDriver
 import time
+
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import custom_logging
 

@@ -1,15 +1,15 @@
 import datetime
+import logging
 import threading
+import time
 
 import selenium.common.exceptions
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import custom_logging
-import util
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.webdriver import WebDriver
-import time
 import database
-import logging
+import util
 
 
 def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: database.DatabaseAccess):

@@ -1,11 +1,14 @@
+import time
+
 import selenium.common.exceptions
+from selenium.common.exceptions import (ElementNotInteractableException,
+                                        NoSuchElementException,
+                                        TimeoutException)
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 import custom_logging
 import util
-from selenium.webdriver.common.by import By
-import time
-from selenium.common.exceptions import NoSuchElementException, TimeoutException, ElementNotInteractableException
 
 
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:

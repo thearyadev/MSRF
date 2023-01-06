@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
-from typing import Any, List, Optional, Dict, Union
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Extra, Field, validator
 from rich import print
+
+import util
 
 """
 This file models the data retrieved from rewards.bing.com.
@@ -110,4 +112,4 @@ class DashboardDataModel(BaseModel):
         newDict = dict()
         for promotionDateString, promotionData in value.items():
             newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
-        return newDict
+        return newDict # hello world

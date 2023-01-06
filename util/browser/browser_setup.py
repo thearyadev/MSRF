@@ -1,10 +1,10 @@
 import sys
+from subprocess import CREATE_NO_WINDOW
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
-from selenium.webdriver.chrome.options import Options
-from subprocess import CREATE_NO_WINDOW
 
 import custom_logging
 import util

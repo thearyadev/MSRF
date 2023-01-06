@@ -1,11 +1,11 @@
 import logging
 import time
 
+from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.common.by import By
+
 import custom_logging
 import util
-from selenium.webdriver.chrome.webdriver import WebDriver
-
-from selenium.webdriver.common.by import By
 
 
 def complete_daily_set_quiz(browser: WebDriver, cardNumber: int, base_url: str):

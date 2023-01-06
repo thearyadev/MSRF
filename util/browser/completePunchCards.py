@@ -1,9 +1,9 @@
 import logging
 
+from selenium.webdriver.chrome.webdriver import WebDriver
+
 import custom_logging
 import util
-
-from selenium.webdriver.chrome.webdriver import WebDriver
 
 
 def exec_punch_cards(browser: WebDriver):
