@@ -55,7 +55,6 @@ if __name__ == '__main__':
         target_file = pathlib.Path(f"{target_directory.name}/{file.name}")
         shutil.copy(file, target_file)
 
-
     try:
         shutil.rmtree(build_dir)
     except FileNotFoundError:
