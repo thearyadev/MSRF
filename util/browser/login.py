@@ -11,7 +11,7 @@ import custom_logging
 import util
 
 
-def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, ) -> bool:
+def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount) -> bool:
     """
     Logs into Microsoft Rewards (and bing) in the current browser instance for the given account.
     :browser Selenium webdriver
