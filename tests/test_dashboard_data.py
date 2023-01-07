@@ -1,12 +1,13 @@
+import atexit
 import os
 from datetime import datetime
 
 import dotenv
-import util
 import pytest
-from selenium.webdriver.chrome.webdriver import WebDriver
-import atexit
 import pytest_check as ptc
+from selenium.webdriver.chrome.webdriver import WebDriver
+
+import util
 
 dotenv.load_dotenv()
 config: util.Config = util.load_config("configuration.yaml")
