@@ -44,6 +44,8 @@ If the quiz types change, or new data is present that I have not designed this f
 That being said, from my testing and observation, a level 2 microsoft rewards account seems to get 150-250 points per day. 
 This number can be increased by manually ensuring that the daily set is completed, so that you gain streak bonuses, and that any additional quizzes or polls that the bot is unable to do are completed. 
 
+`07/01/2023` - Some surveys don't work. Fixes maybe soon :)
+
 ### Bans
 I've been developing this for about a month now. I haven't been banned on the 4 accounts that I have been testing on. After redeeming excess of $25 worth of rewards, and continuously running this daily, not one account has been banned. 
 
@@ -68,6 +70,11 @@ For example:
   - "Please verify your security information". This will require you to click a button to confirm, which will block the program from running on your account.
   
 If other errors are occurring, you can use debugging mode to determine why those issues are arising.
+
+### Updates
+When the program gets updated, it will reveal an update prompt. It is important to keep this app up to date, to prevent your account from getting banned. 
+
+This project currently has no update/installer. It is just a zipped folder with an executable in it. To copy your accounts over, copy the `accounts.sqlite` file to the directory that contains the updated files. 
 
 ## Contributing
 
