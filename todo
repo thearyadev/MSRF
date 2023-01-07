@@ -1,21 +1,9 @@
-- gui
-    - hide delete account button while a thread is running
 - create tests for all stages
     - daily set
-        - daily set has data
         - daily set contains 3 items
-        - daily set type is of recorded types
-        - daily set data is valid
-    - punch cards
-        - punch cards has data
-        - punch card type contains all recorded types
-        - punch card data is valid
-    - more promotions
-        - promotions has data
-        - promotion types are in recorded types
-    - run on an account that is confirmed to have searches and daily set available.
-        - get dashboard data before and after to confirm changes and potential missed points
-- remove some error checking in login function
-- add proper teardown for browsers on unexpected program failure.
-- sort import statements for all files
-- format all files
+
+- Add error capturing module
+    - When an error occurs in Selenium/Chromedriver:
+        - Take a screenshot of the page
+        - Record snapshot of current HTML
+        - load account data AFTER the exception occurs
