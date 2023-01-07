@@ -16,6 +16,7 @@ class Config(BaseModel):
     version: str | None
     program_name: str | None
     product_name: str | None
+    theme_mode: str | None
 
 
 def load_config(file: str) -> Config:
