@@ -52,7 +52,7 @@ Microsoft may change their methods of banning at any time. Use accounts that you
 I'm also not currently aware of any IP bans or rate limits for a single IP when it comes to point collection and reward redemption, as I haven't encountered this in my testing. If this concerns you, i advise you use a VPN. If this becomes a major problem I may incorporate proxy servers into this project.
 
 ### Breaking Changes
-Microsoft can make changes at any time. They may break the farmer. I've designed this so that whichever component doesn't work, is simply skipped, outputting a critical error then continuing to the next task. 
+Microsoft can make changes at any time. They may break the farmer. I've designed this so that whichever component does not work, is simply skipped, outputting a critical error then continuing to the next task. 
 When breaking changes are known, I will work towards fixing them. 
 
 ### Not working? 
