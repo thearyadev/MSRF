@@ -325,6 +325,10 @@ def main_screen(page: ft.Page):
                                     tooltip="Force Execution (Not Recommended)",
                                     on_click=lambda _: force_exec(),
                                 ),
+                                ft.IconButton(
+                                    icon=ft.icons.FOLDER_SPECIAL,
+                                    tooltip="Open Program Folder",
+                                ),
                                 ft.Container(
                                     content=ft.Text("Update Available",
                                                     color=ft.colors.RED,
