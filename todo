@@ -1,9 +1,0 @@
-- create tests for all stages
-    - daily set
-        - daily set contains 3 items
-
-- Add error capturing module
-    - When an error occurs in Selenium/Chromedriver:
-        - Take a screenshot of the page
-        - Record snapshot of current HTML
-        - load account data AFTER the exception occurs
