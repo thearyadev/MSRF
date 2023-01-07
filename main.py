@@ -1,6 +1,7 @@
 import atexit
 import copy
 import datetime
+import os
 import threading
 import time
 
@@ -90,7 +91,6 @@ def force_exec():
     for account in accounts:
         account.lastExec = account.lastExec - datetime.timedelta(days=365)
         db.write(account)
-
 
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
@@ -328,6 +328,7 @@ def main_screen(page: ft.Page):
                                 ft.IconButton(
                                     icon=ft.icons.FOLDER_SPECIAL,
                                     tooltip="Open Program Folder",
+                                    on_click=lambda _: os.startfile(".")
                                 ),
                                 ft.Container(
                                     content=ft.Text("Update Available",
