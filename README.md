@@ -55,6 +55,19 @@ I'm also not currently aware of any IP bans or rate limits for a single IP when 
 Microsoft can make changes at any time. They may break the farmer. I've designed this so that whichever component doesn't work, is simply skipped, outputting a critical error then continuing to the next task. 
 When breaking changes are known, I will work towards fixing them. 
 
+### Not working? 
+The most common problem I've seen in testing is login problems. The prompt may say something like invalid credentials, which may be the case. 
+Microsoft sometimes has other steps to the login, which I have not considered. 
+
+If an account is continuously failing to log in, you can enter "debugging mode" by clicking the bug icon at the bottom control panel. This will show the Chrome browser that is being used by the program, and will allow you to see what is preventing the login. 
+
+For example: 
+- Invalid credentials
+  - You will be able to see the program attempt to log in, and view the full error message sent by microsoft authentication
+- Additional Login steps
+  - "Please verify your security information". This will require you to click a button to confirm, which will block the program from running on your account.
+  
+If other errors are occurring, you can use debugging mode to determine why those issues are arising.
 
 ## Contributing
 
