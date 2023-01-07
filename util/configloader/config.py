@@ -1,4 +1,3 @@
-
 import yaml
 from pydantic import BaseModel
 
@@ -17,6 +16,7 @@ class Config(BaseModel):
     version: str | None
     program_name: str | None
     product_name: str | None
+
 
 def load_config(file: str) -> Config:
     with open(file, "r") as f:
