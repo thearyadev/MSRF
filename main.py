@@ -97,7 +97,7 @@ def main_screen(page: ft.Page):
     page.window_title_bar_buttons_hidden = True
 
     page.window_opacity = config.gui_window_opacity
-    page.theme_mode = "light"
+    page.theme_mode = config.theme_mode.lower()
 
     def show_bs(e):
         bs.open = True
@@ -334,11 +334,17 @@ def main_screen(page: ft.Page):
                                     content=ft.Text("Update Available",
                                                     color=ft.colors.RED,
                                                     tooltip=f"Version {version_info.release_version} is available."
-                                                            f" Current on {config.version}"
+                                                            f" Currently on {config.version}"
                                                             f".\nClick to update") if
                                     version_info.release_version != config.version else None,
                                     on_click=lambda _: page.launch_url(version_info.release_url)
+                                ) if "DEVELOPMENT" not in config.version else
+                                ft.Container(
+                                    content=ft.Text("DEVELOPMENT BUILD",
+                                                    style=ft.TextThemeStyle.BODY_MEDIUM,
+                                                    color=ft.colors.GREEN)
                                 )
+
 
                             ],
                         )
