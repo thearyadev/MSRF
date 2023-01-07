@@ -6,15 +6,12 @@ from pydantic import BaseModel
 class Config(BaseModel):
     pc_user_agent: str | None
     mobile_user_agent: str | None
-    database_url: str | None
     LANG: str | None
     GEO: str | None
     TZ: str | None
     debug: bool | None
     minimum_auto_rerun_delay_seconds: int | None
     gui_window_opacity: float | None
-    operation_mode: str | None
-    pocket_base_binary_path: str | None
     hydration_rate: int | None
     max_account_number: int | None
     version: str | None
