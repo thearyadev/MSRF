@@ -22,6 +22,7 @@ class ErrorReport:
         self.exceptionData: str = exceptionData
         self.compressed: bool = False
         self.data: bytes = bytes()
+        self.file_path: str = str()
 
     def compress(self) -> 'ErrorReport':
         zip_buffer = io.BytesIO()
@@ -56,20 +57,30 @@ class ErrorReporter:
         return browser.current_url
 
     @staticmethod
-    def _serialize_dashboard_data_as_json(accountData: util.DashboardData) -> str:
+    def _serialize_dashboard_data_as_json(browser: WebDriver, accountData: util.DashboardData | None | str) -> str:
+        if isinstance(accountData, str):
+            if accountData == "RETRIEVE":
+                try:
+                    accountData = util.load_dashboard_data(browser)
+                except Exception:
+                    return str(None)
+        if accountData is None:
+            return str(None)
+
         return json.dumps(obj=accountData.dict(), cls=error_reporting.DateTimeEncoder)
 
     @staticmethod
     def _parse_exception(exception: Exception) -> str:
         return ''.join(traceback.format_exception(exception))
 
-    def generate_report(self, browser: WebDriver, accountData: util.DashboardData, exception: Exception) -> ErrorReport:
+    def generate_report(self, browser: WebDriver, accountData: util.DashboardData | None | str,
+                        exception: Exception) -> ErrorReport:
         try:
             report = ErrorReport(
                 screenshot=self._get_browser_screenshot(browser),
                 html=self._get_html(browser),
                 url=self._get_current_url(browser),
-                accountDataJson=self._serialize_dashboard_data_as_json(accountData),
+                accountDataJson=self._serialize_dashboard_data_as_json(browser, accountData),
                 exceptionData=self._parse_exception(exception)
             ).compress()
             self._write(report)
@@ -79,5 +90,6 @@ class ErrorReporter:
             return report
 
     def _write(self, report: ErrorReport) -> None:
-        with open(self._err_dir + f"/error_{datetime.datetime.now().timestamp()}.zip", "wb") as file:
+        report.file_path = self._err_dir + f"/error_{datetime.datetime.now().timestamp()}.zip"
+        with open(report.file_path, "wb") as file:
             file.write(report.data)
