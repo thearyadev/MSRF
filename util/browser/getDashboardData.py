@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
@@ -15,6 +17,7 @@ def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(colors=True, console=True)
     logger.info("loading dashboard data")
     browser.get("https://rewards.bing.com")
+    time.sleep(3)
     try:
         return util.DashboardData(**browser.execute_script("return dashboard"))
     except Exception as e:
