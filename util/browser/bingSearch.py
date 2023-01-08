@@ -7,10 +7,14 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 import custom_logging
-from error_reporting import ErrorReport, ErrorReporter
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):
+    from util import ErrorReport, ErrorReporter
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     browser.get('https://bing.com')

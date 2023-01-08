@@ -11,6 +11,7 @@ def complete_daily_set_quiz(browser: WebDriver, cardNumber: int, base_url: str):
     """
     completes the daily set quiz
     """
+
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     time.sleep(2)
     browser.find_element(By.XPATH, '//*[@id="daily-sets"]/mee-card-group[1]/div/mee-card[' + str(

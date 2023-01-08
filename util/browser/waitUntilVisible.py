@@ -3,11 +3,16 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-from error_reporting import ErrorReport, ErrorReporter
-from main import logger
+import custom_logging
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 
 def waitUntilVisible(browser: WebDriver, by_: By, selector: str, time_to_wait: int = 10):
+    from util import ErrorReport, ErrorReporter
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     try:
         WebDriverWait(browser, time_to_wait).until(ec.visibility_of_element_located((by_, selector)))
     except Exception as e:

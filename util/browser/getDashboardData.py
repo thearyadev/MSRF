@@ -2,12 +2,16 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
-from error_reporting import ErrorReport, ErrorReporter
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 from ..models.dashboard_data import DashboardData
 
 
 def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
+    from util import ErrorReport, ErrorReporter
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(colors=True, console=True)
     logger.info("loading dashboard data")
     browser.get("https://rewards.bing.com")

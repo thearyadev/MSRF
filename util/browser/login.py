@@ -9,7 +9,10 @@ from selenium.webdriver.common.by import By
 
 import custom_logging
 import util
-from error_reporting import ErrorReport, ErrorReporter
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount) -> bool:
@@ -18,6 +21,7 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     :browser Selenium webdriver
     :account MicrosoftAccount object
     """
+    from util import ErrorReport, ErrorReporter
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
     # Access to bing.com

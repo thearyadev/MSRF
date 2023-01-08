@@ -3,7 +3,10 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
-from error_reporting import ErrorReport, ErrorReporter
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 
 def getPointCount(browser: WebDriver) -> int:
@@ -12,6 +15,7 @@ def getPointCount(browser: WebDriver) -> int:
     Defaults to 0 if the function fails.
     :browser Selenium web driver
     """
+    from util import ErrorReport, ErrorReporter
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     accountData = util.load_dashboard_data(browser)
 

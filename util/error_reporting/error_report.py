@@ -7,7 +7,9 @@ import zipfile
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
-import error_reporting
+from ..models.dashboard_data import DashboardData
+from ..browser.getDashboardData import load_dashboard_data
+from .json_encoder import DateTimeEncoder
 import util
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
@@ -43,6 +45,7 @@ class ErrorReport:
 class ErrorReporter:
     def __init__(self, error_dir: str = "./errors"):
         self._err_dir: str = error_dir
+        print("Error reporting started...")
 
     @staticmethod
     def _get_browser_screenshot(browser: WebDriver) -> bytes:
@@ -61,19 +64,19 @@ class ErrorReporter:
         if isinstance(accountData, str):
             if accountData == "RETRIEVE":
                 try:
-                    accountData = util.load_dashboard_data(browser)
+                    accountData = load_dashboard_data(browser)
                 except Exception:
                     return str(None)
         if accountData is None:
             return str(None)
 
-        return json.dumps(obj=accountData.dict(), cls=error_reporting.DateTimeEncoder)
+        return json.dumps(obj=accountData.dict(), cls=DateTimeEncoder)
 
     @staticmethod
     def _parse_exception(exception: Exception) -> str:
         return ''.join(traceback.format_exception(exception))
 
-    def generate_report(self, browser: WebDriver, accountData: util.DashboardData | None | str,
+    def generate_report(self, browser: WebDriver, accountData: DashboardData | None | str,
                         exception: Exception) -> ErrorReport:
         try:
             report = ErrorReport(

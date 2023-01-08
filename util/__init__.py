@@ -34,3 +34,4 @@ from .browser.isMicrosoftRewards import isMicrosoftRewards
 from .models.dashboard_json_models import *
 from .models.dashboard_data import DashboardData
 from .version_checker.check_version import check_version, VersionInfo
+from .error_reporting.error_report import ErrorReporter, ErrorReport

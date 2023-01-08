@@ -7,7 +7,10 @@ from selenium.webdriver.common.by import By
 import custom_logging
 import database
 import util
-from error_reporting import ErrorReport, ErrorReporter
+import typing
+
+if typing.TYPE_CHECKING:
+    from util import ErrorReport, ErrorReporter
 
 
 def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
@@ -18,6 +21,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     :config generic configuration for this project
     :db DatabaseAccess class to record MicrosoftAccount changes
     """
+    from util import ErrorReport, ErrorReporter
 
     account.lastExec = datetime.datetime.now(tz=datetime.timezone.utc)
     db.write(account=account)
