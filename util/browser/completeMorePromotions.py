@@ -32,8 +32,6 @@ def exec_additional_promotions(browser: WebDriver):
         return
 
     for cardNumberNoOffset, promotion in enumerate(more_promotions):
-        promotion.complete = False
-        promotion.pointProgress = 0
         cardNo = cardNumberNoOffset + 1
         try:
             if not promotion.complete and promotion.pointProgressMax != 0:
