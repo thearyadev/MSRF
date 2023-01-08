@@ -11,6 +11,7 @@ from ..models.dashboard_data import DashboardData
 from ..browser.getDashboardData import load_dashboard_data
 from .json_encoder import DateTimeEncoder
 import util
+import sys
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
@@ -97,7 +98,10 @@ class ErrorReporter:
 
     @staticmethod
     def _parse_exception(exception: Exception) -> str:
-        return ''.join(traceback.format_exception(exception))
+        try:
+            return ''.join(traceback.format_exception(*sys.exc_info()))
+        except Exception:
+            return ''.join(traceback.format_exception(exception))
 
     def generate_report(self, browser: WebDriver, accountData: DashboardData | None | str,
                         exception: Exception) -> ErrorReport:
