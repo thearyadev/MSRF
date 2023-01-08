@@ -1,9 +1,10 @@
-import logging
+
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 def exec_punch_cards(browser: WebDriver):
@@ -11,13 +12,19 @@ def exec_punch_cards(browser: WebDriver):
 
     accountData: util.DashboardData = util.load_dashboard_data(browser)
     if accountData is None:
-        logging.critical("Unable to complete punch cards due to missing dashboard data.")
+        logger.critical("Unable to complete punch cards due to missing dashboard data.")
         return
 
     punch_cards: list[util.PunchCards] = accountData.punchCards
 
     if not punch_cards:
-        logging.critical("Unable to complete punch cards. Attribute is None or Empty Array")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=accountData,
+            exception=Exception("Manual exception. Punch card data is missing")
+        )
+        logger.critical("Unable to complete punch cards. Attribute is None or Empty Array "
+                        f"Error report has been generated: {errorReport.file_path}")
         return
 
     for punch_card in punch_cards:
@@ -33,6 +40,12 @@ def exec_punch_cards(browser: WebDriver):
                     punch_card.childPromotion
                 )
             except Exception as e:
-                logging.critical(f"Failed to complete punch card child promotion. Expected error: {e}")
+                errorReport: ErrorReport = ErrorReporter().generate_report(
+                    browser,
+                    accountData=accountData,
+                    exception=e
+                )
+                logger.critical("Failed to complete punch card child promotion. Expected error: "
+                                f"Error report has been generated: {errorReport.file_path}")
             else:
                 logger.info(f"Successfully completed punch card child promotion: {punch_card.name}")

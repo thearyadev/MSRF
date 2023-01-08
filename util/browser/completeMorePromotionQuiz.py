@@ -14,7 +14,7 @@ def complete_more_promotion_quiz(*, browser: WebDriver, cardNumber: int):
     time.sleep(1)
     browser.switch_to.window(window_name=browser.window_handles[1])
     time.sleep(8)
-    if not util.waitUntilQuizLoads(browser):
+    if not util.waitUntilQuizLoads(browser):  # error report is done by caller
         logger.critical("Quiz did not load. Resetting tabs and exiting module")
         raise Exception("Forced exception due to missing quiz load.")
 

@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 import custom_logging
 import database
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
@@ -36,7 +37,13 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     login_state = util.authenticate_microsoft_account(browser=browser,
                                                       account=account)
     if not login_state:
-        logger.critical("Login failed. Module may be broken, or credentials are invalid.")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=Exception("Login failed. Module may be broken, or credentials are invalid.")
+        )
+        logger.critical("Login failed. Module may be broken, or credentials are invalid. "
+                        f"Error report has been generated: {errorReport.file_path}")
         return
 
     logger.info("Successfully authenticated. ")
@@ -68,8 +75,16 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     try:
         util.exec_daily_set(browser)
     except Exception as e:
+
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData="RETRIEVE",
+            exception=e
+        )
+        logger.critical("Uncaught exception has caused daily set to fail. "
+                        f"Error report has been generated: {errorReport.file_path}")
+
         util.resetTabs(browser, BASE_URL)
-        logger.critical(f"Uncaught exception has caused daily set to fail. {e}")
     else:
         logger.info("Successfully completed DAILY SET")
 
@@ -81,8 +96,15 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     try:
         util.exec_punch_cards(browser)
     except Exception as e:
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData="RETRIEVE",
+            exception=e
+        )
+        logger.critical("Uncaught exception has caused punch cards to fail. "
+                        f"Error report has been generated: {errorReport.file_path}")
+
         util.resetTabs(browser, BASE_URL)
-        logger.critical(f"Uncaught exception has caused punch cards to fail. {e}")
     else:
         logger.info("Successfully completed PUNCH CARDS")
 
@@ -94,8 +116,15 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     try:
         util.exec_additional_promotions(browser)
     except Exception as e:
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData="RETRIEVE",
+            exception=e
+        )
+        logger.critical("Uncaught exception has caused additional promotions to fail. "
+                        f"Error report has been generated: {errorReport.file_path}")
+
         util.resetTabs(browser, BASE_URL)
-        logger.critical(f"Uncaught exception has caused additional promotions to fail. {e}")
     else:
         logger.info("Successfully completed ADDITIONAL PROMOTIONS")
 
@@ -112,6 +141,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         logger.info(f"Searches loaded. {remainingSearches}")
 
         if remainingSearches.pcSearches:
+            logger.info("(4/5) Completing PC SEARCHES")
             account.points = util.getPointCount(browser)
             db.write(account)
             searchTerms = util.getGoogleTrends(remainingSearches.pcSearches, config.LANG, config.GEO)
@@ -125,9 +155,18 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
                     mobile=False
                 )
             except Exception as e:
-                logger.critical(f"Failed to complete PC bing searches. {e}")
+                errorReport: ErrorReport = ErrorReporter().generate_report(
+                    browser,
+                    accountData="RETRIEVE",
+                    exception=e
+                )
+                logger.critical("Failed to complete PC bing searches. "
+                                f"Error report has been generated: {errorReport.file_path}")
+
+                util.resetTabs(browser, BASE_URL)
 
         if remainingSearches.mobileSearches:
+            logger.info("(5/5) Completing MOBILE SEARCHES")
             logger.info("Starting mobile browser.")
             account.points = util.getPointCount(browser)
             db.write(account)
@@ -144,7 +183,16 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
                     mobile=True
                 )
             except Exception as e:
-                logger.critical(f"Failed to complete Mobile bing searches. {e}")
+                errorReport: ErrorReport = ErrorReporter().generate_report(
+                    browser,
+                    accountData="RETRIEVE",
+                    exception=e
+                )
+                logger.critical("Failed to complete Mobile bing searches. "
+                                f"Error report has been generated: {errorReport.file_path}")
+
+                util.resetTabs(browser, BASE_URL)
+
             logger.info("Closing mobile browser")
             mobileBrowser.quit()
 

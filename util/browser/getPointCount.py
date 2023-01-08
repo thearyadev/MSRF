@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 def getPointCount(browser: WebDriver) -> int:
@@ -20,5 +21,12 @@ def getPointCount(browser: WebDriver) -> int:
     try:
         return accountData.userStatus.availablePoints
     except Exception as e:
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData="RETRIEVE",
+            exception=e
+        )
+        logger.critical("Failed to complete PC bing searches. "
+                        f"Error report has been generated: {errorReport.file_path}")
         logger.critical(f"Unexpected error in point retrieval. {e}")
     return 0

@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 def exec_additional_promotions(browser: WebDriver):
@@ -17,7 +18,13 @@ def exec_additional_promotions(browser: WebDriver):
         return
 
     if not more_promotions:
-        logging.critical("Unable to complete more promotions. Attribute is None or Empty Array")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=accountData,
+            exception=Exception("Manual exception. Missing more_promotions dashboard data")
+        )
+        logging.critical("Unable to complete more promotions. Attribute is None or Empty Array"
+                         f"Error report generated: {errorReport.file_path}")
         return
 
     for cardNumberNoOffset, promotion in enumerate(more_promotions):
@@ -45,4 +52,10 @@ def exec_additional_promotions(browser: WebDriver):
                         logger.info("Promotion Point Search value: 100-200")
                         util.complete_more_promotion_search(browser=browser, cardNumber=cardNo)
         except Exception as e:
-            logger.critical(f"Uncaught error in more promotions scraper. {e}")
+            errorReport: ErrorReport = ErrorReporter().generate_report(
+                browser,
+                accountData=accountData,
+                exception=e
+            )
+            logger.critical("Uncaught error in more promotions scraper. "
+                            f"Error report has been generated: {errorReport.file_path}")

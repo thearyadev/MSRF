@@ -9,6 +9,7 @@ from selenium.webdriver.common.by import By
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount) -> bool:
@@ -48,7 +49,13 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     except selenium.common.exceptions.ElementNotInteractableException:
         logger.warning("Login next button not intractable. idSIButton9")
     except Exception as e:
-        logger.error(f"Error uncaught. Likely unable to log in.")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Error uncaught. Likely unable to log in. "
+                        f"Error report has been generated: {errorReport.file_path}")
 
     # Wait 2 seconds
     time.sleep(2)
@@ -73,8 +80,13 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     except selenium.common.exceptions.ElementNotInteractableException:
         logger.warning("Password next button is not interactable")
     except Exception as e:
-        logger.error(f"Error uncaught. Likely unable to log in.")
-
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Error uncaught. Likely unable to log in. "
+                        f"Error report has been generated: {errorReport.file_path}")
     # Wait 5 seconds
     time.sleep(5)
 
@@ -89,7 +101,13 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     except (NoSuchElementException, ElementNotInteractableException) as e:
         logger.warning(f"iNext element is unreachable.")
     except Exception as e:
-        logger.warning("Caught unknown error during security check pass. Login state uncertain")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Caught unknown error during security check pass. Login state uncertain "
+                        f"Error report has been generated: {errorReport.file_path}")
 
     # Wait complete loading
     try:
@@ -105,11 +123,23 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     except (NoSuchElementException, ElementNotInteractableException) as e:
         logger.warning(f"idSIButton9 element is unreachable.. Login state uncertain")
     except Exception as e:
-        logger.warning(f"Caught unknown error during security check pass. Login state uncertain.")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Caught unknown error during security check pass. Login state uncertain."
+                        f"Error report has been generated: {errorReport.file_path}")
 
     # Check Login in Bing.
     logger.info("Validating Bing login state...")
     try:
         return util.verify_bing_login(browser)
     except Exception as e:
-        logger.critical(f"Uncaught error in validating bing login {e}")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Uncaught error in validating bing login. "
+                        f"Error report has been generated: {errorReport.file_path}")

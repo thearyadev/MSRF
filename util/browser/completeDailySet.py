@@ -1,4 +1,3 @@
-import logging
 import urllib.parse
 from datetime import datetime
 
@@ -6,6 +5,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 
 # noinspection PyTypeChecker
@@ -14,7 +14,13 @@ def exec_daily_set(browser: WebDriver):
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     accountData: util.DashboardData = util.load_dashboard_data(browser)
     if accountData is None:
-        logging.critical("Unable to complete daily set due to missing dashboard data.")
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=accountData,
+            exception=Exception("Manual exception. Dashboard is missing")
+        )
+        logger.critical("Unable to complete daily set due to missing dashboard data."
+                        f"Error report has been generated: {errorReport.file_path}")
         return
     # load the daily set data.
 
@@ -47,7 +53,13 @@ def exec_daily_set(browser: WebDriver):
                     logger.info(f"Completing daily set search for card #{daily_set_item.cardNumber}")
                     util.complete_daily_set_search(browser, daily_set_item.cardNumber)
                 except Exception as e:
-                    logger.critical(f"Unable to complete daily_set_search due to an uncaught error in scraper. {e}")
+                    errorReport: ErrorReport = ErrorReporter().generate_report(
+                        browser,
+                        accountData=accountData,
+                        exception=e
+                    )
+                    logger.critical("Unable to complete daily_set_search due to an uncaught error in scraper."
+                                    f"Error report has been generated: {errorReport.file_path}")
 
             if daily_set_item.promotionType == "quiz":
                 logger.info("Daily set item is of type [quiz]")
@@ -59,8 +71,13 @@ def exec_daily_set(browser: WebDriver):
                         util.complete_daily_set_this_or_that(browser, daily_set_item.cardNumber,
                                                              base_url="https://rewards.bing.com")
                     except Exception as e:
-                        logger.critical(
-                            f"Unable to complete daily_set_this_or_that due to an uncaught error in scraper. {e}")
+                        errorReport: ErrorReport = ErrorReporter().generate_report(
+                            browser,
+                            accountData=accountData,
+                            exception=e
+                        )
+                        logger.critical("Unable to complete daily_set_this_or_that due to an uncaught error in scraper."
+                                        f"Error report has been generated: {errorReport.file_path}")
                 elif daily_set_item.pointProgressMax in (40, 30) and daily_set_item.pointProgressMax == 0:
                     # if the max points are 40 or 30, it is just a generic quiz
                     # only attempt if progress on the quiz is 0
@@ -70,8 +87,13 @@ def exec_daily_set(browser: WebDriver):
                                                      daily_set_item.cardNumber,
                                                      base_url="https://rewards.bing.com")
                     except Exception as e:
-                        logger.critical(
-                            f"Unable to complete daily_set_quiz due to an uncaught error in scraper. {e}")
+                        errorReport: ErrorReport = ErrorReporter().generate_report(
+                            browser,
+                            accountData=accountData,
+                            exception=e
+                        )
+                        logger.critical("Unable to complete daily_set_quiz due to an uncaught error in scraper."
+                                        f"Error report has been generated: {errorReport.file_path}")
 
                 elif daily_set_item.pointProgressMax == 10 and daily_set_item.pointProgress == 0:
                     # if the total point value is 10 and the point progress is 0 (untouched)
@@ -95,17 +117,35 @@ def exec_daily_set(browser: WebDriver):
                             try:
                                 util.completeDailySetSurvey(browser, daily_set_item.cardNumber)
                             except Exception as e:
+                                errorReport: ErrorReport = ErrorReporter().generate_report(
+                                    browser,
+                                    accountData=accountData,
+                                    exception=e
+                                )
                                 logger.critical(
-                                    f"Unable to complete daily_set_survey due to an uncaught error in scraper. {e}")
+                                    "Unable to complete daily_set_survey due to an uncaught error in scraper. "
+                                    f"Error report has been generated: {errorReport.file_path}")
                         else:
                             logger.info(f"Completing quiz of card #{daily_set_item.cardNumber}")
                             try:
                                 util.completeDailySetVariableActivity(browser, daily_set_item.cardNumber)
                             except Exception as e:
+                                errorReport: ErrorReport = ErrorReporter().generate_report(
+                                    browser,
+                                    accountData=accountData,
+                                    exception=e
+                                )
                                 logger.critical(
-                                    f"Unable to complete daily_set_variable_activity due to an uncaught error in "
-                                    f"scraper. {e}")
+                                    "UUnable to complete daily_set_variable_activity due to an uncaught error in "
+                                    "scraper. "
+                                    f"Error report has been generated: {errorReport.file_path}")
                     except Exception as e:
-                        logger.critical(f"Legacy code segment caused an exception. {e}")
+                        errorReport: ErrorReport = ErrorReporter().generate_report(
+                            browser,
+                            accountData=accountData,
+                            exception=e
+                        )
+                        logger.critical("Legacy code segment caused an exception."
+                                        f"Error report has been generated: {errorReport.file_path}")
         else:
             logger.info(f"Daily Set Card #{daily_set_item.cardNumber} is already complete")

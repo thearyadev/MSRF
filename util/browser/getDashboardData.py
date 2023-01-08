@@ -2,6 +2,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
+from error_reporting import ErrorReport, ErrorReporter
 
 from ..models.dashboard_data import DashboardData
 
@@ -14,5 +15,10 @@ def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
         return util.DashboardData(**browser.execute_script("return dashboard"))
     except Exception as e:
         # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
-        logger.critical(f"Unable to load dashboard data. {e}")
-
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=e
+        )
+        logger.critical("Unable to load dashboard data.  "
+                        f"Error report has been generated: {errorReport.file_path}")
