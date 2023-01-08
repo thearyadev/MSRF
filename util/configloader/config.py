@@ -17,6 +17,7 @@ class Config(BaseModel):
     program_name: str | None
     product_name: str | None
     theme_mode: str | None
+    run_scheduler: bool | None
 
 
 def load_config(file: str) -> Config:

@@ -443,7 +443,8 @@ def pick_and_run():
 if __name__ == '__main__':
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=pick_and_run, trigger="interval", seconds=15)
-    scheduler.start()
+    if config.run_scheduler:
+        scheduler.start()
 
     ft.app(target=main_screen, view=ft.FLET_APP_HIDDEN)
     atexit.register(scheduler.shutdown)
