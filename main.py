@@ -14,7 +14,7 @@ from rich import print
 import custom_logging
 import database
 import util
-
+import sys
 """
 github.com/thearyadev/msrf
 
@@ -28,6 +28,11 @@ What does this file do?
 
 Also... idk how to build ui's. this file is messy.
 """
+
+try:
+    os.mkdir("./errors")
+except FileExistsError:
+    pass
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 config: util.Config = util.load_config("configuration.yaml")  # load config from file
