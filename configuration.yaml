@@ -12,4 +12,4 @@ version: v0.4DEVELOPMENT
 program_name: "msrf"
 product_name: "Microsoft Rewards Farmer"
 theme_mode: LIGHT
-run_scheduler: False
+run_scheduler: True
