@@ -63,7 +63,7 @@ def exec_additional_promotions(browser: WebDriver):
                             logger.critical("Uncaught error in more promotions scraper. "
                                             f"Error report has been generated: {errorReport.file_path}")
 
-                    elif promotion.pointProgressMax in (30, 40) and not promotion.complete:
+                    elif promotion.pointProgressMax in (30, 40):
                         logger.info("Promotion Point Quiz value: 30 or 40")
 
                         try:
