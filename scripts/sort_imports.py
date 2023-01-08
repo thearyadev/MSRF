@@ -16,10 +16,8 @@ if __name__ == '__main__':
     dirs = ["custom_logging", "database", "util", "tests", "error_reporting"]
     files = ["main.py", ]
 
-    for d in track(dirs, "stage: dirs"):
+    for d in track(dirs, "running"):
         gb = glob.glob(f"{d}/**/*.py", recursive=True)
+        gb.extend(files)
         for f in gb:
             exec_file(f)
-
-    for f in track(files, "stage 2: files"):
-        exec_file(f)
