@@ -14,7 +14,7 @@ from rich import print
 import custom_logging
 import database
 import util
-import sys
+
 """
 github.com/thearyadev/msrf
 
