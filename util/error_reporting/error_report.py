@@ -16,6 +16,8 @@ logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(consol
 
 
 class ErrorReport:
+    """Data structure to hold information about a single error report."""
+
     def __init__(self, *, screenshot: bytes, accountDataJson: str, url: str, html: str, exceptionData: str):
         self.screenshot: bytes = screenshot
         self.accountDataJson: str = accountDataJson
@@ -27,6 +29,11 @@ class ErrorReport:
         self.file_path: str = str()
 
     def compress(self) -> 'ErrorReport':
+        """
+        Compresses all the data in the error report into a zipfile byte buffer
+        Returns self
+        data is stored in self.data
+        """
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer,
                              "a",
@@ -43,24 +50,40 @@ class ErrorReport:
 
 
 class ErrorReporter:
+    """Handles error reporting data collection"""
+
     def __init__(self, error_dir: str = "./errors"):
         self._err_dir: str = error_dir
-        print("Error reporting started...")
 
     @staticmethod
     def _get_browser_screenshot(browser: WebDriver) -> bytes:
+        """uses the webdriver at the time of the exception and takes a screenshot"""
         return browser.get_screenshot_as_png()
 
     @staticmethod
     def _get_html(browser: WebDriver) -> str:
+        """uses the webdriver at the time of the exception and gets the page source"""
         return browser.execute_script("return document.body.innerHTML")
 
     @staticmethod
     def _get_current_url(browser: WebDriver) -> str:
+        """uses the webdriver at the time of the exception and gets the url"""
         return browser.current_url
 
     @staticmethod
     def _serialize_dashboard_data_as_json(browser: WebDriver, accountData: util.DashboardData | None | str) -> str:
+        """
+        Converts the account data to a json string
+        The accountData parameter has multiple types to accept different states of errors.
+        Browser errors can happen:
+        1. when the accountData is the cause of the exception (None)
+        2. when the instance is not authenticated. There is no dashboard if the account is not logged in.(None)
+        3. When the accountData is not available at the time of the exception (str("RETRIEVE"))
+            - the process of retrieving the accountData would change the location of the browser
+              this would prevent a useful screenshot from being taken
+            - the account data is "RETRIEVE" later, instead of at the time this class is instantiated.
+        4. When the accountData was available at the time of the exception
+        """
         if isinstance(accountData, str):
             if accountData == "RETRIEVE":
                 try:
@@ -69,7 +92,7 @@ class ErrorReporter:
                     return str(None)
         if accountData is None:
             return str(None)
-
+        # use encoder to serialize datetime.datetime keys -> str
         return json.dumps(obj=accountData.dict(), cls=DateTimeEncoder)
 
     @staticmethod
@@ -86,13 +109,13 @@ class ErrorReporter:
                 accountDataJson=self._serialize_dashboard_data_as_json(browser, accountData),
                 exceptionData=self._parse_exception(exception)
             ).compress()
-            self._write(report)
-        except Exception as err:
+            self._write(report)  # write to disk
+        except Exception as err:  # if there's an error, just skip making the error report.
             logger.critical(f"Unable to create error report. Unknown error {err}")
         else:
-            return report
+            return report  # if no errors, send the report back to the user.
 
     def _write(self, report: ErrorReport) -> None:
-        report.file_path = self._err_dir + f"/error_{datetime.datetime.now().timestamp()}.zip"
+        report.file_path = self._err_dir + f"/error_{datetime.datetime.now().timestamp()}.zip"  # save filename
         with open(report.file_path, "wb") as file:
-            file.write(report.data)
+            file.write(report.data)  # write
