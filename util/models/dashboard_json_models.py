@@ -108,4 +108,4 @@ class DashboardDataModel(BaseModel):
         newDict = dict()
         for promotionDateString, promotionData in value.items():
             newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
-        return newDict # hello world
+        return newDict  # hello world
