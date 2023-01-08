@@ -1,15 +1,14 @@
+import datetime
 import io
 import json
-import time
-import typing
-
-import util
-import error_reporting
-import custom_logging
-from selenium.webdriver.chrome.webdriver import WebDriver
-import zipfile
-import datetime
 import traceback
+import zipfile
+
+from selenium.webdriver.chrome.webdriver import WebDriver
+
+import custom_logging
+import error_reporting
+import util
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 
