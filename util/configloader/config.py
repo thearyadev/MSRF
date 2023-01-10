@@ -1,8 +1,9 @@
 import yaml
 from pydantic import BaseModel
+from pydantic_yaml import YamlModel
 
 
-class Config(BaseModel):
+class Config(YamlModel):
     pc_user_agent: str | None
     mobile_user_agent: str | None
     LANG: str | None
@@ -19,11 +20,19 @@ class Config(BaseModel):
     theme_mode: str | None
     run_scheduler: bool | None
 
+    @classmethod
+    def load_config(cls, file: str):
+        with open(file, "r") as f:
+            return cls(**yaml.safe_load(f))
 
-def load_config(file: str) -> Config:
-    with open(file, "r") as f:
-        return Config(**yaml.safe_load(f))
+    def save_config(self, file: str):
+        with open(file, "w") as f:
+            f.write(self.yaml())
 
 
 if __name__ == '__main__':
-    print(load_config("../../configuration.yaml"))
+    a = Config.load_config("../../configuration.yaml")
+    print(a)
+    print(a.debug)
+    a.debug = True
+    a.save_config("../../configuration.yaml")
