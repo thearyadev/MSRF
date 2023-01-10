@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 import util
 
 dotenv.load_dotenv()
-config: util.Config = util.load_config("configuration.yaml")
+config: util.Config = util.Config.load_config("configuration.yaml")
 
 x = 1
 
