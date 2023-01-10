@@ -1,13 +1,14 @@
+import typing
+
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 import custom_logging
-import typing
 
 if typing.TYPE_CHECKING:
-    from util import ErrorReport, ErrorReporter
+    pass
 
 
 def waitUntilVisible(browser: WebDriver, by_: By, selector: str, time_to_wait: int = 10):

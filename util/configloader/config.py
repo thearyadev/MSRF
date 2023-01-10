@@ -1,5 +1,4 @@
 import yaml
-from pydantic import BaseModel
 from pydantic_yaml import YamlModel
 
 

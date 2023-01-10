@@ -1,13 +1,13 @@
 import logging
+import typing
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
 import util
-import typing
 
 if typing.TYPE_CHECKING:
-    from util import ErrorReport, ErrorReporter
+    pass
 
 
 def exec_additional_promotions(browser: WebDriver):

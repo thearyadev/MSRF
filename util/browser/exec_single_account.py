@@ -1,4 +1,5 @@
 import datetime
+import typing
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -7,10 +8,9 @@ from selenium.webdriver.common.by import By
 import custom_logging
 import database
 import util
-import typing
 
 if typing.TYPE_CHECKING:
-    from util import ErrorReport, ErrorReporter
+    pass
 
 
 def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):

@@ -1,17 +1,18 @@
 import datetime
 import io
 import json
+import sys
 import traceback
 import zipfile
 
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
-from ..models.dashboard_data import DashboardData
-from ..browser.getDashboardData import load_dashboard_data
-from .json_encoder import DateTimeEncoder
 import util
-import sys
+
+from ..browser.getDashboardData import load_dashboard_data
+from ..models.dashboard_data import DashboardData
+from .json_encoder import DateTimeEncoder
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
 

@@ -1,5 +1,6 @@
 import random
 import time
+import typing
 
 from selenium.common.exceptions import (NoAlertPresentException,
                                         UnexpectedAlertPresentException)
@@ -7,10 +8,9 @@ from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 import custom_logging
-import typing
 
 if typing.TYPE_CHECKING:
-    from util import ErrorReport, ErrorReporter
+    pass
 
 
 def bingSearch(browser: WebDriver, word: str, isMobile: bool):

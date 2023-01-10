@@ -1,4 +1,5 @@
 import time
+import typing
 
 import selenium.common.exceptions
 from selenium.common.exceptions import (ElementNotInteractableException,
@@ -9,10 +10,9 @@ from selenium.webdriver.common.by import By
 
 import custom_logging
 import util
-import typing
 
 if typing.TYPE_CHECKING:
-    from util import ErrorReport, ErrorReporter
+    pass
 
 
 def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount) -> bool:
