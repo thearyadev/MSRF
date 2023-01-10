@@ -1,15 +1,17 @@
-pc_user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63'
-mobile_user_agent: 'Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0. 3945.79 Mobile Safari/537.36'
-LANG: "en-CA"
-GEO: "CA"
+pc_user_agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
+  like Gecko) Chrome/86.0.4240.183 Safari/537.36 Edg/86.0.622.63
+mobile_user_agent: Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML,
+  like Gecko) Chrome/79.0. 3945.79 Mobile Safari/537.36
+LANG: en-CA
+GEO: CA
 TZ: '-300'
-debug: False
+debug: false
 minimum_auto_rerun_delay_seconds: 97200
 gui_window_opacity: 0.9
-hydration_rate: 2 # 2 or below feels good. Above 2 causes some delays when screen elements change
+hydration_rate: 2
 max_account_number: 8
 version: v0.4DEVELOPMENT
-program_name: "msrf"
-product_name: "Microsoft Rewards Farmer"
-theme_mode: LIGHT
-run_scheduler: True
+program_name: msrf
+product_name: Microsoft Rewards Farmer
+theme_mode: DARK
+run_scheduler: false
