@@ -35,7 +35,7 @@ except FileExistsError:
     pass
 
 logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
-config: util.Config = util.load_config("configuration.yaml")  # load config from file
+config: util.Config = util.Config.load_config("configuration.yaml")  # load config from file
 logger.info("Loaded ./configuration.yaml into config object")
 db = database.DatabaseAccess()  # create database connection
 logger.info("Connection to database was successful.")
@@ -77,7 +77,7 @@ def add_account(email, password):
 
 def calc_hours_ago(account: util.MicrosoftAccount) -> str:
     tsec = (
-        datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
+            datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
     ).total_seconds()
 
     if tsec > 2_592_000:
@@ -96,6 +96,7 @@ def force_exec():
     for account in accounts:
         account.lastExec = account.lastExec - datetime.timedelta(days=365)
         db.write(account)
+
 
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
@@ -212,13 +213,19 @@ def main_screen(page: ft.Page):
         if page.theme_mode == ft.ThemeMode.DARK:
             page.theme_mode = ft.ThemeMode.LIGHT
             page.update()
+            config.theme_mode = "LIGHT"
+            config.save_config("configuration.yaml")
             return
 
         if page.theme_mode == ft.ThemeMode.LIGHT:
             page.theme_mode = ft.ThemeMode.DARK
             page.update()
+            config.theme_mode = "DARK"
+            config.save_config("configuration.yaml")
             return
         page.theme_mode = ft.ThemeMode.DARK
+        config.theme_mode = "DARK"
+        config.save_config("configuration.yaml")
         page.update()
         return
 
@@ -262,6 +269,7 @@ def main_screen(page: ft.Page):
         divider.visible = False
         page.update()
         return
+
     version_info: util.VersionInfo = util.check_version()
     page.add(
         ft.Row(
@@ -350,7 +358,6 @@ def main_screen(page: ft.Page):
                                                     color=ft.colors.GREEN)
                                 )
 
-
                             ],
                         )
                     ],
@@ -386,8 +393,8 @@ def main_screen(page: ft.Page):
         if not page.client_storage.get("farmer_prompt_shown"):
             try:
                 secs = (
-                    scheduler.get_jobs()[0]
-                    .next_run_time - datetime.datetime.now(tz=pytz.timezone('America/New_York'))
+                        scheduler.get_jobs()[0]
+                        .next_run_time - datetime.datetime.now(tz=pytz.timezone('America/New_York'))
                 ).total_seconds()
                 if secs < 1.5:
                     page.client_storage.set("farmer_prompt_shown", True)
@@ -421,8 +428,8 @@ def pick_and_run():
         validAccounts = [
             account for account in sorted(db.read(), key=lambda a: a.lastExec)
             if (
-                datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
-            ).total_seconds() > config.minimum_auto_rerun_delay_seconds
+                       datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
+               ).total_seconds() > config.minimum_auto_rerun_delay_seconds
         ]
         if validAccounts:  # if at least one account is eligible
             threading.Thread(
