@@ -9,7 +9,6 @@ import flet as ft
 import flet.buttons
 import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
-from rich import print
 
 import custom_logging
 import database
@@ -98,6 +97,15 @@ def force_exec():
         db.write(account)
 
 
+def force_exec_single(event: flet.control_event.ControlEvent):
+    accounts = db.read()
+    for account in accounts:
+        if account.id == event.control.content.data:
+            account.lastExec = account.lastExec - datetime.timedelta(days=365)
+            db.write(account)
+            return
+
+
 def main_screen(page: ft.Page):
     page.window_title_bar_hidden = True
     page.window_title_bar_buttons_hidden = True
@@ -105,14 +113,14 @@ def main_screen(page: ft.Page):
     page.window_opacity = config.gui_window_opacity
     page.theme_mode = config.theme_mode.lower()
 
-    def show_bs(e):
+    def show_bs(_):
         bs.open = True
         bs.update()
 
-    def bs_dismissed(e):
+    def bs_dismissed(_):
         ...
 
-    def close_bs(e):
+    def close_bs(_):
         bs.open = False
         bs.update()
 
@@ -177,38 +185,6 @@ def main_screen(page: ft.Page):
     page.window_resizable = False
     page.window_maximizable = False
 
-    log_text = ft.Text(logger.load(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
-    add_account_prompt = ft.Text("Click the + button below to add an account.",
-                                 width=600,
-                                 text_align=ft.TextAlign.CENTER)
-    accountsTable = ft.DataTable(
-        width=600 if not page.web else 800,
-        horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
-        divider_thickness=0,
-        columns=[
-            ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
-            ft.DataColumn(ft.Text("Last Exec")),
-            ft.DataColumn(ft.Text("Points"), numeric=True),
-        ],
-        rows=[
-            ft.DataRow(
-                cells=[
-                    ft.DataCell(ft.Text(account.email), on_long_press=lambda event: print(event.control.content.value)),
-                    ft.DataCell(
-                        ft.Text(calc_hours_ago(account))),
-                    ft.DataCell(ft.Text(str(account.points))),
-                ],
-            ) for account in db.read()
-        ],
-    )
-
-    log_display = ft.Column(
-        expand=True,
-        controls=[log_text],
-        scroll=ft.ScrollMode.ALWAYS,
-    )
-    divider = ft.VerticalDivider()
-
     def toggle_dark(_):
         if page.theme_mode == ft.ThemeMode.DARK:
             page.theme_mode = ft.ThemeMode.LIGHT
@@ -242,6 +218,43 @@ def main_screen(page: ft.Page):
         if e.control.data:
             remove_account(delete_account_dialog.data)
         delete_account_dialog.data = ""
+
+    log_text = ft.Text(logger.load(), font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
+    add_account_prompt = ft.Text("Click the + button below to add an account.",
+                                 width=600,
+                                 text_align=ft.TextAlign.CENTER)
+    accountsTable = ft.DataTable(
+        width=600 if not page.web else 800,
+        horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
+        divider_thickness=0,
+        columns=[
+            ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
+            ft.DataColumn(ft.Text("Last Exec"),
+                          tooltip="Long press on the Last Exec of the account you want to run now."),
+            ft.DataColumn(ft.Text("Points"), numeric=True),
+        ],
+        rows=[
+            ft.DataRow(
+                cells=[
+                    ft.DataCell(ft.Text(account.email),
+                                on_long_press=show_del_acct_dialog if not is_currently_running(account) else None),
+                    ft.DataCell(
+                        ft.Text(calc_hours_ago(account), data=account.id),
+                        on_long_press=force_exec_single if not is_currently_running(account) else None,
+                    ),
+                    ft.DataCell(ft.Text(str(account.points))),
+                ]
+
+            ) for account in db.read()
+        ],
+    )
+
+    log_display = ft.Column(
+        expand=True,
+        controls=[log_text],
+        scroll=ft.ScrollMode.ALWAYS,
+    )
+    divider = ft.VerticalDivider()
 
     delete_account_dialog = ft.AlertDialog(
         title=ft.Text("Remove Account"),
@@ -379,7 +392,8 @@ def main_screen(page: ft.Page):
                     ft.DataCell(ft.Text(account.email),
                                 on_long_press=show_del_acct_dialog if not is_currently_running(account) else None),
                     ft.DataCell(
-                        ft.Text(calc_hours_ago(account))
+                        ft.Text(calc_hours_ago(account), data=account.id),
+                        on_long_press=force_exec_single if not is_currently_running(account) else None,
                     ),
                     ft.DataCell(ft.Text(str(account.points))),
                 ]
