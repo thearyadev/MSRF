@@ -120,7 +120,7 @@ Unzip your error report, and remove any personal information from it. You can th
 
 Please use the Github issue template for all bugs and feature requests. 
 
-## Development Roadmap
+## Development Roadmap / Known Issues
 - tests
     - daily set
         - daily set contains 3 items
