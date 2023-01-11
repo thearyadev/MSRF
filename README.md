@@ -15,6 +15,7 @@ v0.4b Release Notes:
 		- the url that the exception occured on.
 	- This module is primarily made to help me find and address problems with the scrapers, but also to give you a simple way to report errors when they happen. 
 
+
 I currently do not have a full test suite going for this project, and its very likely that there are problems within this update. If it is not working for you, please try the previous version (v0.3b) for the time being.
 ```
 
