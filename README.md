@@ -22,6 +22,7 @@ I currently do not have a full test suite going for this project, and its very l
 
 # Microsoft Rewards Famer (MSRF)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/thearyadev/msrf?color=gree&style=for-the-badge)
+![Flet](https://img.shields.io/badge/FLET-cock?style=for-the-badge&logo=flutter)
 
 This project is a automated farmer for Microsoft Rewards. It will log into given accounts and complete surveys, quizzes, and conduct bing searches. The farmer will automatically schedule runs to farm points for each account. More details on what exactly it is doing is outlined below.
 
