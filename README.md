@@ -19,7 +19,6 @@ I currently do not have a full test suite going for this project, and its very l
 ```
 
 
-
 # Microsoft Rewards Famer (MSRF)
 
 This project is a automated farmer for Microsoft Rewards. It will log into given accounts and complete surveys, quizzes, and conduct bing searches. The farmer will automatically schedule runs to farm points for each account. More details on what exactly it is doing is outlined below.
