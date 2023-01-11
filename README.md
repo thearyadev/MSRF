@@ -142,6 +142,9 @@ Please use the Github issue template for all bugs and feature requests.
   - globals
   - etc. 
 - have custom logging return a log object, so that the log dump can be displayed on the screen, but also sent to the error log.
+- Test usage with Chrome Portable to allow for smaller package size. 
+  - The total unzipped size of this program is ~700mb. Chrome is like 70% of that. Chrome Portable is significantly smaller than that.
+  - Currently unsure if it works with existing Chrome/Chromedriver applications, will be looking into this soon.
 
 
 ## Contributing
