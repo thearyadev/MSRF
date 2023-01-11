@@ -145,6 +145,8 @@ Please use the Github issue template for all bugs and feature requests.
 - Test usage with Chrome Portable to allow for smaller package size. 
   - The total unzipped size of this program is ~700mb. Chrome is like 70% of that. Chrome Portable is significantly smaller than that.
   - Currently unsure if it works with existing Chrome/Chromedriver applications, will be looking into this soon.
+- Installer for the app, so it can be added to registered programs on the system
+- Auto updater script
 
 
 ## Contributing
