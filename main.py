@@ -173,6 +173,26 @@ def main_screen(page: ft.Page):
         force_single_account_callback=force_exec_single,
         delete_account_handler=remove_account
     )
+    version: util.VersionInfo = util.check_version()
+    updatePrompt = update_prompt = ft.Text("")
+    if version.release_version != config.version:
+        updatePrompt = ft.TextButton(
+            "Update Available",
+            icon=ft.icons.UPDATE,
+            icon_color=ft.colors.GREEN,
+            tooltip=f"You are currently on {config.version}.\n"
+                    f"\n{version.release_version} is available in the latest release for thearyadev/msrf."
+                    f"Click this button to open",
+            on_click=lambda _: page.launch_url(version.release_url)
+        )
+    if "DEV" in config.version:
+        updatePrompt = ft.TextButton(
+            "Development Build",
+            icon=ft.icons.LOGO_DEV,
+            icon_color=ft.colors.GREEN,
+            disabled=True
+        )
+
     page.add(
         Titlebar("Microsoft Rewards Farmer", visible=not page.web),
         ft.Row(
@@ -184,6 +204,8 @@ def main_screen(page: ft.Page):
                             content=accountsControl,
                             expand=True,
                         ),
+                        ft.Text("The farmer is paused." if not config.run_scheduler else ""
+                                , italic=True, color=ft.colors.BLUE_GREY),
                         Toolbar(
                             toolbarItems=[
                                 ToolbarItem(
@@ -211,7 +233,8 @@ def main_screen(page: ft.Page):
                                     tooltip="Open Program Folder",
                                     callback=lambda _: os.startfile(".")
                                 )
-                            ]
+                            ],
+                            update_prompt=updatePrompt
                         )
                     ],
 
