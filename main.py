@@ -1,5 +1,4 @@
 import atexit
-import copy
 import datetime
 import os
 import threading
@@ -7,20 +6,13 @@ import time
 
 import flet as ft
 import flet.buttons
-import pytz
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import custom_logging
 import database
 import util
-from gui import (
-    ToolbarItem,
-    Toolbar,
-    Titlebar,
-    AccountDataTable,
-    AddAccountDialog,
-    LogDisplay
-)
+from gui import (AccountDataTable, AddAccountDialog, LogDisplay, Titlebar,
+                 Toolbar, ToolbarItem)
 
 try:
     os.mkdir("./errors")
