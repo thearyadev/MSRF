@@ -1,7 +1,8 @@
-import flet as ft
-from typing import TYPE_CHECKING, Callable
-import threading
 import datetime
+import threading
+from typing import TYPE_CHECKING, Callable
+
+import flet as ft
 
 if TYPE_CHECKING:
     import util
