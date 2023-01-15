@@ -13,5 +13,5 @@ max_account_number: 8
 version: v0.4DEV
 program_name: msrf
 product_name: Microsoft Rewards Farmer
-theme_mode: LIGHT
+theme_mode: DARK
 run_scheduler: false

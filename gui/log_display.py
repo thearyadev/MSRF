@@ -18,8 +18,4 @@ class LogDisplay(ft.UserControl):
             pass
 
     def build(self):
-        return ft.Column(
-            expand=True,
-            controls=[self.text],
-            scroll=ft.ScrollMode.ALWAYS,
-        )
+        return self.text
