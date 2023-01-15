@@ -5,7 +5,7 @@ class Titlebar(ft.UserControl):
     def __init__(self, window_title: str = "", visible: bool = True, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.window_title = window_title
-        self.visible = visible # :)
+        self.visible = visible
 
     def build(self):
         return ft.Row(
