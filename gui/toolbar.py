@@ -19,9 +19,17 @@ class ToolbarItem(ft.UserControl):
 
 
 class Toolbar(ft.UserControl):
-    def __init__(self, toolbarItems: list[ToolbarItem], *args, **kwargs):
+    def __init__(
+            self,
+            toolbarItems: list[ToolbarItem | ft.control.Control],
+            update_prompt: ft.control.Control | None,
+            *args,
+            **kwargs
+    ):
         super().__init__(*args, **kwargs)
         self.toolbarItems = toolbarItems
+        if update_prompt:
+            self.toolbarItems.append(update_prompt)
 
     def build(self):
         return ft.Row(self.toolbarItems)
