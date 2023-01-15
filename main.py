@@ -232,7 +232,12 @@ def main_screen(page: ft.Page):
 
                 ),
                 ft.VerticalDivider(),
-                logDisplay
+                ft.Column(
+                    expand=True,
+                    controls=[logDisplay],
+                    scroll=ft.ScrollMode.ALWAYS,
+                )
+
             ],
             spacing=0,
             expand=True,
