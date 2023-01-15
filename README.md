@@ -147,6 +147,7 @@ Please use the Github issue template for all bugs and feature requests.
   - Currently unsure if it works with existing Chrome/Chromedriver applications, will be looking into this soon.
 - Installer for the app, so it can be added to registered programs on the system
 - Auto updater script
+- Server Mode; linux support; web-ui enhancements
 
 
 ## Contributing
