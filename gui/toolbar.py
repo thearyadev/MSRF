@@ -1,5 +1,6 @@
-import flet as ft
 from typing import Callable
+
+import flet as ft
 
 
 class ToolbarItem(ft.UserControl):
