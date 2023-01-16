@@ -11,8 +11,13 @@ class Titlebar(ft.UserControl):
         return ft.Row(
             [
                 ft.WindowDragArea(
-                    ft.Container(ft.Text(f"{self.window_title}"),
-                                 bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
+                    ft.Container(
+                        ft.Row(
+                            [
+                                ft.IconButton(icon=ft.icons.GENERATING_TOKENS, disabled=True),
+                                ft.Text(f"{self.window_title}")
+                            ]
+                        ), bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
                 ),
                 ft.IconButton(ft.icons.CLOSE, on_click=lambda _: self.page.window_close()),
             ],
