@@ -13,7 +13,7 @@ def exec_file(file: str):
 
 
 if __name__ == '__main__':
-    dirs = ["custom_logging", "database", "util", "tests", "gui", "error_reporting"]
+    dirs = ["custom_logging", "database", "util", "tests", "gui", "error_reporting", "update"]
     files = ["main.py", ]
 
     for d in track(dirs, "running"):
