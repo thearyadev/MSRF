@@ -23,4 +23,4 @@ def waitUntilVisible(browser: WebDriver, by_: By, selector: str, time_to_wait: i
             exception=e
         )
         logger.critical(f"Error report has been generated: {errorReport.file_path}")
-        raise e
+        return
