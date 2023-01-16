@@ -1,22 +1,12 @@
 ```
-v0.4b Release Notes:
-- Persistent Dark Mode
-	- When Dark Mode is toggled, it will be updated in the configuration.yaml file, which loads every time the program is run. 
-- Long press on the "Last Exec" cell for the account to force execute only that account
-- Error Reporting
-	- Errors that cause fatal errors in a module (critical errors) will be logged using the Error Reporting module. 
-	- This will create a zipfile in the ./errors directory in the same location as the executable. 
-	- the errors directory will contain all errors thrown by the application. 
-	- Error Information
-		- Account data (Same account data used for earning points, this information does not contain any account credentials, only account information like: point count, available promotions, etc.) 
-		- Browser screenshot at the time of the error. This may include the account name, and potentially the account email. If you plan on sharing this (such as in a Github issue), you may want to cover any personal information
-		- A traceback. This is the exception raised by python. 
-		- The HTML page at the time of the error. This helps in determining exactly why an error happened, but this file will have personal information, such as your email address and name. You may not want to include this when sharing this with other people. If you are familiar with HTML structure, you can find and remove that personal information before sharing. 
-		- the url that the exception occured on.
-	- This module is primarily made to help me find and address problems with the scrapers, but also to give you a simple way to report errors when they happen. 
+### v0.5b Release Notes:
 
-
-I currently do not have a full test suite going for this project, and its very likely that there are problems within this update. If it is not working for you, please try the previous version (v0.3b) for the time being.
+- GUI (code) structure is changed to decouple & reduce replicated code. 
+- Toggle Log Display button has been removed.
+- Default Re-execution time reduced to 24 hours from 27 hours. All accounts will run at (around) the same time.
+- Changed "Update Available" prompt to better looking form. 
+- Bug fixes
+- Decrease UI refresh rate. Page update sequence was often interupting the long-press actions while navigating
 ```
 
 
