@@ -1,3 +1,4 @@
+altgraph==0.17.3
 APScheduler==3.9.1.post1
 async-generator==1.10
 attrs==22.2.0
@@ -12,6 +13,7 @@ commonmark==0.9.1
 Deprecated==1.2.13
 exceptiongroup==1.1.0
 flet==0.3.1
+future==0.18.3
 h11==0.14.0
 idna==3.4
 iniconfig==2.0.0
@@ -19,6 +21,7 @@ isort==5.11.4
 oauthlib==3.2.2
 outcome==1.2.0
 packaging==23.0
+pefile==2022.5.30
 pluggy==1.0.0
 pycparser==2.21
 pydantic==1.10.2
@@ -26,6 +29,8 @@ pydantic-yaml==0.9.0
 pyflakes==3.0.1
 PyGithub==1.57
 Pygments==2.14.0
+pyinstaller==5.7.0
+pyinstaller-hooks-contrib==2022.15
 PyJWT==2.6.0
 PyNaCl==1.5.0
 PySocks==1.7.1
@@ -33,6 +38,7 @@ pytest==7.2.0
 python-dotenv==0.21.0
 pytz==2022.6
 pytz-deprecation-shim==0.1.0.post0
+pywin32-ctypes==0.2.0
 PyYAML==6.0
 repath==0.9.0
 requests==2.28.1
