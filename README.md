@@ -138,7 +138,7 @@ Please use the Github issue template for all bugs and feature requests.
 - Installer for the app, so it can be added to registered programs on the system
 - Auto updater script
 - Server Mode; linux support; web-ui enhancements
-
+- switch to Poetry for dependency management
 
 ## Contributing
 
