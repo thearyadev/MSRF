@@ -74,6 +74,7 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
     # TODO
     # determine which password entry method works.
     logger.info("Writing password...")
+    time.sleep(2)
     browser.execute_script("document.getElementById('i0118').value = '" + account.password + "';")
 
     # Click next
