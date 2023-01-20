@@ -139,7 +139,9 @@ Please use the Github issue template for all bugs and feature requests.
 - Auto updater script
 - Server Mode; linux support; web-ui enhancements
 - switch to Poetry for dependency management
-
+- fix a problem with account password which a space/newline is recorded. This will break login and theres no easy way to determine what the problem is.
+- add account email to error report zipfile name to make specific errors easily identifiable. 
+- add function to error report zipfile name to make specific errors easily identifiable
 ## Contributing
 
 There are no contributing guidelines (for now). 
