@@ -25,3 +25,6 @@ apscheduler = "^3.9.1.post1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+msrf = "scripts/startup_scripts:flet_normal_python_start"
