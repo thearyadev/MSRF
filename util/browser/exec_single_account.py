@@ -1,8 +1,6 @@
 import datetime
-import sys
-import typing
 import time
-import copy
+import typing
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
