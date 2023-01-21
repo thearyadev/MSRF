@@ -8,6 +8,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 import custom_logging
+import util
 
 
 def init_browser(*, headless: bool, agent: str) -> WebDriver:
@@ -19,6 +20,7 @@ def init_browser(*, headless: bool, agent: str) -> WebDriver:
     :config generic config for this application.
     """
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    config: util.Config = util.Config.load_config("configuration.yaml")
     options = Options()
     options.add_argument("user-agent=" + agent)
     options.add_argument("log-level=3")
@@ -42,6 +44,9 @@ def init_browser(*, headless: bool, agent: str) -> WebDriver:
 
     else:
         logger.info("Starting browser in development mode")
-        driver = webdriver.Chrome(options=options)
+        if config.mode == "SERVER":
+            driver = webdriver.Chrome("/usr/bin/chromedriver", options=options)
+        else:
+            driver = webdriver.Chrome(options=options)
         atexit.register(driver.quit)
         return driver
