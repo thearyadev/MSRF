@@ -57,6 +57,7 @@ Installation steps:
 6. Run the command `docker run -d -p 50947:50947 msrf_05b`
 7. Navigate to `http://<IP_ADDRESS>:50947` in your web browser. 
 
+Steps for deploying this docker container on Windows is similar. Step 2 simply downloads and extracts the source code for the latest release. 
 
 Work in progress.
 ## Development
