@@ -257,7 +257,8 @@ def main():
     ft.app(
         target=main_screen,
         view=ft.WEB_BROWSER if config.mode == "SERVER" else ft.FLET_APP_HIDDEN,
-        assets_dir="./assets"
+        assets_dir="./assets",
+        port=50947
     )
 
 
