@@ -52,8 +52,14 @@ class AccountDataTable(ft.UserControl):
             ],
             rows=[]
         )
-        self.populate()
         self.addAccountPrompt = AddAccountPrompt()
+        self.row = ft.Row(
+            controls=[
+                self.table if self.accounts else self.addAccountPrompt,
+                self.delete_account_dialog
+            ],
+        )
+        self.populate()
 
     def handle_account_long_press(self, event):
         self.delete_account_dialog.current_account = event.control.content.value
@@ -79,18 +85,19 @@ class AccountDataTable(ft.UserControl):
 
             ) for account in self.accounts
         ]
+        self.row.controls = [
+            self.table if self.accounts else self.addAccountPrompt,
+            self.delete_account_dialog
+        ]
+
         try:
+            self.row.update()
             self.table.update()
         except Exception:
             pass  # this will throw an exception when the component is not on the page yet.
 
     def build(self):
-        return ft.Row(
-            controls=[
-                self.table if self.accounts else self.addAccountPrompt,
-                self.delete_account_dialog
-            ],
-        )
+        return self.row
 
 
 class AddAccountPrompt(ft.UserControl):
