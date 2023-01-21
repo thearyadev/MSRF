@@ -152,6 +152,7 @@ Please use the Github issue template for all bugs and feature requests.
 - add account email to error report zipfile name to make specific errors easily identifiable. 
 - add function to error report zipfile name to make specific errors easily identifiable
 - add support for alternate point collection methods (videos)
+- Test lag with larger log buffer
 ## Contributing
 
 There are no contributing guidelines (for now). 
