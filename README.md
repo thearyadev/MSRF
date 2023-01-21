@@ -38,27 +38,13 @@ Run the executable to start the program.
 
 
 # Installation: Server
-I have not implemented good support for a server instance of this. It's simply the same application just providing a web-page. 
 
-Some features that are not available in the server instance: 
-- Access to error reports. The error reports are still generated, but will not be accessible remotely. You may want to run a http directory server on your server machine as well to have access to the error reports. 
-- Debugging mode. You will not be able to view your web browser to determine what issues may exist while running the farmer. If you run into issues like failed login, id recommend removing the account, and ensuring the credentials are correct (including no leading/trailing empy space), as well as to attempt login on another machine to check for any login interruptions. 
-- Security 
-  - I have put no time into implementing any form of security for this. By using the server instance, you provide a fully open, http, webpage which includes all your email addresses, and passwords visible in the log window. 
+Server instances are possible. This is currently being tested. 
+Not all features are supported on a Linux server instance of this application. 
 
-Also, the webpage does not work on mobile... at all.
+Installation will be done through a bash script to install all dependencies for this application to be run in development/server mode. 
 
-Installation steps. (These steps assume you have already installed CHROME and CHROMEDRIVER suitable for auto-detection in your selected environment): 
-1. Install python3.10.8.
-2. Install Poetry (the python package manager I am using for this) 
-3. Clone this repository using Git.
-4. Navigate to the root directory of the repository you cloned. 
-5. Run the command `poetry install`. This will create a virtual environment and install all the dependencies to it. Poetry will automatically use the correct version of Python installed for this virtual environment. 
-6. Open `configuration.yaml` (located in the root directory) and modify the line `mode: APPLICATION` to `mode: SERVER`. 
-7. In the root directory, run the command `poetry run python main.py`. This will start the server. The web page will be available at `http://<ip-addr>:50947`
-
-If you run into problems, please open an issue on this Github repository and I will try to help. The server instance of this application is not the primary goal of this project, and as such has not been tested very much. 
-
+Work in progress.
 ## Development
 
 This project was developed in Python 3.10.8 and has **not** been tested with any other version of python. 
@@ -165,7 +151,7 @@ Please use the Github issue template for all bugs and feature requests.
 - fix a problem with account password which a space/newline is recorded. This will break login and theres no easy way to determine what the problem is.
 - add account email to error report zipfile name to make specific errors easily identifiable. 
 - add function to error report zipfile name to make specific errors easily identifiable
-- add 
+- add support for alternate point collection methods (videos)
 ## Contributing
 
 There are no contributing guidelines (for now). 
