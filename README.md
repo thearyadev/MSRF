@@ -48,7 +48,7 @@ Some features that are not available in the server instance:
 
 Also, the webpage does not work on mobile... at all.
 
-Installation steps: 
+Installation steps. (These steps assume you have already installed CHROME and CHROMEDRIVER suitable for auto-detection in your selected environment): 
 1. Install python3.10.8.
 2. Install Poetry (the python package manager I am using for this) 
 3. Clone this repository using Git.
