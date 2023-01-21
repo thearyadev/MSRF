@@ -1,6 +1,6 @@
 import atexit
 import sys
-from subprocess import CREATE_NO_WINDOW
+import subprocess
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -32,7 +32,10 @@ def init_browser(*, headless: bool, agent: str) -> WebDriver:
         args = ["hide_console", ]
 
         service = Service("bin/chromedriver.exe", service_args=args)
-        service.creation_flags = CREATE_NO_WINDOW
+        try:
+            service.creation_flags = subprocess.CREATE_NO_WINDOW
+        except AttributeError:
+            pass
         driver = webdriver.Chrome(service=service, options=options)
         atexit.register(driver.quit)
         return driver
