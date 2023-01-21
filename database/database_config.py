@@ -33,7 +33,7 @@ class DatabaseConfig:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 pointsDelta INTEGER,
                 sessionDuration INTEGER,
-                accountName TEXT,
+                accountName TEXT
             )
             """
         )
