@@ -27,4 +27,15 @@ class DatabaseConfig:
             )
             """
         )
+        self.cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS PointCollectionHistory (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pointsDelta INTEGER,
+                sessionDuration INTEGER,
+                accountName TEXT,
+            )
+            """
+        )
+
         self.connection.commit()

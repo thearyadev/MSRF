@@ -57,3 +57,15 @@ class DatabaseAccess(DatabaseConfig):
         )
         self.connection.commit()
         lock.release()
+
+    def recordPointChange(self, delta: int, sessionDuration: int, accountName: str):
+        lock.acquire()
+        self.cursor.execute(
+            """
+            INSERT INTO PointCollectionHistory (pointsDelta, sessionDuration, accountName) 
+            VALUES (?, ?, ?)
+            """,
+            (delta, sessionDuration, accountName)
+        )
+        self.connection.commit()
+        lock.release()

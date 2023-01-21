@@ -1,5 +1,8 @@
 import datetime
+import sys
 import typing
+import time
+import copy
 
 import selenium.common.exceptions
 from selenium.webdriver.chrome.webdriver import WebDriver
@@ -23,6 +26,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     """
     from util import ErrorReport, ErrorReporter
 
+    start_time = time.time()
     account.lastExec = datetime.datetime.now(tz=datetime.timezone.utc)
     db.write(account=account)
 
@@ -65,7 +69,7 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         browser.get(BASE_URL)
 
     account.points = util.getPointCount(browser)  # will redirect to bing.com. Go back to baseurl
-
+    starting_point_count = account.points
     db.write(account)
     logger.info(f"Current Points: {account.points}")
 
@@ -203,6 +207,11 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     logger.info("Getting closing point count.")
     account.points = util.getPointCount(browser)
     db.write(account)
+    db.recordPointChange(
+        delta=account.points - starting_point_count,
+        sessionDuration=int(time.time() - start_time),
+        accountName=account.email,
+    )
 
     logger.info(F"Closing Point Total: {account.points}")
     logger.info("Closing main browser.")
