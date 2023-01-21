@@ -2,6 +2,7 @@ import datetime
 import io
 import json
 import sys
+import threading
 import traceback
 import zipfile
 
@@ -20,7 +21,16 @@ logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(consol
 class ErrorReport:
     """Data structure to hold information about a single error report."""
 
-    def __init__(self, *, screenshot: bytes, accountDataJson: str, url: str, html: str, exceptionData: str):
+    def __init__(
+            self,
+            *,
+            screenshot: bytes,
+            accountDataJson: str,
+            url: str,
+            html: str,
+            exceptionData: str,
+            accountName: str
+    ):
         self.screenshot: bytes = screenshot
         self.accountDataJson: str = accountDataJson
         self.url: str = url
@@ -29,6 +39,7 @@ class ErrorReport:
         self.compressed: bool = False
         self.data: bytes = bytes()
         self.file_path: str = str()
+        self.accountName: str = accountName
 
     def compress(self) -> 'ErrorReport':
         """
@@ -112,7 +123,8 @@ class ErrorReporter:
                 html=self._get_html(browser),
                 url=self._get_current_url(browser),
                 accountDataJson=self._serialize_dashboard_data_as_json(browser, accountData),
-                exceptionData=self._parse_exception(exception)
+                exceptionData=self._parse_exception(exception),
+                accountName=threading.current_thread().name
             ).compress()
             self._write(report)  # write to disk
         except Exception as err:  # if there's an error, just skip making the error report.
@@ -121,6 +133,6 @@ class ErrorReporter:
             return report  # if no errors, send the report back to the user.
 
     def _write(self, report: ErrorReport) -> None:
-        report.file_path = self._err_dir + f"/error_{datetime.datetime.now().timestamp()}.zip"  # save filename
+        report.file_path = self._err_dir + f"/error_{report.accountName}_{datetime.datetime.now().timestamp()}.zip"
         with open(report.file_path, "wb") as file:
             file.write(report.data)  # write
