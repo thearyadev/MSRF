@@ -254,6 +254,7 @@ def main_screen(page: ft.Page):
 
 def main():
     configure_scheduler()
+
     ft.app(
         target=main_screen,
         view=ft.WEB_BROWSER if config.mode == "SERVER" else ft.FLET_APP_HIDDEN,
