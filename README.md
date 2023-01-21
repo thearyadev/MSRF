@@ -25,7 +25,7 @@ This project is a rewrite of ["Microsoft-Rewards-Farmer"](https://github.com/cha
 ![Dark Mode Demo](demo/demo-dark-mode.png)
 ![Add Account Demo](demo/demo-add-account.png)
 
-## Installation
+## Installation: Windows Application
 
 Download the zip file from the Github releases for this project. It will include everything needed to run this program, including: 
   - The main executable
@@ -35,6 +35,27 @@ Download the zip file from the Github releases for this project. It will include
 Run the executable to start the program.
 
 *Note: The bundled Chrome and Chromedriver binaries will likely be outdated. This is to prevent breaking changes in Chrome and Chromedriver from affecting the program. For every major release, both bundled binaries will be updated. When using this program, you accept the risk of using unsecure software that may compromise the overall security of your system.
+
+
+# Installation: Server
+I have not implemented good support for a server instance of this. It's simply the same application just providing a web-page. 
+
+Some features that are not available in the server instance: 
+- Access to error reports. The error reports are still generated, but will not be accessible remotely. You may want to run a http directory server on your server machine as well to have access to the error reports. 
+- Debugging mode. You will not be able to view your web browser to determine what issues may exist while running the farmer. If you run into issues like failed login, id recommend removing the account, and ensuring the credentials are correct (including no leading/trailing empy space), as well as to attempt login on another machine to check for any login interruptions. 
+- Security 
+  - I have put no time into implementing any form of security for this. By using the server instance, you provide a fully open, http, webpage which includes all your email addresses, and passwords visible in the log window. 
+
+Also, the webpage does not work on mobile... at all.
+
+Installation steps: 
+1. Install python3.10.8.
+2. Install Poetry (the python package manager I am using for this) 
+3. Clone this repository using Git.
+4. Navigate to the root directory of the repository you cloned. 
+5. Run the command `poetry install`. This will create a virtual environment and install all the dependencies to it. Poetry will automatically use the correct version of Python installed for this virtual environment. 
+6. Open `configuration.yaml` (located in the root directory) and modify the line `mode: APPLICATION` to `mode: SERVER`. 
+7. In the root directory, run the command `poetry run python main.py`. This will start the server. The web page will be available at `http://<ip-addr>:50947`
 
 ## Development
 
