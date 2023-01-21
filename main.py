@@ -147,7 +147,7 @@ def main_screen(page: ft.Page):
 
     page.window_title_bar_hidden = True
     page.window_title_bar_buttons_hidden = True
-    page.window_opacity = config.gui_window_opacity
+    page.window_opacity = config.gui_window_opacity if not page.web else 1
     page.theme_mode = config.theme_mode.lower()
     page.title = "Microsoft Rewards Farmer"
     page.window_height = 720
@@ -213,7 +213,8 @@ def main_screen(page: ft.Page):
                                 ToolbarItem(
                                     icon=ft.icons.BUG_REPORT,
                                     tooltip="Debugging Mode",
-                                    callback=toggle_debug_mode
+                                    callback=toggle_debug_mode,
+                                    disabled=page.web
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.DOUBLE_ARROW,
@@ -223,7 +224,8 @@ def main_screen(page: ft.Page):
                                 ToolbarItem(
                                     icon=ft.icons.FOLDER_SPECIAL,
                                     tooltip="Open Program Folder",
-                                    callback=lambda _: os.startfile(".")
+                                    callback=lambda _: os.startfile("."),
+                                    disabled=page.web
                                 )
                             ],
                             update_prompt=updatePrompt
@@ -252,7 +254,11 @@ def main_screen(page: ft.Page):
 
 def main():
     configure_scheduler()
-    ft.app(target=main_screen, view=ft.FLET_APP_HIDDEN)
+    ft.app(
+        target=main_screen,
+        view=ft.WEB_BROWSER if config.mode == "SERVER" else ft.FLET_APP_HIDDEN,
+        assets_dir="./assets"
+    )
 
 
 if __name__ == '__main__':
