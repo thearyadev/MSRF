@@ -36,7 +36,6 @@ class Titlebar(ft.UserControl):
                         ft.Container(
                             ft.Row(
                                 [
-                                    ft.IconButton(icon=ft.icons.GENERATING_TOKENS, disabled=True),
                                     ft.Text(f"{self.window_title}")
                                 ]
                             ), bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
