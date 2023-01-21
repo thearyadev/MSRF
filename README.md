@@ -57,6 +57,8 @@ Installation steps. (These steps assume you have already installed CHROME and CH
 6. Open `configuration.yaml` (located in the root directory) and modify the line `mode: APPLICATION` to `mode: SERVER`. 
 7. In the root directory, run the command `poetry run python main.py`. This will start the server. The web page will be available at `http://<ip-addr>:50947`
 
+If you run into problems, please open an issue on this Github repository and I will try to help. The server instance of this application is not the primary goal of this project, and as such has not been tested very much. 
+
 ## Development
 
 This project was developed in Python 3.10.8 and has **not** been tested with any other version of python. 
