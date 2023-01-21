@@ -115,8 +115,12 @@ class ErrorReporter:
         except Exception:
             return ''.join(traceback.format_exception(exception))
 
-    def generate_report(self, browser: WebDriver, accountData: DashboardData | None | str,
-                        exception: Exception) -> ErrorReport:
+    def generate_report(
+            self,
+            browser: WebDriver,
+            accountData: DashboardData | None | str,
+            exception: Exception
+    ) -> ErrorReport:
         try:
             report = ErrorReport(
                 screenshot=self._get_browser_screenshot(browser),
