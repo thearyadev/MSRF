@@ -1,5 +1,7 @@
 import flet as ft
 
+import util
+
 
 class Titlebar(ft.UserControl):
     def __init__(
@@ -8,6 +10,7 @@ class Titlebar(ft.UserControl):
             closable: bool = True,
             hidden: bool = False,
             visible: bool = True,
+            current_version: str = None,
             *args,
             **kwargs
     ):
@@ -16,6 +19,7 @@ class Titlebar(ft.UserControl):
         self.visible = visible
         self.closable = closable
         self.hidden = hidden
+        self.version = current_version
 
     def minimize(self):
         self.page.window_minimized = True
@@ -36,13 +40,14 @@ class Titlebar(ft.UserControl):
                         ft.Container(
                             ft.Row(
                                 [
-                                    ft.Text(f"{self.window_title}")
+                                    ft.Text(f"{self.window_title}"),
+                                    ft.Text(f"{self.version}", color=ft.colors.BLUE_GREY)
                                 ]
                             ), bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
                     ),
                     ft.IconButton(ft.icons.PHOTO_SIZE_SELECT_SMALL, on_click=lambda _: self.minimize(),
-                                  tooltip="Close Program"),
-                    ft.IconButton(ft.icons.CLOSE, on_click=lambda _: self.page.window_close(), tooltip="Minimize")
+                                  tooltip="Minimize"),
+                    ft.IconButton(ft.icons.CLOSE, on_click=lambda _: self.page.window_close(), tooltip="Close")
                     if self.closable else ft.Container(),
 
                 ],

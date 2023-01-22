@@ -186,7 +186,7 @@ def main_screen(page: ft.Page):
         )
 
     page.add(
-        Titlebar("Microsoft Rewards Farmer", visible=not page.web),
+        Titlebar("Microsoft Rewards Farmer", visible=not page.web, current_version=config.version),
         ft.Row(
             [
                 ft.Column(
