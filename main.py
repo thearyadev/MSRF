@@ -12,7 +12,7 @@ import custom_logging
 import database
 import util
 from gui import (AccountDataTable, AddAccountDialog, LogDisplay, Titlebar,
-                 Toolbar, ToolbarItem)
+                 Toolbar, ToolbarItem, ErrorCounter)
 
 try:
     os.mkdir("./errors")
@@ -123,6 +123,7 @@ def main_screen(page: ft.Page):
         accountsControl.accounts = db.read()
         accountsControl.populate()
         logDisplay.populate()
+        errorCounter.populate()
         page.update()
 
     def toggle_dark(_):
@@ -184,7 +185,7 @@ def main_screen(page: ft.Page):
             icon_color=ft.colors.GREEN,
             disabled=True
         )
-
+    errorCounter = ErrorCounter()
     page.add(
         Titlebar("Microsoft Rewards Farmer", visible=not page.web, current_version=config.version),
         ft.Row(
@@ -228,7 +229,8 @@ def main_screen(page: ft.Page):
                                     disabled=page.web
                                 )
                             ],
-                            update_prompt=updatePrompt
+                            update_prompt=updatePrompt,
+                            error_prompt=errorCounter
                         )
                     ],
 

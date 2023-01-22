@@ -23,7 +23,8 @@ class Toolbar(ft.UserControl):
     def __init__(
             self,
             toolbarItems: list[ToolbarItem | ft.control.Control],
-            update_prompt: ft.control.Control | None,
+            update_prompt: ft.control.Control | None = None,
+            error_prompt: ft.control.Control | None = None,
             *args,
             **kwargs
     ):
@@ -31,6 +32,9 @@ class Toolbar(ft.UserControl):
         self.toolbarItems = toolbarItems
         if update_prompt:
             self.toolbarItems.append(update_prompt)
+
+        if error_prompt:
+            self.toolbarItems.append(error_prompt)
 
     def build(self):
         return ft.Row(self.toolbarItems)
