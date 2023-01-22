@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "msrf-dev"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "msrf"
+authors = ["msrf <msrf@msrf.com>"]
 readme = "README.md"
 packages = [{include = "msrf_dev"}]
 
