@@ -139,35 +139,21 @@ Please use the Github issue template for all bugs and feature requests.
     - daily set
         - daily set contains 3 items
     - error reporting
-- load accounts button to allow the user to select an `accounts.sqlite` file from a previous version/save of MSRF
-- final preparations for v1.0 release.
 - purge errors once the errors directory contains more than 50 entries. 
 - complete documentation of all components and modules
 - fix a bug where 12 points worth of PC searches are not completed. 
 - fix question # count. Some start at 0 instead of 1.
-- fix common problem where dashboard data fails to load due to the page not being loaded.
-- suppress exceptions in waitUntilVisible where possible
 - add detailed error descriptions for error report. ie: what is the farmer trying to do
-- add full error trace
-- add error count display in GUI.
 - add an additional data field to the error report so each individual error report can include some extra data where applicable
   - for example: the task it was trying to complete at the time of the error
   - locals
   - globals
-  - etc. 
-- have custom logging return a log object, so that the log dump can be displayed on the screen, but also sent to the error log.
-- Test usage with Chrome Portable to allow for smaller package size. 
-  - The total unzipped size of this program is ~700mb. Chrome is like 70% of that. Chrome Portable is significantly smaller than that.
-  - Currently unsure if it works with existing Chrome/Chromedriver applications, will be looking into this soon.
+  - etc.
 - Installer for the app, so it can be added to registered programs on the system
-- Auto updater script
-- Server Mode; linux support; web-ui enhancements
-- switch to Poetry for dependency management
 - fix a problem with account password which a space/newline is recorded. This will break login and theres no easy way to determine what the problem is.
-- add account email to error report zipfile name to make specific errors easily identifiable. 
 - add function to error report zipfile name to make specific errors easily identifiable
 - add support for alternate point collection methods (videos)
-- Test lag with larger log buffer
+
 ## Contributing
 
 There are no contributing guidelines (for now). 
