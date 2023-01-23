@@ -36,7 +36,11 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     # Starting with PC user agent
 
     # if debug is TRUE, run headless=FALSE to view the browser window.
-    browser: WebDriver = util.init_browser(headless=not config.debug, agent=config.pc_user_agent)
+    browser: WebDriver = util.init_browser(
+        headless=not config.debug,
+        agent=config.pc_user_agent,
+        execution_mode=config.execution_environment
+    )
 
     logger.info("Attempting login...")
     # go through login process
@@ -176,7 +180,11 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
             logger.info("Starting mobile browser.")
             account.points = util.getPointCount(browser)
             db.write(account)
-            mobileBrowser = util.init_browser(headless=not config.debug, agent=config.mobile_user_agent)
+            mobileBrowser = util.init_browser(
+                headless=not config.debug,
+                agent=config.mobile_user_agent,
+                execution_mode=config.execution_environment
+            )
             util.authenticate_microsoft_account(browser=mobileBrowser, account=account)
             searchTerms = util.getGoogleTrends(remainingSearches.mobileSearches, config.LANG, config.GEO)
             try:
