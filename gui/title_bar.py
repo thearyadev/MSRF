@@ -1,7 +1,5 @@
 import flet as ft
 
-import util
-
 
 class Titlebar(ft.UserControl):
     def __init__(

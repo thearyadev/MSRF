@@ -1,10 +1,10 @@
 import atexit
 import datetime
 import os
+import platform
+import sys
 import threading
 import time
-import sys
-import platform
 
 import flet as ft
 import flet.buttons
@@ -13,8 +13,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import custom_logging
 import database
 import util
-from gui import (AccountDataTable, AddAccountDialog, LogDisplay, Titlebar,
-                 Toolbar, ToolbarItem, ErrorCounter)
+from gui import (AccountDataTable, AddAccountDialog, ErrorCounter, LogDisplay,
+                 Titlebar, Toolbar, ToolbarItem)
 
 try:
     os.mkdir("./errors")

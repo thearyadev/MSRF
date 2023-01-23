@@ -1,5 +1,6 @@
-import flet as ft
 import os
+
+import flet as ft
 
 
 class ErrorCounter(ft.UserControl):
