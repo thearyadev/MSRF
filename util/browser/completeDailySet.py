@@ -82,7 +82,7 @@ def exec_daily_set(browser: WebDriver):
                         )
                         logger.critical("Unable to complete daily_set_this_or_that due to an uncaught error in scraper."
                                         f"Error report has been generated: {errorReport.file_path}")
-                elif daily_set_item.pointProgressMax in (40, 30) and daily_set_item.pointProgressMax == 0:
+                elif daily_set_item.pointProgressMax in (40, 30) and daily_set_item.pointProgress == 0:
                     # if the max points are 40 or 30, it is just a generic quiz
                     # only attempt if progress on the quiz is 0
                     logger.info(f"Completing quiz of card #{daily_set_item.cardNumber}")
