@@ -1,12 +1,10 @@
 ```
-### v0.5b Release Notes:
-
-- GUI (code) structure is changed to decouple & reduce replicated code. 
-- Toggle Log Display button has been removed.
-- Default Re-execution time reduced to 24 hours from 27 hours. All accounts will run at (around) the same time.
-- Changed "Update Available" prompt to better looking form. 
-- Bug fixes
-- Decrease UI refresh rate. Page update sequence was often interupting the long-press actions while navigating
+### v0.6b Changes: 
+- Support for Server instance (see `Installation: Server` in README)
+- Changed to Poetry for dependency management
+- Minor UI changes 
+- Update error report file name to include email address of account which the error occured in. 
+- Max accounts changed from 8 to 10
 ```
 
 
