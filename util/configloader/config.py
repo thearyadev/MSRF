@@ -19,6 +19,7 @@ class Config(YamlModel):
     theme_mode: str | None
     run_scheduler: bool | None
     mode: str | None
+    execution_environment: str | None
 
     @classmethod
     def load_config(cls, file: str):
