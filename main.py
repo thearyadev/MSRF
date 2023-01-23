@@ -3,6 +3,8 @@ import datetime
 import os
 import threading
 import time
+import sys
+import platform
 
 import flet as ft
 import flet.buttons
@@ -44,6 +46,24 @@ def remove_account(email):
     account = [a for a in db.read() if a.email == email]
     if len(account):
         db.delete(account[0])
+
+
+def get_environment():
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        return "DIST_WINDOWS"
+
+    if os.environ.get("DOCKER_CONTAINERIZED_EXECUTION", False):
+        return "DOCKER"
+
+    # if neither of the two above cases, we are in development.
+    # check if windows or linux.
+
+    if platform.system() == "Windows":
+        return "DEV_WINDOWS"
+
+    if platform.system() == "Linux":
+        return "DEV_LINUX"
+
 
 
 def add_account(email, password):
@@ -255,6 +275,7 @@ def main_screen(page: ft.Page):
 
 
 def main():
+    config.execution_environment = get_environment()
     configure_scheduler()
 
     ft.app(
