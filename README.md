@@ -133,13 +133,10 @@ Unzip your error report, and remove any personal information from it. You can th
 Please use the Github issue template for all bugs and feature requests. 
 
 ## Development Roadmap / Known Issues
-- Tests
-    - daily set
-        - daily set contains 3 items
-    - error reporting
+- Tests for Microsoft Rewards, Farmer. 
 - purge errors once the errors directory contains more than 50 entries. 
 - complete documentation of all components and modules
-- fix a bug where 12 points worth of PC searches are not completed. 
+- fix a bug where 12 points worth of PC searches are not completed.
 - fix question # count. Some start at 0 instead of 1.
 - add detailed error descriptions for error report. ie: what is the farmer trying to do
 - add an additional data field to the error report so each individual error report can include some extra data where applicable
@@ -147,10 +144,12 @@ Please use the Github issue template for all bugs and feature requests.
   - locals
   - globals
   - etc.
-- Installer for the app, so it can be added to registered programs on the system
 - fix a problem with account password which a space/newline is recorded. This will break login and theres no easy way to determine what the problem is.
 - add function to error report zipfile name to make specific errors easily identifiable
-- add support for alternate point collection methods (videos)
+- rebuild login function
+  - Better error reporting, attempt to determine what the actual problem is. 
+  - Support for mobile authentication is messy and causes a bunch of false errors.
+- Rebuild browser init function to make it easier to deploy to multiple environments. 
 
 ## Contributing
 
