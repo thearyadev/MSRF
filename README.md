@@ -149,7 +149,7 @@ Please use the Github issue template for all bugs and feature requests.
 - rebuild login function
   - Better error reporting, attempt to determine what the actual problem is. 
   - Support for mobile authentication is messy and causes a bunch of false errors.
-- Rebuild browser init function to make it easier to deploy to multiple environments. 
+- Add upload and download button for the `accounts.sqlite` file. 
 
 ## Contributing
 
