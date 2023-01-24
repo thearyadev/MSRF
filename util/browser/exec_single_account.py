@@ -50,7 +50,8 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         errorReport: ErrorReport = ErrorReporter().generate_report(
             browser,
             accountData=None,
-            exception=Exception("Login failed. Module may be broken, or credentials are invalid.")
+            exception=Exception("Login failed. Possible Causes: Invalid credentials,"
+                                " Interrupted login (login steps), login module broken")
         )
         logger.critical("Login failed. Module may be broken, or credentials are invalid. "
                         f"Error report has been generated: {errorReport.file_path}")
