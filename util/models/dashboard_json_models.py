@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, validator
+from rich import print
 
 """
 This file models the data retrieved from rewards.bing.com.
@@ -84,7 +85,7 @@ class PunchCardChildPromotion(BaseModel):
 class PunchCards(BaseModel):
     name: Optional[str] = None
     parentPromotion: Optional[PunchCardParentPromotion] = None
-    childPromotion: Optional[List[PunchCardChildPromotion]] = None
+    childPromotions: Optional[List[PunchCardChildPromotion]] = None
 
 
 class MorePromotion(BaseModel):
@@ -109,3 +110,11 @@ class DashboardDataModel(BaseModel):
         for promotionDateString, promotionData in value.items():
             newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
         return newDict  # hello world
+
+
+if __name__ == '__main__':
+    import json
+    with open("../../dashboard_data_schema_source.json", "r", encoding="utf-8") as file:
+        d = json.load(file)
+        print(DashboardDataModel(**d).punchCards)
+
