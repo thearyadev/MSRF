@@ -41,10 +41,11 @@ class AccountDataTable(ft.UserControl):
         self.accounts = accounts
         self.delete_account_dialog = DeleteAccountDialog(delete_account_handler)
         self.table = ft.DataTable(
-            width=600,
+            width=800,
             horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
             divider_thickness=0,
             columns=[
+                ft.DataColumn(ft.Text("Errors")),
                 ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
                 ft.DataColumn(ft.Text("Last Exec"),
                               tooltip="Long press on the Last Exec of the account you want to run now."),
@@ -69,6 +70,7 @@ class AccountDataTable(ft.UserControl):
         self.table.rows = [
             ft.DataRow(
                 cells=[
+                    ft.DataCell(ft.Text("Err")),
                     ft.DataCell(
                         ft.Text(account.email),
                         on_long_press=self.handle_account_long_press
