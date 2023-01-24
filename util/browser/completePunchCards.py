@@ -1,5 +1,3 @@
-
-
 import typing
 
 from selenium.webdriver.chrome.webdriver import WebDriver
