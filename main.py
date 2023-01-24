@@ -171,8 +171,8 @@ def main_screen(page: ft.Page):
     page.window_opacity = config.gui_window_opacity if not page.web else 1
     page.theme_mode = config.theme_mode.lower()
     page.title = "Microsoft Rewards Farmer"
-    page.window_height = 720
-    page.window_width = 1280
+    page.window_height = 800
+    page.window_width = 1500
     page.window_resizable = False
     page.window_maximizable = False
 
