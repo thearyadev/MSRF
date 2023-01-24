@@ -32,7 +32,7 @@ def exec_punch_cards(browser: WebDriver):
 
     for punch_card in punch_cards:
         if punch_card.parentPromotion is not None \
-                and punch_card.childPromotion is not None \
+                and punch_card.childPromotions is not None \
                 and not punch_card.parentPromotion.complete \
                 and punch_card.parentPromotion.pointProgressMax != 0:
             logger.info(f"Valid punch card child promotion found: {punch_card.name}")
@@ -40,7 +40,7 @@ def exec_punch_cards(browser: WebDriver):
                 util.exec_single_punch_card_child_promotion(
                     browser,
                     punch_card.parentPromotion.destinationUrl,
-                    punch_card.childPromotion
+                    punch_card.childPromotions
                 )
             except Exception as e:
                 errorReport: ErrorReport = ErrorReporter().generate_report(
@@ -48,7 +48,7 @@ def exec_punch_cards(browser: WebDriver):
                     accountData=accountData,
                     exception=e
                 )
-                logger.critical("Failed to complete punch card child promotion. Expected error: "
+                logger.critical("Failed to complete punch card child promotions. Expected error: "
                                 f"Error report has been generated: {errorReport.file_path}")
             else:
                 logger.info(f"Successfully completed punch card child promotion: {punch_card.name}")
