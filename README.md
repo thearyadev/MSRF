@@ -61,8 +61,12 @@ Work in progress.
 ## Development
 
 This project was developed in Python 3.10.8 and has **not** been tested with any other version of python. 
+The valid Python range is 3.10 -> 3.12. Most are untested.
 
-Install all python dependencies using the `requirements.txt` file found in the root of this project. 
+This project uses Poetry for dependency management. 
+Using poetry, run `poetry install` in the root of the project directory. This will install all dependencies.
+
+Tests use environment variables to load some testing account credentials. Check the tests module for more information.
 
 ```bash
 python -m pip install -r requirements.txt
