@@ -2,6 +2,7 @@ import atexit
 import datetime
 import os
 import platform
+import shutil
 import sys
 import threading
 import time
@@ -210,6 +211,7 @@ def main_screen(page: ft.Page):
         Titlebar("Microsoft Rewards Farmer", visible=not page.web, current_version=config.version),
         ft.Row(
             [
+
                 ft.Column(
                     controls=[
                         ft.Container(
@@ -247,10 +249,15 @@ def main_screen(page: ft.Page):
                                     tooltip="Open Program Folder",
                                     callback=lambda _: os.startfile("."),
                                     disabled=page.web
+                                ),
+                                ToolbarItem(
+                                    icon=ft.icons.PLAYLIST_REMOVE_OUTLINED,
+                                    tooltip="Clear all errors",
+                                    callback=lambda _: [os.remove(f"./errors/{f}") for f in os.listdir("errors")]
                                 )
                             ],
                             update_prompt=updatePrompt,
-                            error_prompt=errorCounter
+                            error_prompt=None
                         )
                     ],
 

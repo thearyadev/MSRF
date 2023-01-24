@@ -1,6 +1,7 @@
 import datetime
 import threading
 from typing import TYPE_CHECKING, Callable
+import os
 
 import flet as ft
 
@@ -10,6 +11,10 @@ if TYPE_CHECKING:
 
 def is_currently_running(account: 'util.MicrosoftAccount') -> bool:
     return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
+
+
+def get_errors() -> list[str]:
+    return [f for f in os.listdir("errors") if "error" in f]
 
 
 def calc_hours_ago(account: 'util.MicrosoftAccount') -> str:
@@ -45,7 +50,7 @@ class AccountDataTable(ft.UserControl):
             horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
             divider_thickness=0,
             columns=[
-                ft.DataColumn(ft.Text("Errors")),
+                ft.DataColumn(ft.Text("Errors"), tooltip="Click the folder button to view error reports"),
                 ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
                 ft.DataColumn(ft.Text("Last Exec"),
                               tooltip="Long press on the Last Exec of the account you want to run now."),
@@ -67,10 +72,19 @@ class AccountDataTable(ft.UserControl):
         self.delete_account_dialog.show()
 
     def populate(self):
+        errors: list[str] = get_errors()
         self.table.rows = [
             ft.DataRow(
                 cells=[
-                    ft.DataCell(ft.Text("Err")),
+                    ft.DataCell(
+                        ft.Text(
+                            str(
+                                len(
+                                    [e for e in errors if account.email in e]
+                                )
+                            )
+                        )
+                    ),
                     ft.DataCell(
                         ft.Text(account.email),
                         on_long_press=self.handle_account_long_press
@@ -87,6 +101,7 @@ class AccountDataTable(ft.UserControl):
 
             ) for account in self.accounts
         ]
+
         self.row.controls = [
             self.table if self.accounts else self.addAccountPrompt,
             self.delete_account_dialog
