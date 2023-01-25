@@ -69,7 +69,7 @@ def init_browser(*, headless: bool, agent: str, execution_mode: str) -> WebDrive
         driver = webdriver.Chrome(options=options)
 
     if execution_mode == "DEV_LINUX":  # This is linux installation
-        ...
+        driver = webdriver.Chrome(options=options)
 
     if execution_mode == "DEV_WINDOWS":  # This is Windows Installation
         driver = webdriver.Chrome(options=options)
