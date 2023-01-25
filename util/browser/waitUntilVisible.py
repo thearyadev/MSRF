@@ -24,3 +24,10 @@ def waitUntilVisible(browser: WebDriver, by_: By, selector: str, time_to_wait: i
         )
         logger.critical(f"Error report has been generated: {errorReport.file_path}")
         return
+
+
+def waitUntilVisible_RaisesExceptions(browser: WebDriver, by_: By, selector: str, time_to_wait: int = 10):
+    from util import ErrorReport, ErrorReporter
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    WebDriverWait(browser, time_to_wait).until(ec.visibility_of_element_located((by_, selector)))
+
