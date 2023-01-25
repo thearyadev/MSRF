@@ -152,7 +152,7 @@ def authenticate_microsoft_account_legacy(*, browser: WebDriver, account: util.M
                         f"Error report has been generated: {errorReport.file_path}")
 
 
-def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount) -> bool:
+def authenticate_microsoft_account(*, browser: WebDriver, account: util.MicrosoftAccount, mobile: bool = False) -> bool:
     from util import ErrorReport, ErrorReporter
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info("Navigating to https://login.live.com/")
@@ -219,24 +219,35 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
         "=1555A6A1CA736D690B78B42BCBD96C3E"
     )
 
-    try:
-        util.waitUntilVisible(browser, By.ID, "id_n", 8)
-    except selenium.common.exceptions.TimeoutException:
-        logger.warning("Timeout exception: element may not be loaded.")
+    if not mobile:
+        try:
+            util.waitUntilVisible_RaisesExceptions(browser, By.ID, "id_n", 8)
+        except Exception:
+            pass
+    else:
+        try:
+            util.waitUntilVisible_RaisesExceptions(browser, By.ID, "hb_n", 8)
+        except Exception:
+            pass
 
-    # Check login
-
     try:
-        authenticated_user_title = browser.find_element(By.ID, "id_n").text
-        if authenticated_user_title and authenticated_user_title != account.email:
-            logger.warning("Login uncertain. Bing authenticated user is not the same as the current exec email.")
+        if not mobile:
+            try:
+                authenticated_user_title = browser.find_element(By.ID, "id_n").text
+            except Exception:
+                authenticated_user_title = False
+
+        else:
+            try:
+                authenticated_user_title = browser.find_element(By.ID, "hb_n").text
+            except Exception:
+                authenticated_user_title = False
 
         if authenticated_user_title:
             logger.info("https://bing.com is authenticated.")
             return True
 
     except selenium.common.exceptions.TimeoutException:
-        logger.critical("id_n element is not available on page.")
+        logger.critical("User title not available on page. Unable to confirm if authenticated.")
         return False
-
     return False
