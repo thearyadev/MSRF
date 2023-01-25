@@ -136,7 +136,7 @@ Unzip your error report, and remove any personal information from it. You can th
 
 Please use the Github issue template for all bugs and feature requests. 
 
-## Development Roadmap / Known Issues
+## Development Roadmap / Known Issues (All to be implemented at or before the v1.0 release.)
 - Tests for Microsoft Rewards, Farmer. 
 - purge errors once the errors directory contains more than 50 entries. 
 - complete documentation of all components and modules
@@ -153,7 +153,18 @@ Please use the Github issue template for all bugs and feature requests.
 - rebuild login function
   - Better error reporting, attempt to determine what the actual problem is. 
   - Support for mobile authentication is messy and causes a bunch of false errors.
-- Add upload and download button for the `accounts.sqlite` file. 
+- Add upload and download button for the `accounts.sqlite` file.
+- Move to multi-threaded queue oriented execution
+- Multiple concurrent workers. Could cause ban, experimentation required. 
+- Modify database to include: 
+  - account level
+- Create Jobs for the queue
+  - Job Type #1: Exec
+    - Runs the farmer to collect points
+  - Job Type #2: Refresh Points
+    - Long-press on the points column will add this job to the queue
+    - it will refresh the point count, in case of manual changes. 
+- 
 
 ## Contributing
 
