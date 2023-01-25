@@ -164,7 +164,9 @@ Please use the Github issue template for all bugs and feature requests.
   - Job Type #2: Refresh Points
     - Long-press on the points column will add this job to the queue
     - it will refresh the point count, in case of manual changes. 
-- 
+- Move all uses of waitUntilVisible to the new function that raises an error and does not create an error report. 
+  - Error report should not be handled this deep in the stack.
+- Address some errors with some quiz types. Available on new accounts. 
 
 ## Contributing
 
