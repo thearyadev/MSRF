@@ -204,6 +204,7 @@ def authenticate_microsoft_account(*, browser: WebDriver, account: util.Microsof
         logger.error(f"Error uncaught while trying to enter and submit password."
                      f"Error report has been generated: {errorReport.file_path}")
     browser.get("https://rewards.bing.com")
+    time.sleep(2)
     logger.info("Verifying login is successful")
     try:
         browser.execute_script("return dashboard")
