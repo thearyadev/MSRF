@@ -15,4 +15,4 @@ program_name: msrf
 product_name: Microsoft Rewards Farmer
 theme_mode: DARK
 run_scheduler: true
-mode: SERVER
+mode: APP
