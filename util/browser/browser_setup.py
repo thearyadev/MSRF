@@ -66,6 +66,7 @@ def init_browser(*, headless: bool, agent: str, execution_mode: str) -> WebDrive
     if execution_mode == "DOCKER":  # This is linux installation
         options.add_argument("--no-sandbox")  # causes chrome to crash in screen-less environment
         options.add_argument("--disable-dev-shm-usage")  # causes chrome to crash in screen-less environment
+        options.add_argument('--headless')
         driver = webdriver.Chrome(options=options, chrome_options=options)
 
     if execution_mode == "DEV_LINUX":  # This is linux installation
