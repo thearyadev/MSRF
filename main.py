@@ -86,7 +86,6 @@ def force_exec_single(event: flet.control_event.ControlEvent):
             db.write(account)
             return
 
-# : )
 
 def pick_and_run():
     running = bool([t.name for t in threading.enumerate() if "@" in t.name])  # get all active threads by name
