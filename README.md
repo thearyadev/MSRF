@@ -1,10 +1,10 @@
 ```
-### v0.6b Changes: 
-- Support for Server instance (see `Installation: Server` in README)
-- Changed to Poetry for dependency management
-- Minor UI changes 
-- Update error report file name to include email address of account which the error occured in. 
-- Max accounts changed from 8 to 10
+### v0.7b Changes: 
+- Server Instance Bug Fixes. (Feedback on this is greatly appriciated)
+- Add Error Count column to accounts table. 
+    - This will let you address potential problems. Note: Before running into the github issues with a list of errors, please read the Errors section of this readme. Many errors generated are not legitimate problems. 
+    - This should primarily be used to identify accounts you may want to double check on, to check if they have been banned, or something else. 
+
 ```
 
 
@@ -48,14 +48,16 @@ The following steps assumes:
 
 Installation steps: 
 1. Create a new directory to work with the project files. This example will use `./msrf-home`. `cd ./msrf-home`
-2. Run the following command: ```curl -o msrf-v0.6b.zip https://codeload.github.com/thearyadev/MSRF/zip/refs/tags/v0.6b && unzip msrf-v0.6b.zip && rm msrf-v0.6b.zip```
-3. A new directory has been created, `./msrf-home/MSRF-0.6b`. CD into this directory. 
-4. Open the file `./msrf-home/configuration.yaml` in an editor. Change the line `mode: APPLICATION` to `mode: SERVER`
-5. Run the command `docker build -t msrf_06b .`. This will create a docker image.
-6. Run the command `docker run -d -p 50947:50947 msrf_06b`
+2. Run the following command: ```curl -o msrf-v0.7b.zip https://codeload.github.com/thearyadev/MSRF/zip/refs/tags/v0.7b && unzip msrf-v0.7b.zip && rm msrf-v0.7b.zip```
+3. A new directory has been created, `./msrf-home/MSRF-0.7b`. CD into this directory. 
+4. Open the file `.configuration.yaml` in an editor. Change the line `mode: APPLICATION` to `mode: SERVER`
+5. Run the command `docker build -t msrf_07b .`. This will create a docker image.
+6. Run the command `docker run -d -p 50947:50947 msrf_07b`
 7. Navigate to `http://<IP_ADDRESS>:50947` in your web browser. 
 
 Steps for deploying this docker container on Windows is similar. Step 2 simply downloads and extracts the source code for the latest release. 
+
+When re-deploying for an update to MSRF, use the commands: `docker stop msrf_07b` and `docker remove msrf_07b` to clear the previous installation.
 
 Work in progress.
 ## Development
