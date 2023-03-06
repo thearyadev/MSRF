@@ -10,10 +10,10 @@ minimum_auto_rerun_delay_seconds: 86400
 gui_window_opacity: 0.9
 hydration_rate: 2
 max_account_number: 10
-version: v0.7DEV
+version: v0.7
 program_name: msrf
 product_name: Microsoft Rewards Farmer
 theme_mode: DARK
-run_scheduler: false
+run_scheduler: true
 mode: SERVER
 execution_environment: DEV_WINDOWS
