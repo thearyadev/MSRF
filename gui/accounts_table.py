@@ -1,7 +1,7 @@
 import datetime
+import os
 import threading
 from typing import TYPE_CHECKING, Callable
-import os
 
 import flet as ft
 
