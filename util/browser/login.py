@@ -3,12 +3,12 @@ import typing
 
 import selenium.common.exceptions
 from selenium.common.exceptions import (ElementNotInteractableException,
+                                        JavascriptException,
                                         NoSuchElementException,
                                         TimeoutException)
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import JavascriptException
 
 import custom_logging
 import util
