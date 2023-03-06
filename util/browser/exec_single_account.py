@@ -44,8 +44,8 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
 
     logger.info("Attempting login...")
     # go through login process
-    login_state = util.authenticate_microsoft_account(browser=browser,
-                                                      account=account)
+    login_state = util.authenticate_microsoft_account_legacy(browser=browser,
+                                                             account=account)
     if not login_state:
         errorReport: ErrorReport = ErrorReporter().generate_report(
             browser,
