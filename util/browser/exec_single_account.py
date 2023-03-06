@@ -223,3 +223,30 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     logger.info(F"Closing Point Total: {account.points}")
     logger.info("Closing main browser.")
     browser.quit()
+
+
+def exec_refresh_points(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
+    from util import ErrorReport, ErrorReporter
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+
+    browser: WebDriver = util.init_browser(
+        headless=not config.debug,
+        agent=config.pc_user_agent,
+        execution_mode=config.execution_environment
+    )
+    logger.info("Attempting login...")
+    # go through login process
+    login_state = util.authenticate_microsoft_account(browser=browser,
+                                                      account=account)
+    if not login_state:
+        errorReport: ErrorReport = ErrorReporter().generate_report(
+            browser,
+            accountData=None,
+            exception=Exception("Login failed. Possible Causes: Invalid credentials,"
+                                " Interrupted login (login steps), login module broken")
+        )
+        logger.critical("Login failed. Module may be broken, or credentials are invalid. "
+                        f"Error report has been generated: {errorReport.file_path}")
+        return
+    account.points = util.getPointCount(browser)
+    db.write(account)

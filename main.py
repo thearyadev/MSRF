@@ -2,7 +2,6 @@ import atexit
 import datetime
 import os
 import platform
-import shutil
 import sys
 import threading
 import time
@@ -27,15 +26,6 @@ config: util.Config = util.Config.load_config("configuration.yaml")  # load conf
 logger.info("Loaded ./configuration.yaml into config object")
 db = database.DatabaseAccess()  # create database connection
 logger.info("Connection to database was successful.")
-
-
-def get_log() -> str:
-    with open("farmer.log", "r") as file:
-        return "".join(list((list(reversed(file.readlines()))[:100])))
-
-
-def is_currently_running(account: util.MicrosoftAccount) -> bool:
-    return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
 
 
 def toggle_debug_mode(_):
@@ -64,7 +54,6 @@ def get_environment():
 
     if platform.system() == "Linux":
         return "DEV_LINUX"
-
 
 
 def add_account(email, password):
@@ -188,7 +177,7 @@ def main_screen(page: ft.Page):
         delete_account_handler=remove_account
     )
     version: util.VersionInfo = util.check_version()
-    updatePrompt = update_prompt = ft.Text("")
+    updatePrompt = ft.Text("")
     if version.release_version != config.version:
         updatePrompt = ft.TextButton(
             "Update Available",
@@ -219,8 +208,8 @@ def main_screen(page: ft.Page):
                             content=accountsControl,
                             expand=True,
                         ),
-                        ft.Text("The farmer is paused." if not config.run_scheduler else ""
-                                , italic=True, color=ft.colors.BLUE_GREY),
+                        ft.Text("The farmer is paused." if not config.run_scheduler else "",
+                                italic=True, color=ft.colors.BLUE_GREY),
                         Toolbar(
                             toolbarItems=[
                                 ToolbarItem(
