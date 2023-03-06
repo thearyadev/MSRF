@@ -11,8 +11,6 @@ import util
 def exec_single_punch_card_child_promotion(browser: WebDriver,
                                            url: str,
                                            childPromotions: list['util.PunchCardChildPromotion']):
-    from util import ErrorReport, ErrorReporter
-
     logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
     logger.info(f"Navigating to punch card url: {url}")
     browser.get(url)
