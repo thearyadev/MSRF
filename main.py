@@ -5,9 +5,10 @@ import platform
 import sys
 import threading
 import time
+import base64
 
 import flet as ft
-import flet.buttons
+import flet
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import custom_logging
@@ -127,7 +128,34 @@ def configure_scheduler():
         atexit.register(scheduler.shutdown)
 
 
+def gen_accounts_url() -> str:
+    """converts accounts.sqlite to a data: uri."""
+    with open("accounts.sqlite", "rb") as file:
+        data = file.read()
+        encoded = base64.b64encode(data).decode("utf-8")
+        uri = 'data:multipart/form-data;base64,' + encoded
+        return uri
+
+
 def main_screen(page: ft.Page):
+    def replace_accounts_file(e: ft.FilePickerUploadEvent):
+        source_file_data = file_picker.save_file(e.file_name)
+        try:
+            database_test = database.DatabaseAccess(source_file_data.path)
+            database_test.read()
+        except Exception as e:
+            logger.critical(
+                f"The file submitted is not valid. Unable to read database, reverting to original. Error: {e}")
+            return
+        logger.info(f"Writing {source_file_data.path} to ./accounts.sqlite")
+
+        with open(source_file_data.path, "rb") as source_file:  # open src
+            with open("accounts.sqlite", "wb") as destination_file:  # open destination
+                destination_file.write(source_file.read())  # overwrite
+
+        logger.info("Reloading Database. If any problems occur, delete ./accounts.sqlite and restart the program.")
+        db.__init__()
+
     def hydrate():
         time.sleep(config.hydration_rate)
         accountsControl.accounts = db.read()
@@ -156,6 +184,9 @@ def main_screen(page: ft.Page):
         page.update()
         return
 
+    def result_handler(e):
+        file_picker.upload(e.files)
+
     page.window_title_bar_hidden = True
     page.window_title_bar_buttons_hidden = True
     page.window_opacity = config.gui_window_opacity if not page.web else 1
@@ -168,7 +199,8 @@ def main_screen(page: ft.Page):
 
     addAccountDialog = AddAccountDialog(add_account_handler=add_account)
     page.overlay.append(addAccountDialog)
-
+    file_picker = ft.FilePicker(on_upload=replace_accounts_file, on_result=result_handler)
+    page.add(file_picker)
     logDisplay = LogDisplay(data_handler=logger.load)
 
     accountsControl = AccountDataTable(
@@ -243,7 +275,20 @@ def main_screen(page: ft.Page):
                                     icon=ft.icons.PLAYLIST_REMOVE_OUTLINED,
                                     tooltip="Clear all errors",
                                     callback=lambda _: [os.remove(f"./errors/{f}") for f in os.listdir("errors")]
-                                )
+                                ),
+                                # ToolbarItem(
+                                #     icon=ft.icons.UPLOAD,
+                                #     tooltip="Upload Accounts File",
+                                #     callback=lambda _: file_picker.pick_files()
+                                # ), ToolbarItem(
+                                #     icon=ft.icons.DOWNLOAD,
+                                #     tooltip="Download Accounts File."
+                                #             "\nThe file will be unnamed."
+                                #             " Use the upload button to add the accounts file.",
+                                #     callback=lambda _: page.launch_url(gen_accounts_url()),
+                                #     disabled=not page.web
+                                # ),
+
                             ],
                             update_prompt=updatePrompt,
                             error_prompt=None
