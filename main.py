@@ -1,14 +1,14 @@
 import atexit
+import base64
 import datetime
 import os
 import platform
 import sys
 import threading
 import time
-import base64
 
-import flet as ft
 import flet
+import flet as ft
 from apscheduler.schedulers.background import BackgroundScheduler
 
 import custom_logging
