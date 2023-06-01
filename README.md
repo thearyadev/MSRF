@@ -1,10 +1,8 @@
 ```
-### v0.7b Changes: 
-- Server Instance Bug Fixes. (Feedback on this is greatly appriciated)
-- Add Error Count column to accounts table. 
-    - This will let you address potential problems. Note: Before running into the github issues with a list of errors, please read the Errors section of this readme. Many errors generated are not legitimate problems. 
-    - This should primarily be used to identify accounts you may want to double check on, to check if they have been banned, or something else. 
-
+### v0.8b Changes: 
+- use docker compose
+- update server installation process
+- move accounts.sqlite to ./accounts/accounts.sqlite
 ```
 
 
@@ -37,29 +35,24 @@ Run the executable to start the program.
 
 # Installation: Server
 
-Server instances are possible. This is currently being tested. 
-Not all features are supported on a Linux server instance of this application. 
+Requirements: docker, docker-compose
+1. Clone the latest release of this repository: `git clone --branch v0.8b https://github.com/thearyadev/MSRF.git`. The `--branch` flag is used to select a release in this context. Use the tag name of the release. This project uses `vX.Yz` where `X` is the major version number, `Y` is the sub-version number, and `z` is the beta tag. 
 
-Server installation is supported through Docker. 
-The following steps assumes: 
-- Docker is installed correctly.
-- unzip is installed correctly. 
-- curl is installed correctly.
+2. Add an existing `accounts.sqlite` file. In the `v0.8b` release, the `accounts.sqlite` file has been moved to a directory `./accounts`. This directory is not in the repository. Docker compose or the application will auto create it. If you would like to use your existing `accounts.sqlite` file, create a directory `/accounts` and place the `accounts.sqlite` file there. 
 
-Installation steps: 
-1. Create a new directory to work with the project files. This example will use `./msrf-home`. `cd ./msrf-home`
-2. Run the following command: ```curl -o msrf-v0.7b.zip https://codeload.github.com/thearyadev/MSRF/zip/refs/tags/v0.7b && unzip msrf-v0.7b.zip && rm msrf-v0.7b.zip```
-3. A new directory has been created, `./msrf-home/MSRF-0.7b`. CD into this directory. 
-4. Open the file `.configuration.yaml` in an editor. Change the line `mode: APPLICATION` to `mode: SERVER`
-5. Run the command `docker build -t msrf_07b .`. This will create a docker image.
-6. Run the command `docker run -d -p 50947:50947 msrf_07b`
-7. Navigate to `http://<IP_ADDRESS>:50947` in your web browser. 
+3. Configure: You can look into the `docker-compose.yml` file to change the external port number, and the mounted directory for the accounts file. 
 
-Steps for deploying this docker container on Windows is similar. Step 2 simply downloads and extracts the source code for the latest release. 
+4. Build and Deploy: Run `docker compose up -d`. This will build and launch the application as a docker stack. 
 
-When re-deploying for an update to MSRF, use the commands: `docker stop msrf_07b` and `docker remove msrf_07b` to clear the previous installation.
+## Updating
+1. Delete the existing files. If you know how to use git then feel free to just fetch the changes from the latest release, and skip this and the next step. 
+2. Clone the latest release `git clone --branch v0.8b https://github.com/thearyadev/MSRF.git`. Remember to change the branch name. 
+3. Run `docker compose up -d --build`.  The `--build` flag will ensure the docker image is re-built for the changes. 
 
-Work in progress.
+## Making changes after installing
+When re-deploying the docker stack, use `docker compose up -d --build` so that the container is re-built. You should do this when updating any files, such as the `configuration.yaml` file, as these are embedded into the docker image, and need to be re-built to be included. 
+
+
 ## Development
 
 This project was developed in Python 3.10.8 and has **not** been tested with any other version of python. 
