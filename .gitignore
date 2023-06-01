@@ -12,3 +12,5 @@ dist
 .env
 accounts
 .vscode
+msrf.spec
+build
