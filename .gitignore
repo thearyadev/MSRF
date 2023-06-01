@@ -1,0 +1,12 @@
+__pycache__
+.idea
+accounts.sqlite
+log.txt
+bin
+errors
+test.py
+test2.py
+dashboard_data_schema_source.json
+deployable
+dist
+.env
