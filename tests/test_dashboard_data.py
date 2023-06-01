@@ -22,8 +22,8 @@ def browser() -> WebDriver:
         browser=browser,
         account=util.MicrosoftAccount(
             email=os.getenv("MSRF_L2_TESTING_USERNAME"),
-            password=os.getenv("MSRF_L2_TESTING_PASSWORD")
-        )
+            password=os.getenv("MSRF_L2_TESTING_PASSWORD"),
+        ),
     )
     browser.get("https://rewards.bing.com")
     atexit.register(browser.quit)
@@ -32,7 +32,6 @@ def browser() -> WebDriver:
 
 @pytest.mark.trylast
 class TestDashboardData:
-
     def test_dashboard_data_exists_on_page(self, browser: WebDriver):
         assert isinstance(browser.execute_script("return dashboard"), dict)
 
@@ -49,7 +48,13 @@ class TestDashboardData:
                 ptc.is_not(promo.pointProgress, None)
                 ptc.is_not(promo.pointProgressMax, None)
                 ptc.assert_equal(bool(promo.promotionType), True)
-                ptc.is_in(promo.promotionType, ('urlreward', 'quiz',))
+                ptc.is_in(
+                    promo.promotionType,
+                    (
+                        "urlreward",
+                        "quiz",
+                    ),
+                )
                 ptc.is_not(promo.complete, None)
                 ptc.assert_equal(bool(promo.destinationUrl), True)
 
@@ -67,7 +72,13 @@ class TestDashboardData:
             if punchCard.childPromotion is not None:
                 for childPromo in punchCard.childPromotion:
                     ptc.assert_equal(bool(childPromo.promotionType), True)
-                    ptc.is_in(childPromo.promotionType, ('urlreward', 'quiz',))
+                    ptc.is_in(
+                        childPromo.promotionType,
+                        (
+                            "urlreward",
+                            "quiz",
+                        ),
+                    )
                     ptc.is_not(childPromo.complete, None)
                     ptc.assert_equal(bool(childPromo.destinationUrl), True)
                     ptc.is_not(childPromo.pointProgressMax, None)
@@ -78,7 +89,7 @@ class TestDashboardData:
         ptc.is_not(accountData.morePromotions, None)
         for promo in accountData.morePromotions:
             ptc.is_not(promo.promotionType, None)
-            ptc.is_in(promo.promotionType, ('urlreward', 'quiz', ''))
+            ptc.is_in(promo.promotionType, ("urlreward", "quiz", ""))
             ptc.is_not(promo.complete, None)
             ptc.is_not(promo.pointProgress, None)
             ptc.is_not(promo.pointProgressMax, None)

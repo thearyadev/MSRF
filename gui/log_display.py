@@ -7,7 +7,9 @@ class LogDisplay(ft.UserControl):
     def __init__(self, data_handler: Callable, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data_handler = data_handler
-        self.text = ft.Text("", font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE)
+        self.text = ft.Text(
+            "", font_family="Consolas", size=10, overflow=ft.TextOverflow.VISIBLE
+        )
         self.populate()
 
     def populate(self):

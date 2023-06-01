@@ -14,16 +14,27 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import custom_logging
 import database
 import util
-from gui import (AccountDataTable, AddAccountDialog, ErrorCounter, LogDisplay,
-                 Titlebar, Toolbar, ToolbarItem)
+from gui import (
+    AccountDataTable,
+    AddAccountDialog,
+    ErrorCounter,
+    LogDisplay,
+    Titlebar,
+    Toolbar,
+    ToolbarItem,
+)
 
 try:
     os.mkdir("./errors")
 except FileExistsError:
     pass
 
-logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
-config: util.Config = util.Config.load_config("configuration.yaml")  # load config from file
+logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+    console=True, colors=True
+)
+config: util.Config = util.Config.load_config(
+    "configuration.yaml"
+)  # load config from file
 logger.info("Loaded ./configuration.yaml into config object")
 db = database.DatabaseAccess()  # create database connection
 logger.info("Connection to database was successful.")
@@ -62,12 +73,15 @@ def add_account(email, password):
     print(password)
     # if current account number is less than or equal to the max allowed accounts
     if len(db.read()) <= config.max_account_number:
-        db.insert(util.MicrosoftAccount(
-            email=email,
-            password=password,
-            lastExec=datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=365),
-            points=0
-        ))
+        db.insert(
+            util.MicrosoftAccount(
+                email=email,
+                password=password,
+                lastExec=datetime.datetime.now(tz=datetime.timezone.utc)
+                - datetime.timedelta(days=365),
+                points=0,
+            )
+        )
     else:
         logger.error(f"Unable to add account {email}. Account limit reached.")
 
@@ -89,30 +103,29 @@ def force_exec_single(event: flet.control_event.ControlEvent):
 
 
 def pick_and_run():
-    running = bool([t.name for t in threading.enumerate() if "@" in t.name])  # get all active threads by name
+    running = bool(
+        [t.name for t in threading.enumerate() if "@" in t.name]
+    )  # get all active threads by name
     # the thread names that are active account processes will have an @ in them.
     # if true, there is something running.
 
     if not running:
-
         # 1. Sort accounts by last exec datetime.
         # 2 if the time between its last execution and now is greater than the defined # of seconds
         # 3. append
         validAccounts = [
-            account for account in sorted(db.read(), key=lambda a: a.lastExec)
+            account
+            for account in sorted(db.read(), key=lambda a: a.lastExec)
             if (
-                       datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
-               ).total_seconds() > config.minimum_auto_rerun_delay_seconds
+                datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec
+            ).total_seconds()
+            > config.minimum_auto_rerun_delay_seconds
         ]
         if validAccounts:  # if at least one account is eligible
             threading.Thread(
                 name=validAccounts[0].email,
                 target=util.exec_farmer,
-                kwargs={
-                    "account": validAccounts[0],
-                    "config": config,
-                    "db": db
-                }
+                kwargs={"account": validAccounts[0], "config": config, "db": db},
             ).start()
             logger.info(f"Started thread for: {validAccounts[0]}")
             return
@@ -133,7 +146,7 @@ def gen_accounts_url() -> str:
     with open("accounts.sqlite", "rb") as file:
         data = file.read()
         encoded = base64.b64encode(data).decode("utf-8")
-        uri = 'data:multipart/form-data;base64,' + encoded
+        uri = "data:multipart/form-data;base64," + encoded
         return uri
 
 
@@ -145,7 +158,8 @@ def main_screen(page: ft.Page):
             database_test.read()
         except Exception as e:
             logger.critical(
-                f"The file submitted is not valid. Unable to read database, reverting to original. Error: {e}")
+                f"The file submitted is not valid. Unable to read database, reverting to original. Error: {e}"
+            )
             return
         logger.info(f"Writing {source_file_data.path} to ./accounts.sqlite")
 
@@ -153,7 +167,9 @@ def main_screen(page: ft.Page):
             with open("accounts.sqlite", "wb") as destination_file:  # open destination
                 destination_file.write(source_file.read())  # overwrite
 
-        logger.info("Reloading Database. If any problems occur, delete ./accounts.sqlite and restart the program.")
+        logger.info(
+            "Reloading Database. If any problems occur, delete ./accounts.sqlite and restart the program."
+        )
         db.__init__()
 
     def hydrate():
@@ -199,14 +215,16 @@ def main_screen(page: ft.Page):
 
     addAccountDialog = AddAccountDialog(add_account_handler=add_account)
     page.overlay.append(addAccountDialog)
-    file_picker = ft.FilePicker(on_upload=replace_accounts_file, on_result=result_handler)
+    file_picker = ft.FilePicker(
+        on_upload=replace_accounts_file, on_result=result_handler
+    )
     page.add(file_picker)
     logDisplay = LogDisplay(data_handler=logger.load)
 
     accountsControl = AccountDataTable(
         accounts=db.read(),
         force_single_account_callback=force_exec_single,
-        delete_account_handler=remove_account
+        delete_account_handler=remove_account,
     )
     version: util.VersionInfo = util.check_version()
     updatePrompt = ft.Text("")
@@ -216,23 +234,26 @@ def main_screen(page: ft.Page):
             icon=ft.icons.UPDATE,
             icon_color=ft.colors.GREEN,
             tooltip=f"You are currently on {config.version}.\n"
-                    f"\n{version.release_version} is available in the latest release for thearyadev/msrf."
-                    f"Click this button to open",
-            on_click=lambda _: page.launch_url(version.release_url)
+            f"\n{version.release_version} is available in the latest release for thearyadev/msrf."
+            f"Click this button to open",
+            on_click=lambda _: page.launch_url(version.release_url),
         )
     if "DEV" in config.version:
         updatePrompt = ft.TextButton(
             "Development Build",
             icon=ft.icons.LOGO_DEV,
             icon_color=ft.colors.GREEN,
-            disabled=True
+            disabled=True,
         )
     errorCounter = ErrorCounter()
     page.add(
-        Titlebar("Microsoft Rewards Farmer", visible=not page.web, current_version=config.version),
+        Titlebar(
+            "Microsoft Rewards Farmer",
+            visible=not page.web,
+            current_version=config.version,
+        ),
         ft.Row(
             [
-
                 ft.Column(
                     controls=[
                         ft.Container(
@@ -240,41 +261,47 @@ def main_screen(page: ft.Page):
                             content=accountsControl,
                             expand=True,
                         ),
-                        ft.Text("The farmer is paused." if not config.run_scheduler else "",
-                                italic=True, color=ft.colors.BLUE_GREY),
+                        ft.Text(
+                            "The farmer is paused." if not config.run_scheduler else "",
+                            italic=True,
+                            color=ft.colors.BLUE_GREY,
+                        ),
                         Toolbar(
                             toolbarItems=[
                                 ToolbarItem(
                                     icon=ft.icons.ADD,
                                     tooltip="Add Account",
-                                    callback=addAccountDialog.show_dialog
+                                    callback=addAccountDialog.show_dialog,
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.DARK_MODE_SHARP,
                                     tooltip="Toggle Dark Mode",
-                                    callback=toggle_dark
+                                    callback=toggle_dark,
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.BUG_REPORT,
                                     tooltip="Debugging Mode",
                                     callback=toggle_debug_mode,
-                                    disabled=page.web
+                                    disabled=page.web,
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.DOUBLE_ARROW,
                                     tooltip="Force Execution (Not Recommended)",
-                                    callback=force_exec
+                                    callback=force_exec,
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.FOLDER_SPECIAL,
                                     tooltip="Open Program Folder",
                                     callback=lambda _: os.startfile("."),
-                                    disabled=page.web
+                                    disabled=page.web,
                                 ),
                                 ToolbarItem(
                                     icon=ft.icons.PLAYLIST_REMOVE_OUTLINED,
                                     tooltip="Clear all errors",
-                                    callback=lambda _: [os.remove(f"./errors/{f}") for f in os.listdir("errors")]
+                                    callback=lambda _: [
+                                        os.remove(f"./errors/{f}")
+                                        for f in os.listdir("errors")
+                                    ],
                                 ),
                                 # ToolbarItem(
                                 #     icon=ft.icons.UPLOAD,
@@ -288,25 +315,22 @@ def main_screen(page: ft.Page):
                                 #     callback=lambda _: page.launch_url(gen_accounts_url()),
                                 #     disabled=not page.web
                                 # ),
-
                             ],
                             update_prompt=updatePrompt,
-                            error_prompt=None
-                        )
+                            error_prompt=None,
+                        ),
                     ],
-
                 ),
                 ft.VerticalDivider(),
                 ft.Column(
                     expand=True,
                     controls=[logDisplay],
                     scroll=ft.ScrollMode.ALWAYS,
-                )
-
+                ),
             ],
             spacing=0,
             expand=True,
-        )
+        ),
     )
 
     page.window_visible = True
@@ -323,9 +347,9 @@ def main():
         target=main_screen,
         view=ft.WEB_BROWSER if config.mode == "SERVER" else ft.FLET_APP_HIDDEN,
         assets_dir="./assets",
-        port=50947
+        port=50947,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

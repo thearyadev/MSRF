@@ -9,7 +9,10 @@ class DateTimeEncoder(json.JSONEncoder):
         if isinstance(obj, (datetime.date, datetime.datetime, datetime.timedelta)):
             return obj.isoformat()
         elif isinstance(obj, dict):
-            return {self._preprocess_date(k): self._preprocess_date(v) for k, v in obj.items()}
+            return {
+                self._preprocess_date(k): self._preprocess_date(v)
+                for k, v in obj.items()
+            }
         elif isinstance(obj, list):
             return [self._preprocess_date(i) for i in obj]
         return obj

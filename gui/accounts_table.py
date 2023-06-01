@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     import util
 
 
-def is_currently_running(account: 'util.MicrosoftAccount') -> bool:
+def is_currently_running(account: "util.MicrosoftAccount") -> bool:
     return bool(len([t.name for t in threading.enumerate() if t.name == account.email]))
 
 
@@ -17,9 +17,10 @@ def get_errors() -> list[str]:
     return [f for f in os.listdir("errors") if "error" in f]
 
 
-def calc_hours_ago(account: 'util.MicrosoftAccount') -> str:
+def calc_hours_ago(account: "util.MicrosoftAccount") -> str:
     tsec = (
-            datetime.datetime.now(tz=datetime.timezone.utc) - account.lastExec.astimezone(tz=datetime.timezone.utc)
+        datetime.datetime.now(tz=datetime.timezone.utc)
+        - account.lastExec.astimezone(tz=datetime.timezone.utc)
     ).total_seconds()
 
     if tsec > 2_592_000:
@@ -35,11 +36,12 @@ def calc_hours_ago(account: 'util.MicrosoftAccount') -> str:
 
 class AccountDataTable(ft.UserControl):
     def __init__(
-            self,
-            force_single_account_callback: Callable,
-            delete_account_handler: Callable,
-            accounts: list['util.MicrosoftAccount'],
-            *args, **kwargs
+        self,
+        force_single_account_callback: Callable,
+        delete_account_handler: Callable,
+        accounts: list["util.MicrosoftAccount"],
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.force_single_account_callback = force_single_account_callback
@@ -50,19 +52,26 @@ class AccountDataTable(ft.UserControl):
             horizontal_lines=ft.border.BorderSide(width=0, color=ft.colors.BLACK26),
             divider_thickness=0,
             columns=[
-                ft.DataColumn(ft.Text("Errors"), tooltip="Click the folder button to view error reports"),
-                ft.DataColumn(ft.Text("Account"), tooltip="Long press the account name to delete."),
-                ft.DataColumn(ft.Text("Last Exec"),
-                              tooltip="Long press on the Last Exec of the account you want to run now."),
+                ft.DataColumn(
+                    ft.Text("Errors"),
+                    tooltip="Click the folder button to view error reports",
+                ),
+                ft.DataColumn(
+                    ft.Text("Account"), tooltip="Long press the account name to delete."
+                ),
+                ft.DataColumn(
+                    ft.Text("Last Exec"),
+                    tooltip="Long press on the Last Exec of the account you want to run now.",
+                ),
                 ft.DataColumn(ft.Text("Points"), numeric=True),
             ],
-            rows=[]
+            rows=[],
         )
         self.addAccountPrompt = AddAccountPrompt()
         self.row = ft.Row(
             controls=[
                 self.table if self.accounts else self.addAccountPrompt,
-                self.delete_account_dialog
+                self.delete_account_dialog,
             ],
         )
         self.populate()
@@ -77,34 +86,29 @@ class AccountDataTable(ft.UserControl):
             ft.DataRow(
                 cells=[
                     ft.DataCell(
-                        ft.Text(
-                            str(
-                                len(
-                                    [e for e in errors if account.email in e]
-                                )
-                            )
-                        )
+                        ft.Text(str(len([e for e in errors if account.email in e])))
                     ),
                     ft.DataCell(
                         ft.Text(account.email),
                         on_long_press=self.handle_account_long_press
-                        if not is_currently_running(
-                            account) else None,
+                        if not is_currently_running(account)
+                        else None,
                     ),
                     ft.DataCell(
                         ft.Text(calc_hours_ago(account), data=account.id),
-                        on_long_press=self.force_single_account_callback if not is_currently_running(
-                            account) else None,
+                        on_long_press=self.force_single_account_callback
+                        if not is_currently_running(account)
+                        else None,
                     ),
                     ft.DataCell(ft.Text(str(account.points))),
                 ]
-
-            ) for account in self.accounts
+            )
+            for account in self.accounts
         ]
 
         self.row.controls = [
             self.table if self.accounts else self.addAccountPrompt,
-            self.delete_account_dialog
+            self.delete_account_dialog,
         ]
 
         try:
@@ -125,7 +129,7 @@ class AddAccountPrompt(ft.UserControl):
         return ft.Text(
             "Click the + button to add an account.",
             width=600,
-            text_align=ft.TextAlign.CENTER
+            text_align=ft.TextAlign.CENTER,
         )
 
 
@@ -138,9 +142,9 @@ class DeleteAccountDialog(ft.UserControl):
             modal=True,
             actions=[
                 ft.TextButton("Yes", on_click=self.close, data=True),
-                ft.TextButton("No", on_click=self.close, data=False)
+                ft.TextButton("No", on_click=self.close, data=False),
             ],
-            actions_alignment=ft.MainAxisAlignment.END
+            actions_alignment=ft.MainAxisAlignment.END,
         )
         self.current_account: str | None = None
 
@@ -149,7 +153,6 @@ class DeleteAccountDialog(ft.UserControl):
         self.dialog.update()
 
     def close(self, event):
-
         if event.control.data:
             if self.current_account:
                 self.handler(self.current_account)

@@ -15,21 +15,23 @@ from ..browser.getDashboardData import load_dashboard_data
 from ..models.dashboard_data import DashboardData
 from .json_encoder import DateTimeEncoder
 
-logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+    console=True, colors=True
+)
 
 
 class ErrorReport:
     """Data structure to hold information about a single error report."""
 
     def __init__(
-            self,
-            *,
-            screenshot: bytes,
-            accountDataJson: str,
-            url: str,
-            html: str,
-            exceptionData: str,
-            accountName: str
+        self,
+        *,
+        screenshot: bytes,
+        accountDataJson: str,
+        url: str,
+        html: str,
+        exceptionData: str,
+        accountName: str,
     ):
         self.screenshot: bytes = screenshot
         self.accountDataJson: str = accountDataJson
@@ -41,17 +43,14 @@ class ErrorReport:
         self.file_path: str = str()
         self.accountName: str = accountName
 
-    def compress(self) -> 'ErrorReport':
+    def compress(self) -> "ErrorReport":
         """
         Compresses all the data in the error report into a zipfile byte buffer
         Returns self
         data is stored in self.data
         """
         zip_buffer = io.BytesIO()
-        with zipfile.ZipFile(zip_buffer,
-                             "a",
-                             zipfile.ZIP_DEFLATED,
-                             False) as zip_file:
+        with zipfile.ZipFile(zip_buffer, "a", zipfile.ZIP_DEFLATED, False) as zip_file:
             zip_file.writestr("screenshot.png", self.screenshot)
             zip_file.writestr("account_data.json", self.accountDataJson)
             zip_file.writestr("url.txt", self.url)
@@ -84,7 +83,9 @@ class ErrorReporter:
         return browser.current_url
 
     @staticmethod
-    def _serialize_dashboard_data_as_json(browser: WebDriver, accountData: util.DashboardData | None | str) -> str:
+    def _serialize_dashboard_data_as_json(
+        browser: WebDriver, accountData: util.DashboardData | None | str
+    ) -> str:
         """
         Converts the account data to a json string
         The accountData parameter has multiple types to accept different states of errors.
@@ -111,32 +112,39 @@ class ErrorReporter:
     @staticmethod
     def _parse_exception(exception: Exception) -> str:
         try:
-            return ''.join(traceback.format_exception(*sys.exc_info()))
+            return "".join(traceback.format_exception(*sys.exc_info()))
         except Exception:
-            return ''.join(traceback.format_exception(exception))
+            return "".join(traceback.format_exception(exception))
 
     def generate_report(
-            self,
-            browser: WebDriver,
-            accountData: DashboardData | None | str,
-            exception: Exception
+        self,
+        browser: WebDriver,
+        accountData: DashboardData | None | str,
+        exception: Exception,
     ) -> ErrorReport:
         try:
             report = ErrorReport(
                 screenshot=self._get_browser_screenshot(browser),
                 html=self._get_html(browser),
                 url=self._get_current_url(browser),
-                accountDataJson=self._serialize_dashboard_data_as_json(browser, accountData),
+                accountDataJson=self._serialize_dashboard_data_as_json(
+                    browser, accountData
+                ),
                 exceptionData=self._parse_exception(exception),
-                accountName=threading.current_thread().name
+                accountName=threading.current_thread().name,
             ).compress()
             self._write(report)  # write to disk
-        except Exception as err:  # if there's an error, just skip making the error report.
+        except (
+            Exception
+        ) as err:  # if there's an error, just skip making the error report.
             logger.critical(f"Unable to create error report. Unknown error {err}")
         else:
             return report  # if no errors, send the report back to the user.
 
     def _write(self, report: ErrorReport) -> None:
-        report.file_path = self._err_dir + f"/error_{report.accountName}_{datetime.datetime.now().timestamp()}.zip"
+        report.file_path = (
+            self._err_dir
+            + f"/error_{report.accountName}_{datetime.datetime.now().timestamp()}.zip"
+        )
         with open(report.file_path, "wb") as file:
             file.write(report.data)  # write

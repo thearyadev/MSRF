@@ -14,7 +14,10 @@ from ..models.dashboard_data import DashboardData
 
 def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
     from util import ErrorReport, ErrorReporter
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(colors=True, console=True)
+
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        colors=True, console=True
+    )
     logger.info("loading dashboard data")
     browser.get("https://rewards.bing.com")
     time.sleep(3)
@@ -23,9 +26,9 @@ def load_dashboard_data(browser: WebDriver) -> DashboardData | None:
     except Exception as e:
         # Since this is breaking, it may be ideal to exit the thread with sys.exit(). tbd.
         errorReport: ErrorReport = ErrorReporter().generate_report(
-            browser,
-            accountData=None,
-            exception=e
+            browser, accountData=None, exception=e
         )
-        logger.critical("Unable to load dashboard data.  "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Unable to load dashboard data.  "
+            f"Error report has been generated: {errorReport.file_path}"
+        )

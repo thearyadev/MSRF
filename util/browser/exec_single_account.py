@@ -14,7 +14,12 @@ if typing.TYPE_CHECKING:
     pass
 
 
-def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
+def exec_farmer(
+    *,
+    account: util.MicrosoftAccount,
+    config: util.Config,
+    db: "database.DatabaseAccess",
+):
     """
     Runs the script on a single MicrosoftAccount object.
 
@@ -28,7 +33,9 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     account.lastExec = datetime.datetime.now(tz=datetime.timezone.utc)
     db.write(account=account)
 
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
 
     # init browser
     logger.info(f"Current Account: {account}")
@@ -39,39 +46,48 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     browser: WebDriver = util.init_browser(
         headless=not config.debug,
         agent=config.pc_user_agent,
-        execution_mode=config.execution_environment
+        execution_mode=config.execution_environment,
     )
 
     logger.info("Attempting login...")
     # go through login process
-    login_state = util.authenticate_microsoft_account_legacy(browser=browser,
-                                                             account=account)
+    login_state = util.authenticate_microsoft_account_legacy(
+        browser=browser, account=account
+    )
     if not login_state:
         errorReport: ErrorReport = ErrorReporter().generate_report(
             browser,
             accountData=None,
-            exception=Exception("Login failed. Possible Causes: Invalid credentials,"
-                                " Interrupted login (login steps), login module broken")
+            exception=Exception(
+                "Login failed. Possible Causes: Invalid credentials,"
+                " Interrupted login (login steps), login module broken"
+            ),
         )
-        logger.critical("Login failed. Module may be broken, or credentials are invalid. "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Login failed. Module may be broken, or credentials are invalid. "
+            f"Error report has been generated: {errorReport.file_path}"
+        )
         return
 
     logger.info("Successfully authenticated. ")
     logger.info("Navigating to https://account.microsoft.com/")
-    browser.get('https://account.microsoft.com/')
+    browser.get("https://account.microsoft.com/")
     try:
-        util.waitUntilVisible(browser, By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a', 20)
+        util.waitUntilVisible(
+            browser, By.XPATH, '//*[@id="navs"]/div/div/div/div/div[4]/a', 20
+        )
     except selenium.common.exceptions.TimeoutException:
         logger.error("Unable to confirm if page has loaded. Continuing anyway...")
 
     # Check if the current page is valid.
-    BASE_URL = 'https://rewards.microsoft.com'
+    BASE_URL = "https://rewards.microsoft.com"
     if not util.isMicrosoftRewards(browser):
-        BASE_URL = 'https://account.microsoft.com/rewards'
+        BASE_URL = "https://account.microsoft.com/rewards"
         browser.get(BASE_URL)
 
-    account.points = util.getPointCount(browser)  # will redirect to bing.com. Go back to baseurl
+    account.points = util.getPointCount(
+        browser
+    )  # will redirect to bing.com. Go back to baseurl
     starting_point_count = account.points
     db.write(account)
     logger.info(f"Current Points: {account.points}")
@@ -86,14 +102,13 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
     try:
         util.exec_daily_set(browser)
     except Exception as e:
-
         errorReport: ErrorReport = ErrorReporter().generate_report(
-            browser,
-            accountData="RETRIEVE",
-            exception=e
+            browser, accountData="RETRIEVE", exception=e
         )
-        logger.critical("Uncaught exception has caused daily set to fail. "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Uncaught exception has caused daily set to fail. "
+            f"Error report has been generated: {errorReport.file_path}"
+        )
 
         util.resetTabs(browser, BASE_URL)
     else:
@@ -108,12 +123,12 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         util.exec_punch_cards(browser)
     except Exception as e:
         errorReport: ErrorReport = ErrorReporter().generate_report(
-            browser,
-            accountData="RETRIEVE",
-            exception=e
+            browser, accountData="RETRIEVE", exception=e
         )
-        logger.critical("Uncaught exception has caused punch cards to fail. "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Uncaught exception has caused punch cards to fail. "
+            f"Error report has been generated: {errorReport.file_path}"
+        )
 
         util.resetTabs(browser, BASE_URL)
     else:
@@ -128,12 +143,12 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         util.exec_additional_promotions(browser)
     except Exception as e:
         errorReport: ErrorReport = ErrorReporter().generate_report(
-            browser,
-            accountData="RETRIEVE",
-            exception=e
+            browser, accountData="RETRIEVE", exception=e
         )
-        logger.critical("Uncaught exception has caused additional promotions to fail. "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Uncaught exception has caused additional promotions to fail. "
+            f"Error report has been generated: {errorReport.file_path}"
+        )
 
         util.resetTabs(browser, BASE_URL)
     else:
@@ -145,9 +160,13 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
 
     # bing searches.
     try:
-        remainingSearches: util.RemainingSearchOutline = util.get_remaining_searches(browser)
+        remainingSearches: util.RemainingSearchOutline = util.get_remaining_searches(
+            browser
+        )
     except Exception as e:
-        logger.critical(f"Unable to get remaining searches. Could be malformed data. {e}")
+        logger.critical(
+            f"Unable to get remaining searches. Could be malformed data. {e}"
+        )
     else:
         logger.info(f"Searches loaded. {remainingSearches}")
 
@@ -155,7 +174,9 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
             logger.info("(4/5) Completing PC SEARCHES")
             account.points = util.getPointCount(browser)
             db.write(account)
-            searchTerms = util.getGoogleTrends(remainingSearches.pcSearches, config.LANG, config.GEO)
+            searchTerms = util.getGoogleTrends(
+                remainingSearches.pcSearches, config.LANG, config.GEO
+            )
             try:
                 util.exec_bing_searches(
                     browser=browser,
@@ -163,16 +184,16 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
                     terms=searchTerms,
                     starting_points=account.points,
                     agent=config.pc_user_agent,
-                    mobile=False
+                    mobile=False,
                 )
             except Exception as e:
                 errorReport: ErrorReport = ErrorReporter().generate_report(
-                    browser,
-                    accountData="RETRIEVE",
-                    exception=e
+                    browser, accountData="RETRIEVE", exception=e
                 )
-                logger.critical("Failed to complete PC bing searches. "
-                                f"Error report has been generated: {errorReport.file_path}")
+                logger.critical(
+                    "Failed to complete PC bing searches. "
+                    f"Error report has been generated: {errorReport.file_path}"
+                )
 
                 util.resetTabs(browser, BASE_URL)
 
@@ -184,10 +205,12 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
             mobileBrowser = util.init_browser(
                 headless=not config.debug,
                 agent=config.mobile_user_agent,
-                execution_mode=config.execution_environment
+                execution_mode=config.execution_environment,
             )
             util.authenticate_microsoft_account(browser=mobileBrowser, account=account)
-            searchTerms = util.getGoogleTrends(remainingSearches.mobileSearches, config.LANG, config.GEO)
+            searchTerms = util.getGoogleTrends(
+                remainingSearches.mobileSearches, config.LANG, config.GEO
+            )
             try:
                 util.exec_bing_searches(
                     browser=mobileBrowser,
@@ -195,16 +218,16 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
                     terms=searchTerms,
                     starting_points=account.points,
                     agent=config.mobile_user_agent,
-                    mobile=True
+                    mobile=True,
                 )
             except Exception as e:
                 errorReport: ErrorReport = ErrorReporter().generate_report(
-                    browser,
-                    accountData="RETRIEVE",
-                    exception=e
+                    browser, accountData="RETRIEVE", exception=e
                 )
-                logger.critical("Failed to complete Mobile bing searches. "
-                                f"Error report has been generated: {errorReport.file_path}")
+                logger.critical(
+                    "Failed to complete Mobile bing searches. "
+                    f"Error report has been generated: {errorReport.file_path}"
+                )
 
                 util.resetTabs(browser, BASE_URL)
 
@@ -220,33 +243,44 @@ def exec_farmer(*, account: util.MicrosoftAccount, config: util.Config, db: 'dat
         accountName=account.email,
     )
 
-    logger.info(F"Closing Point Total: {account.points}")
+    logger.info(f"Closing Point Total: {account.points}")
     logger.info("Closing main browser.")
     browser.quit()
 
 
-def exec_refresh_points(*, account: util.MicrosoftAccount, config: util.Config, db: 'database.DatabaseAccess'):
+def exec_refresh_points(
+    *,
+    account: util.MicrosoftAccount,
+    config: util.Config,
+    db: "database.DatabaseAccess",
+):
     from util import ErrorReport, ErrorReporter
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
 
     browser: WebDriver = util.init_browser(
         headless=not config.debug,
         agent=config.pc_user_agent,
-        execution_mode=config.execution_environment
+        execution_mode=config.execution_environment,
     )
     logger.info("Attempting login...")
     # go through login process
-    login_state = util.authenticate_microsoft_account(browser=browser,
-                                                      account=account)
+    login_state = util.authenticate_microsoft_account(browser=browser, account=account)
     if not login_state:
         errorReport: ErrorReport = ErrorReporter().generate_report(
             browser,
             accountData=None,
-            exception=Exception("Login failed. Possible Causes: Invalid credentials,"
-                                " Interrupted login (login steps), login module broken")
+            exception=Exception(
+                "Login failed. Possible Causes: Invalid credentials,"
+                " Interrupted login (login steps), login module broken"
+            ),
         )
-        logger.critical("Login failed. Module may be broken, or credentials are invalid. "
-                        f"Error report has been generated: {errorReport.file_path}")
+        logger.critical(
+            "Login failed. Module may be broken, or credentials are invalid. "
+            f"Error report has been generated: {errorReport.file_path}"
+        )
         return
     account.points = util.getPointCount(browser)
     db.write(account)

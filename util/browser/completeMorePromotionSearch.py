@@ -8,10 +8,16 @@ import custom_logging
 
 
 def complete_more_promotion_search(*, browser: WebDriver, cardNumber: int):
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
     logger.info("Completing promotion search")
-    browser.find_element(By.XPATH, '//*[@id="more-activities"]/div/mee-card[' + str(
-        cardNumber) + ']/div/card-content/mee-rewards-more-activities-card-item/div/a').click()
+    browser.find_element(
+        By.XPATH,
+        '//*[@id="more-activities"]/div/mee-card['
+        + str(cardNumber)
+        + "]/div/card-content/mee-rewards-more-activities-card-item/div/a",
+    ).click()
     time.sleep(1)
     browser.switch_to.window(window_name=browser.window_handles[1])
     time.sleep(random.randint(13, 17))

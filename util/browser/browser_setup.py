@@ -19,7 +19,9 @@ def init_browser_legacy(*, headless: bool, agent: str) -> WebDriver:
     :agent mobile or pc agent string.
     :config generic config for this application.
     """
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
     config: util.Config = util.Config.load_config("configuration.yaml")
     options = Options()
     options.add_argument("user-agent=" + agent)
@@ -31,7 +33,9 @@ def init_browser_legacy(*, headless: bool, agent: str) -> WebDriver:
         logger.info("Starting browser in bundled mode")
         options.binary_location = "bin/chrome/chrome.exe"
         options.add_argument("--log-level=OFF")
-        args = ["hide_console", ]
+        args = [
+            "hide_console",
+        ]
 
         service = Service("bin/chromedriver.exe", service_args=args)
         try:
@@ -53,7 +57,9 @@ def init_browser_legacy(*, headless: bool, agent: str) -> WebDriver:
 
 
 def init_browser(*, headless: bool, agent: str, execution_mode: str) -> WebDriver:
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
     logger.info(f"Starting browser in {execution_mode}")
     driver: WebDriver | None = None
 
@@ -64,9 +70,13 @@ def init_browser(*, headless: bool, agent: str, execution_mode: str) -> WebDrive
         options.add_argument("--headless")
 
     if execution_mode == "DOCKER":  # This is linux installation
-        options.add_argument("--no-sandbox")  # causes chrome to crash in screen-less environment
-        options.add_argument("--disable-dev-shm-usage")  # causes chrome to crash in screen-less environment
-        options.add_argument('--headless')
+        options.add_argument(
+            "--no-sandbox"
+        )  # causes chrome to crash in screen-less environment
+        options.add_argument(
+            "--disable-dev-shm-usage"
+        )  # causes chrome to crash in screen-less environment
+        options.add_argument("--headless")
         driver = webdriver.Chrome(options=options, chrome_options=options)
 
     if execution_mode == "DEV_LINUX":  # This is linux installation
@@ -75,10 +85,14 @@ def init_browser(*, headless: bool, agent: str, execution_mode: str) -> WebDrive
     if execution_mode == "DEV_WINDOWS":  # This is Windows Installation
         driver = webdriver.Chrome(options=options)
 
-    if execution_mode == "DIST_WINDOWS":  # This is Windows installation, but for distribution.
+    if (
+        execution_mode == "DIST_WINDOWS"
+    ):  # This is Windows installation, but for distribution.
         options.binary_location = "bin/chrome/chrome.exe"
         options.add_argument("--log-level=OFF")
-        args = ["hide_console", ]
+        args = [
+            "hide_console",
+        ]
         service = Service("bin/chromedriver.exe", service_args=args)
         try:
             service.creation_flags = subprocess.CREATE_NO_WINDOW

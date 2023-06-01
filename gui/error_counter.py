@@ -11,7 +11,7 @@ class ErrorCounter(ft.UserControl):
             icon=ft.icons.ERROR_SHARP,
             tooltip="Some errors have been detected.\nOpen the project directory to view them.",
             visible=False,
-            icon_color=ft.colors.RED
+            icon_color=ft.colors.RED,
         )
         self.populate()
 

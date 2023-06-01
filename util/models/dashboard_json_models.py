@@ -99,7 +99,9 @@ class MorePromotion(BaseModel):
 # noinspection PyNestedDecorators
 class DashboardDataModel(BaseModel):
     userStatus: Optional[UserStatus] = None
-    dailySetPromotions: Optional[Dict[Union[datetime, str], List[DailyPromotion]]] = None
+    dailySetPromotions: Optional[
+        Dict[Union[datetime, str], List[DailyPromotion]]
+    ] = None
     punchCards: Optional[List[PunchCards]] = None
     morePromotions: Optional[List[MorePromotion]] = None
 
@@ -108,13 +110,13 @@ class DashboardDataModel(BaseModel):
     def validate_promotion_date(cls, value: dict) -> Any:
         newDict = dict()
         for promotionDateString, promotionData in value.items():
-            newDict[datetime.strptime(promotionDateString, '%m/%d/%Y')] = promotionData
+            newDict[datetime.strptime(promotionDateString, "%m/%d/%Y")] = promotionData
         return newDict  # hello world
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import json
+
     with open("../../dashboard_data_schema_source.json", "r", encoding="utf-8") as file:
         d = json.load(file)
         print(DashboardDataModel(**d).punchCards)
-

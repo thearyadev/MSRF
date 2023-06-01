@@ -23,7 +23,7 @@ class Progress(ft.UserControl):
                             height=45,
                             content=self.progressText,
                             border_radius=50,
-                            alignment=ft.alignment.center
+                            alignment=ft.alignment.center,
                         )
                     ],
                     left=37,

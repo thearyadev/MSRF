@@ -3,14 +3,14 @@ import flet as ft
 
 class Titlebar(ft.UserControl):
     def __init__(
-            self,
-            window_title: str = "",
-            closable: bool = True,
-            hidden: bool = False,
-            visible: bool = True,
-            current_version: str = None,
-            *args,
-            **kwargs
+        self,
+        window_title: str = "",
+        closable: bool = True,
+        hidden: bool = False,
+        visible: bool = True,
+        current_version: str = None,
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.window_title = window_title
@@ -28,7 +28,11 @@ class Titlebar(ft.UserControl):
             return ft.Row(
                 [
                     ft.WindowDragArea(
-                        ft.Container(bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True),
+                        ft.Container(
+                            bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0
+                        ),
+                        expand=True,
+                    ),
                 ]
             )
         else:
@@ -39,15 +43,29 @@ class Titlebar(ft.UserControl):
                             ft.Row(
                                 [
                                     ft.Text(f"{self.window_title}"),
-                                    ft.Text(f"{self.version}", color=ft.colors.BLUE_GREY)
+                                    ft.Text(
+                                        f"{self.version}", color=ft.colors.BLUE_GREY
+                                    ),
                                 ]
-                            ), bgcolor=ft.colors.TRANSPARENT, padding=10, margin=0), expand=True
+                            ),
+                            bgcolor=ft.colors.TRANSPARENT,
+                            padding=10,
+                            margin=0,
+                        ),
+                        expand=True,
                     ),
-                    ft.IconButton(ft.icons.PHOTO_SIZE_SELECT_SMALL, on_click=lambda _: self.minimize(),
-                                  tooltip="Minimize"),
-                    ft.IconButton(ft.icons.CLOSE, on_click=lambda _: self.page.window_close(), tooltip="Close")
-                    if self.closable else ft.Container(),
-
+                    ft.IconButton(
+                        ft.icons.PHOTO_SIZE_SELECT_SMALL,
+                        on_click=lambda _: self.minimize(),
+                        tooltip="Minimize",
+                    ),
+                    ft.IconButton(
+                        ft.icons.CLOSE,
+                        on_click=lambda _: self.page.window_close(),
+                        tooltip="Close",
+                    )
+                    if self.closable
+                    else ft.Container(),
                 ],
-                visible=self.visible
+                visible=self.visible,
             )

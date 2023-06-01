@@ -31,7 +31,7 @@ class Config(YamlModel):
             f.write(self.yaml())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     a = Config.load_config("../../configuration.yaml")
     print(a)
     print(a.debug)

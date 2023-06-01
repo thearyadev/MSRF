@@ -17,11 +17,14 @@ lock = threading.Lock()
 
 
 class FileStreamLogger:
-    def __init__(self, *,
-                 console: bool = True,
-                 colors: bool = False,
-                 file_path: str = "./log.txt",
-                 logLevel: LogLevel = LogLevel.CRITICAL):
+    def __init__(
+        self,
+        *,
+        console: bool = True,
+        colors: bool = False,
+        file_path: str = "./log.txt",
+        logLevel: LogLevel = LogLevel.CRITICAL,
+    ):
         self.console: bool = console
         self.colors: bool = colors
         self.logLevel: LogLevel = logLevel
@@ -113,7 +116,7 @@ def main():
     fonc()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logger = FileStreamLogger(console=True, colors=True)
     logger2 = FileStreamLogger(console=True, colors=True)
     logger3 = FileStreamLogger(console=True, colors=True)

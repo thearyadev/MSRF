@@ -16,29 +16,38 @@ class AddAccountDialog(ft.UserControl):
                         ft.Text("Add Account", size=35),
                         ft.Text(
                             "Note: Ensure that the Microsoft Rewards onboarding tasks have been completed. Make sure "
-                            "the credentials are correct.", italic=True, color=ft.colors.BLUE_GREY),
-                        ft.Text("Your account may be banned by Microsoft as this application is a direct violation of "
-                                "their terms of service. Avoid using accounts that have any importance",
-                                italic=True, color=ft.colors.RED,
-                                tooltip="MSRF will attempt to avoid bans. This may not "
-                                        "be successful, as MS Rewards will update "
-                                        "faster than MSRF can. "),
+                            "the credentials are correct.",
+                            italic=True,
+                            color=ft.colors.BLUE_GREY,
+                        ),
+                        ft.Text(
+                            "Your account may be banned by Microsoft as this application is a direct violation of "
+                            "their terms of service. Avoid using accounts that have any importance",
+                            italic=True,
+                            color=ft.colors.RED,
+                            tooltip="MSRF will attempt to avoid bans. This may not "
+                            "be successful, as MS Rewards will update "
+                            "faster than MSRF can. ",
+                        ),
                         ft.Row(
                             [
                                 self.email_field,
                                 self.password_field,
-                                ft.ElevatedButton("Add",
-                                                  on_click=self.add_btn_handler,
-                                                  width=200,
-                                                  height=60,
-                                                  bgcolor=ft.colors.GREEN,
-                                                  color=ft.colors.WHITE,
-                                                  style=ft.ButtonStyle(
-                                                      shape=ft.buttons.RoundedRectangleBorder(radius=5)
-                                                  ))
+                                ft.ElevatedButton(
+                                    "Add",
+                                    on_click=self.add_btn_handler,
+                                    width=200,
+                                    height=60,
+                                    bgcolor=ft.colors.GREEN,
+                                    color=ft.colors.WHITE,
+                                    style=ft.ButtonStyle(
+                                        shape=ft.buttons.RoundedRectangleBorder(
+                                            radius=5
+                                        )
+                                    ),
+                                ),
                             ],
-
-                        )
+                        ),
                     ],
                     tight=True,
                 ),
@@ -75,7 +84,9 @@ class AddAccountDialog(ft.UserControl):
             return
 
         # handle add account
-        self.add_account_handler(email=self.email_field.value, password=self.password_field.value)
+        self.add_account_handler(
+            email=self.email_field.value, password=self.password_field.value
+        )
         self.page.update()
         self.close_dialog()
 

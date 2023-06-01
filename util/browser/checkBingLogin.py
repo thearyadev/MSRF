@@ -14,7 +14,9 @@ def verify_bing_login(browser: WebDriver) -> bool:
 
     :browser Selenium webdriver.
     """
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
     # Access Bing.com
     browser.get(
         "https://www.bing.com/fd/auth/signin?action=interactive&provider=windows_live_id&return_url=https%3a%2f%2fwww"
@@ -43,6 +45,6 @@ def verify_bing_login(browser: WebDriver) -> bool:
     return False  # guard. Login failed
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     config = util.load_config("../../configuration.yaml")
     b = util.init_browser(headless=False, agent=config.pc_user_agent)

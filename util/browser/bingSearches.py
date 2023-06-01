@@ -4,13 +4,18 @@ import custom_logging
 import util
 
 
-def exec_bing_searches(*, browser: WebDriver,
-                       searchCount: int,
-                       terms: list[str],
-                       starting_points: int,
-                       mobile: bool,
-                       agent: str):
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+def exec_bing_searches(
+    *,
+    browser: WebDriver,
+    searchCount: int,
+    terms: list[str],
+    starting_points: int,
+    mobile: bool,
+    agent: str,
+):
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
 
     for i, searchTerm in enumerate(terms):
         logger.info(f"Executing search # {i + 1}/{searchCount}")

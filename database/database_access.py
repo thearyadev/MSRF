@@ -17,7 +17,7 @@ class DatabaseAccess(DatabaseConfig):
             """
             INSERT INTO MicrosoftAccount (email, password, lastExec, points) VALUES (?, ?, ?, ?)
             """,
-            (account.email, account.password, account.lastExec, account.points)
+            (account.email, account.password, account.lastExec, account.points),
         )
         self.connection.commit()
         lock.release()
@@ -41,7 +41,13 @@ class DatabaseAccess(DatabaseConfig):
             SET email = ?, password = ?, lastExec = ?, points = ?
             WHERE id = ?
             """,
-            (account.email, account.password, account.lastExec, account.points, account.id)
+            (
+                account.email,
+                account.password,
+                account.lastExec,
+                account.points,
+                account.id,
+            ),
         )
         self.connection.commit()
         lock.release()
@@ -53,7 +59,7 @@ class DatabaseAccess(DatabaseConfig):
             DELETE FROM MicrosoftAccount
             WHERE id = ?
             """,
-            (account.id,)
+            (account.id,),
         )
         self.connection.commit()
         lock.release()
@@ -65,7 +71,7 @@ class DatabaseAccess(DatabaseConfig):
             INSERT INTO PointCollectionHistory (pointsDelta, sessionDuration, accountName) 
             VALUES (?, ?, ?)
             """,
-            (delta, sessionDuration, accountName)
+            (delta, sessionDuration, accountName),
         )
         self.connection.commit()
         lock.release()

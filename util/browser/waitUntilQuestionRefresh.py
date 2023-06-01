@@ -9,8 +9,10 @@ def waitUntilQuestionRefresh(browser: WebDriver):
     refreshCount = 0
     while True:
         try:
-            _ = browser.find_elements(By.CLASS_NAME, 'rqECredits')[0]  # exception will be thrown
-            return True # if no exception
+            _ = browser.find_elements(By.CLASS_NAME, "rqECredits")[
+                0
+            ]  # exception will be thrown
+            return True  # if no exception
         except Exception as e:
             if tries < 10:
                 tries += 1

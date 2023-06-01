@@ -11,7 +11,9 @@ class RemainingSearchOutline(BaseModel):
 
 
 def get_remaining_searches(browser: WebDriver) -> RemainingSearchOutline:
-    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(console=True, colors=True)
+    logger: custom_logging.FileStreamLogger = custom_logging.FileStreamLogger(
+        console=True, colors=True
+    )
 
     accountData: util.DashboardData = util.load_dashboard_data(browser)
 
@@ -28,12 +30,19 @@ def get_remaining_searches(browser: WebDriver) -> RemainingSearchOutline:
     # pc searches = points required - points earned
     try:
         remainingSearches.pcSearches = int(
-            (counters.pcSearch[0].pointProgressMax - counters.pcSearch[0].pointProgress) / 3)
+            (counters.pcSearch[0].pointProgressMax - counters.pcSearch[0].pointProgress)
+            / 3
+        )
     except TypeError:
         pass
     try:
-        remainingSearches.mobileSearches = \
-            int((counters.mobileSearch[0].pointProgressMax - counters.mobileSearch[0].pointProgress) / 3)
+        remainingSearches.mobileSearches = int(
+            (
+                counters.mobileSearch[0].pointProgressMax
+                - counters.mobileSearch[0].pointProgress
+            )
+            / 3
+        )
     except TypeError:
         pass
 
