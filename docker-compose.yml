@@ -6,4 +6,4 @@ services:
     # external:internal
     - "50947:50947"
     volumes:
-    - ./accounts:/accounts # directory which should contain the accounts.sqlite file. 
+    - ./accounts:/msrf/accounts # directory which should contain the accounts.sqlite file. 
