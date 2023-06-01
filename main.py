@@ -345,7 +345,7 @@ def main():
 
     ft.app(
         target=main_screen,
-        view=ft.WEB_BROWSER if config.mode == "SERVER" else ft.FLET_APP_HIDDEN,
+        view=ft.WEB_BROWSER if (config.mode == "SERVER" or os.getenv("DOCKER_CONTAINERIZED_EXECUTION")) else ft.FLET_APP_HIDDEN,
         assets_dir="./assets",
         port=50947,
     )
