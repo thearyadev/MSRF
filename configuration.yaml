@@ -14,6 +14,6 @@ version: v0.8b
 program_name: msrf
 product_name: Microsoft Rewards Farmer
 theme_mode: DARK
-run_scheduler: false
+run_scheduler: true
 mode: APP
 execution_environment: DEV_WINDOWS
