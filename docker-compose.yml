@@ -1,0 +1,7 @@
+version: "3.9"
+services:
+  msrf:
+    build: .
+    ports:
+    # external:internal
+    - "50947:50947"
