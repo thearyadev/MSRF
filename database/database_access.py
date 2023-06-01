@@ -8,7 +8,7 @@ lock = threading.Lock()
 
 
 class DatabaseAccess(DatabaseConfig):
-    def __init__(self, db_path: str = "./accounts.sqlite"):
+    def __init__(self, db_path: str = "./accounts/accounts.sqlite"):
         super().__init__(db_path)
 
     def insert(self, account: util.MicrosoftAccount):

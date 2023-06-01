@@ -1,4 +1,6 @@
 import sqlite3
+import os
+from pathlib import Path
 
 
 def dict_factory(cursor, row):
@@ -9,7 +11,8 @@ def dict_factory(cursor, row):
 
 
 class DatabaseConfig:
-    def __init__(self, db_path: str = "./accounts.sqlite"):
+    def __init__(self, db_path: str = "./accounts/accounts.sqlite"):
+
         self.connection = sqlite3.connect(db_path, check_same_thread=False)
         self.connection.row_factory = dict_factory
         self.cursor = self.connection.cursor()
