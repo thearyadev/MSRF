@@ -35,14 +35,17 @@ Run the executable to start the program.
 
 # Installation: Server
 
-Requirements: docker, docker-compose
-1. Clone the latest release of this repository: `git clone --branch v0.8b https://github.com/thearyadev/MSRF.git`. The `--branch` flag is used to select a release in this context. Use the tag name of the release. This project uses `vX.Yz` where `X` is the major version number, `Y` is the sub-version number, and `z` is the beta tag. 
-
-2. Add an existing `accounts.sqlite` file. In the `v0.8b` release, the `accounts.sqlite` file has been moved to a directory `./accounts`. This directory is not in the repository. Docker compose or the application will auto create it. If you would like to use your existing `accounts.sqlite` file, create a directory `/accounts` and place the `accounts.sqlite` file there. 
-
-3. Configure: You can look into the `docker-compose.yml` file to change the external port number, and the mounted directory for the accounts file. 
-
-4. Build and Deploy: Run `docker compose up -d`. This will build and launch the application as a docker stack. 
+```yaml
+version: "3.9"
+services:
+  msrf:
+    image: ghcr.io/thearyadev/msrf:latest
+    ports:
+    # external:internal
+    - "50947:50947"
+    volumes:
+    - ./accounts:/msrf/accounts # directory which should contain the accounts.sqlite file. 
+```
 
 ## Updating
 1. Delete the existing files. If you know how to use git then feel free to just fetch the changes from the latest release, and skip this and the next step. 
