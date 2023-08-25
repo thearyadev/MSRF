@@ -10,5 +10,5 @@ jobs:
       - name: Build and push the image
         run: |
           docker login --username thearyadev --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thearyadev/MSRF:latest
+          docker build . --tag ghcr.io/thearyadev/msrf:latest
           docker push ghcr.io/thearyadev/MSRF:latest
