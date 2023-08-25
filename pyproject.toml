@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "msrf"
 authors = ["msrf <msrf@msrf.com>"]
 readme = "README.md"
-packages = [{include = "msrf_dev"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
