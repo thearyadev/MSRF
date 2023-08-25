@@ -1,0 +1,9 @@
+version: "3.9"
+services:
+  msrf:
+    image: ghcr.io/thearyadev/msrf:latest
+    ports:
+    # external:internal
+    - "50947:50947"
+    volumes:
+    - ./accounts:/msrf/accounts # directory which should contain the accounts.sqlite file. 

@@ -11,4 +11,4 @@ jobs:
         run: |
           docker login --username thearyadev --password ${{ secrets.GH_PAT }} ghcr.io
           docker build . --tag ghcr.io/thearyadev/msrf:latest
-          docker push ghcr.io/thearyadev/MSRF:latest
+          docker push ghcr.io/thearyadev/msrf:latest

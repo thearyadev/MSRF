@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-LABEL org.opencontainers.image.source=https://github.com/thearyadev/MSRF
+LABEL org.opencontainers.image.source=https://github.com/thearyadev/msrf
 LABEL org.opencontainers.image.description="Docker image for msrf"
 LABEL org.opencontainers.image.licenses=MIT
 
